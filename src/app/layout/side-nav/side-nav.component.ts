@@ -6,11 +6,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SideNavService } from './side-nav.service';
 import { Subscription } from 'rxjs';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'side-nav',
   standalone: true,
-  imports: [MatSidenavModule, MatToolbarModule, MatListModule, MatIconModule],
+  imports: [MatSidenavModule, MatToolbarModule, MatListModule, MatIconModule, RouterOutlet],
   templateUrl: './side-nav.component.html',
   styleUrls: ['./side-nav.component.scss']
 })

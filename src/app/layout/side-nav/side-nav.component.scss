@@ -1,13 +1,17 @@
 :host {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 mat-sidenav-container {
-    flex: 1;
-  }
-  
-  mat-sidenav {
-    width: 250px;
-  }
+  flex: 1;
+}
+
+mat-sidenav {
+  width: 250px;
+}
+
+.content-padding {
+  padding: 20px 60px;
+}

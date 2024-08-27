@@ -1,5 +1,6 @@
-<mat-card class="minimalistic-card">
-  <mat-card-content>
-    <div>Французский</div>
+<mat-card class="minimalistic-card" [style.width]="width" [style.height]="height">
+  <mat-card-content class="language-container">
+    <span class="language-name">{{name}}</span>
+    <img [src]="imgSrc" class="language-flag" width="30">
   </mat-card-content>
 </mat-card>

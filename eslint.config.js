@@ -14,8 +14,7 @@ module.exports = [
       '@typescript-eslint': typescript,
     },
     rules: {
-      ...typescript.configs['recommended'].rules,
-      // Add any custom rules here
+      ...typescript.configs['recommended'].rules
     },
   },
   {
