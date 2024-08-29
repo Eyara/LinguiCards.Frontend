@@ -16,3 +16,12 @@ mat-toolbar {
 .app-title {
     margin-left: 16px;
 }
+
+.menu-icon {
+    border: none;
+    background-color: transparent;
+
+    &:hover {
+        background-color: #e0e0e0;
+    }
+}

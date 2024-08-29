@@ -5,11 +5,12 @@ import { map, Observable, of } from 'rxjs';
 import { LanguageModel } from '../../../models/language.model';
 import { CommonModule } from '@angular/common';
 import { CountryModel } from '../../../models/country.model';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'language-page',
   standalone: true,
-  imports: [CommonModule, CardComponent, ButtonComponent],
+  imports: [CommonModule, CardComponent, ButtonComponent, RouterModule],
   templateUrl: './language-page.component.html',
   styleUrl: './language-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -17,7 +18,7 @@ import { CountryModel } from '../../../models/country.model';
 export class LanguagePageComponent {
   languageCards$: Observable<LanguageModel[]>;
 
-  constructor() {
+  constructor(private router: Router) {
     this.languageCards$ = this.getLanguageCards();
   }
 
@@ -25,8 +26,8 @@ export class LanguagePageComponent {
     // this.languageCards$ = this.languageService.getLanguageCards();
 
     return of([
-      { name: 'Русский', imgSrc: 'https://flagcdn.com/ru.svg' } as LanguageModel,
-      { name: 'Английский', imgSrc: 'https://flagcdn.com/gb.svg' } as LanguageModel,
+      { id: 1, name: 'Русский', imgSrc: 'https://flagcdn.com/ru.svg' } as LanguageModel,
+      { id: 2, name: 'Английский', imgSrc: 'https://flagcdn.com/gb.svg' } as LanguageModel,
     ]);
   }
 
@@ -44,5 +45,10 @@ export class LanguagePageComponent {
 
   saveLanguage(model: LanguageModel) {
     this.languageCards$ = this.getLanguageCards();
+  }
+
+
+  navigateToWordPage(id: number) {
+    this.router.navigate(['/word-page', id]);
   }
 }
