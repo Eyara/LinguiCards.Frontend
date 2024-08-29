@@ -1,0 +1,6 @@
+<button [style.backgroundColor]="backgroundColor" [style.width]="width" [style.height]="height" class="minimalistic-button">
+    {{ name ? name : '' }}
+    @if (icon) {
+        <mat-icon class="large-icon">{{ icon }}</mat-icon>
+    }
+</button>

@@ -1,6 +1,18 @@
 <mat-card class="minimalistic-card" [style.width]="width" [style.height]="height">
-  <mat-card-content class="language-container">
-    <span class="language-name">{{name}}</span>
-    <img [src]="imgSrc" class="language-flag" width="30">
+  <mat-card-content class="content-container">
+    <ng-container *ngIf="!editMode; else editTemplate">
+      <span class="item-name">{{name}}</span>
+      <img [src]="imgSrc" class="item-icon" width="30">
+    </ng-container>
+    <ng-template #editTemplate>
+      <div class="edit-content">
+        <mat-select [(ngModel)]="selectedItem" placeholder="Выберите">
+          <mat-option *ngFor="let item of countries" [value]="item">
+            {{item.name}}
+          </mat-option>
+        </mat-select>
+        <button mat-fab color="primary" class="save-button" (click)="saveItem()" [disabled]="!selectedItem.id">Сохранить</button>
+      </div>
+    </ng-template>
   </mat-card-content>
 </mat-card>

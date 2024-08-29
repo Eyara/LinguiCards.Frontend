@@ -1,4 +1,8 @@
 <div class="language-card-container">
-    <card [name]="'Русский'" [imgSrc]="'https://flagcdn.com/ru.svg'"></card>
-    <card [name]="'Английский'" [imgSrc]="'https://flagcdn.com/gb.svg'"></card>
-  </div>
+  <ng-container *ngFor="let languageCard of (languageCards$ | async)">
+    <card [name]="languageCard.name" [imgSrc]="languageCard.imgSrc" [editMode]="languageCard.editMode"
+      [countries]="languageCard.countries" (saveEmit)="saveLanguage($event)">
+    </card>
+  </ng-container>
+  <app-button icon="add" (click)="addLanguage()"></app-button>
+</div>
