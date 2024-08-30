@@ -27,6 +27,8 @@ export class CardComponent {
   @Input() name: string = '';
   @Input() editMode: boolean = false;
   @Input() countries: CountryModel[] = [];
+  @Input() backgroundGreen: boolean = false;
+  @Input() backgroundRed: boolean = false;
   @Output() saveEmit: EventEmitter<LanguageModel> = new EventEmitter<LanguageModel>();
   selectedItem: CountryModel = {} as CountryModel;
 

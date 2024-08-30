@@ -1,4 +1,5 @@
-<mat-card class="minimalistic-card" [style.width]="width" [style.height]="height">
+<mat-card class="minimalistic-card" [style.width]="width" [style.height]="height" 
+  [ngClass]="{'back-green': backgroundGreen, 'back-red': backgroundRed}">
   <mat-card-content class="content-container">
     <ng-container *ngIf="!editMode; else editTemplate">
       <span class="item-name">{{name}}</span>

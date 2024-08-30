@@ -9,5 +9,9 @@ export const routes: Routes = [
   {
     path: 'word-page/:id',
     loadComponent: () => import('./modules/word/word-page/word-page.component').then(m => m.WordPageComponent)
+  },
+  {
+    path: 'training-page/:languageId',
+    loadComponent: () => import('./modules/training/training-page/training-page.component').then(m => m.TrainingPageComponent)
   }
 ];

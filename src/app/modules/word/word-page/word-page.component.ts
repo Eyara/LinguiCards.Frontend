@@ -1,20 +1,24 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { WordModel } from '../../../models/word.model';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'word-page',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatIconModule],
+  imports: [CommonModule, MatTableModule, MatIconModule, RouterModule],
   templateUrl: './word-page.component.html',
-  styleUrl: './word-page.component.scss'
+  styleUrl: './word-page.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WordPageComponent {
+  languageId: number;
   words: WordModel[] = [];
 
-  constructor() {
+  constructor(private route: ActivatedRoute) {
+    this.languageId = this.route.snapshot.params['id'];
     this.words = this.getWords();
   }
 

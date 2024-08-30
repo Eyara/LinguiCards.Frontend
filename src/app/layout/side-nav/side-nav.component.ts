@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -13,7 +13,8 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [MatSidenavModule, MatToolbarModule, MatListModule, MatIconModule, RouterOutlet, RouterModule],
   templateUrl: './side-nav.component.html',
-  styleUrls: ['./side-nav.component.scss']
+  styleUrls: ['./side-nav.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SideNavComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
