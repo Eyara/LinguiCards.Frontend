@@ -1,0 +1,5 @@
+@import '../shared/login.shared.scss';
+
+.sign-in-container {
+  @extend .auth-container;
+}

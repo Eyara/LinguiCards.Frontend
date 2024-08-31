@@ -1,0 +1,53 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+
+  mat-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+
+    mat-card-header {
+      margin-bottom: 20px;
+    }
+
+    mat-card-content {
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        mat-form-field {
+          width: 100%;
+        }
+
+        button[type="submit"] {
+          margin-top: 16px;
+        }
+      }
+    }
+
+    mat-card-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
+
+      p {
+        margin: 0;
+        
+        a {
+          color: #1976d2;
+          text-decoration: none;
+          cursor: pointer;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}
