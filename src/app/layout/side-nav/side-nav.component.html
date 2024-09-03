@@ -1,10 +1,13 @@
 <mat-sidenav-container>
     <mat-sidenav #sidenav mode="side">
-        <mat-nav-list>
+        <mat-nav-list *ngIf="loginService.isAuthenticated() | async">
             <a mat-list-item [routerLink]="['/language-page']" routerLinkActive="active">Главная</a>
+            <a mat-list-item (click)="logout()">Выход</a>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content class="content-padding">
         <router-outlet></router-outlet>
     </mat-sidenav-content>
 </mat-sidenav-container>
+
+<ng-container *ngIf="toggle$ | async"></ng-container>

@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { WordModel } from '../../../models/word.model';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
