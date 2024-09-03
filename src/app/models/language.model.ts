@@ -1,9 +1,22 @@
-import { CountryModel } from "./country.model";
+export interface LanguageCreateModel {
+    name: string;
+    languageDictionaryId: number;
+}
 
-export interface LanguageModel {
+export interface LanguageResponseModel extends LanguageCreateModel {
     id: number;
     name: string;
-    imgSrc: string;
-    editMode: boolean;
-    countries: CountryModel[];
+    url: string;
+    languageDictionaryId: number;
 }
+
+export interface LanguageModel extends LanguageResponseModel {
+    editMode: boolean;
+}
+
+export interface DictionarExtendedyModel {
+    id: number;
+    name: string;
+    src: string;
+}
+

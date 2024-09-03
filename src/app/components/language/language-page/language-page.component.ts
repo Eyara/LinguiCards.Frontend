@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CardComponent } from '../../../shared/card/card.component';
 import { ButtonComponent } from "../../../shared/button/button.component";
-import { map, Observable, of } from 'rxjs';
-import { LanguageModel } from '../../../models/language.model';
+import { map, Observable, of, tap } from 'rxjs';
+import { DictionarExtendedyModel, LanguageCreateModel, LanguageModel } from '../../../models/language.model';
 import { CommonModule } from '@angular/common';
-import { CountryModel } from '../../../models/country.model';
 import { Router, RouterModule } from '@angular/router';
+import { LanguageService } from '../language.service';
 
 @Component({
   selector: 'language-page',
@@ -17,18 +17,12 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class LanguagePageComponent {
   languageCards$: Observable<LanguageModel[]>;
+  languageDictionary$: Observable<DictionarExtendedyModel[]>;
+  languageCreateObservable$: Observable<boolean> | undefined;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private languageService: LanguageService) {
     this.languageCards$ = this.getLanguageCards();
-  }
-
-  getLanguageCards(): Observable<LanguageModel[]> {
-    // this.languageCards$ = this.languageService.getLanguageCards();
-
-    return of([
-      { id: 1, name: 'Русский', imgSrc: 'https://flagcdn.com/ru.svg' } as LanguageModel,
-      { id: 2, name: 'Английский', imgSrc: 'https://flagcdn.com/gb.svg' } as LanguageModel,
-    ]);
+    this.languageDictionary$ = this.languageService.getDictionary();
   }
 
   addLanguage() {
@@ -36,15 +30,23 @@ export class LanguagePageComponent {
       .pipe(
         map(cards => [...cards,
         {
-          editMode: true,
-          countries: [{ id: 1, name: 'Русский', flagSrc: 'https://flagcdn.com/ru.svg' } as CountryModel, { id: 2, name: 'Английский', flagSrc: 'https://flagcdn.com/gb.svg' } as CountryModel]
+          editMode: true
         } as LanguageModel])
       );
   }
 
+  saveLanguage(model: LanguageCreateModel) {
+    this.languageCreateObservable$ = this.languageService.createLanguage(model)
+      .pipe(
+        tap(() => this.languageCards$ = this.getLanguageCards())
+      );
+  }
 
-  saveLanguage(model: LanguageModel) {
-    this.languageCards$ = this.getLanguageCards();
+  getLanguageCards(): Observable<LanguageModel[]> {
+    return this.languageService.getAllLanguages()
+      .pipe(
+        map(languages => languages.map(language => ({ ...language, editMode: false })))
+      );
   }
 
 

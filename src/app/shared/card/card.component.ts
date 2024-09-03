@@ -6,9 +6,8 @@ import { MatFormField, MatSelect } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CountryModel } from '../../models/country.model';
 import { MatIcon } from '@angular/material/icon';
-import { LanguageModel } from '../../models/language.model';
+import { DictionarExtendedyModel, LanguageCreateModel, LanguageModel } from '../../models/language.model';
 
 @Component({
   selector: 'card',
@@ -19,23 +18,22 @@ import { LanguageModel } from '../../models/language.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-// TODO: make this component more generic
 export class CardComponent {
   @Input() width: string = SIZES.CARD_WIDTH;
   @Input() height: string = SIZES.CARD_HEIGHT;
   @Input() imgSrc: string = '';
   @Input() name: string = '';
   @Input() editMode: boolean = false;
-  @Input() countries: CountryModel[] = [];
+  @Input() dictionaries: DictionarExtendedyModel[] | null = null;
   @Input() backgroundGreen: boolean = false;
   @Input() backgroundRed: boolean = false;
-  @Output() saveEmit: EventEmitter<LanguageModel> = new EventEmitter<LanguageModel>();
-  selectedItem: CountryModel = {} as CountryModel;
+  @Output() saveEmit: EventEmitter<LanguageCreateModel> = new EventEmitter<LanguageCreateModel>();
+  selectedItem: DictionarExtendedyModel = {} as DictionarExtendedyModel;
 
   saveItem() {
     this.saveEmit.emit({
       name: this.selectedItem.name,
-      imgSrc: this.selectedItem.flagSrc
-    } as LanguageModel);
+      languageDictionaryId: this.selectedItem.id
+    } as LanguageCreateModel);
   }
 }

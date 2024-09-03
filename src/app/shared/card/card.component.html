@@ -8,7 +8,7 @@
     <ng-template #editTemplate>
       <div class="edit-content">
         <mat-select [(ngModel)]="selectedItem" placeholder="Выберите">
-          <mat-option *ngFor="let item of countries" [value]="item">
+          <mat-option *ngFor="let item of dictionaries" [value]="item">
             {{item.name}}
           </mat-option>
         </mat-select>
