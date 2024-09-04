@@ -2,6 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { WordModel } from '../../../models/word.model';
 import { CardComponent } from "../../../shared/card/card.component";
 import { CommonModule } from '@angular/common';
+import { forkJoin, map, mergeMap, Observable, of, switchMap, take, tap, withLatestFrom } from 'rxjs';
+import { WordService } from '../../word/word.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'training-page',
@@ -12,52 +15,71 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrainingPageComponent {
-  currentWord: WordModel;
-  trainingWords: WordModel[] = [];
-  options: string[] = [];
+  currentWord$: Observable<WordModel>;
+  trainingWords$: Observable<WordModel[]>;
+  options$: Observable<string[]>;
+  continueTraining$: Observable<[WordModel[], WordModel, boolean]> = of();
+
   selectedOption: string = '';
+  languageId: number;
   isTrainingFinished: boolean = false;
 
-  constructor() {
-    this.trainingWords = this.getWords();
-    this.currentWord = this.trainingWords[0];
-    this.options = this.getRandomOptions();
+  constructor(private route: ActivatedRoute, private wordService: WordService) {
+    this.languageId = this.route.snapshot.params['languageId'];
+    this.trainingWords$ = this.getWords();
+    this.currentWord$ = this.trainingWords$.pipe(map(words => words[0]));
+    this.options$ = this.getRandomOptions();
   }
 
-  getWords(): WordModel[] {
-    return [
-      { id: 1, name: 'Hello', translatedName: 'Привет', languageId: 1, learnedPercent: 25 },
-      { id: 2, name: 'World', translatedName: 'Мир', languageId: 1, learnedPercent: 60 },
-      { id: 3, name: 'Mom', translatedName: 'Мама', languageId: 1, learnedPercent: 25 },
-      { id: 4, name: 'Dad', translatedName: 'Папа', languageId: 1, learnedPercent: 25 },
-      { id: 5, name: 'Cat', translatedName: 'Кошка', languageId: 1, learnedPercent: 25 },
-      { id: 6, name: 'Dog', translatedName: 'Собака', languageId: 1, learnedPercent: 25 }
-    ];
+  getWords(): Observable<WordModel[]> {
+    return this.wordService.getUnlearnedWords(this.languageId);
   }
 
-  getRandomOptions(): string[] {
-    const allOptions = this.trainingWords.map(word => word.translatedName);
-    const shuffled = allOptions.filter(option => option !== this.currentWord.translatedName)
-      .sort(() => 0.5 - Math.random());
-    const randomOptions = shuffled.slice(0, 3);
-    randomOptions.push(this.currentWord.translatedName);
-    return randomOptions.sort(() => 0.5 - Math.random());
+  getRandomOptions(): Observable<string[]> {
+    return this.currentWord$.pipe(
+      switchMap(currentWord => {
+        return this.trainingWords$.pipe(
+          map(words => {
+            const allOptions = words.map(word => word.translatedName);
+            const shuffled = allOptions.filter(option => option !== currentWord.translatedName)
+              .sort(() => 0.5 - Math.random());
+            const randomOptions = shuffled.slice(0, 3);
+            randomOptions.push(currentWord.translatedName);
+            return randomOptions.sort(() => 0.5 - Math.random());
+          })
+        );
+      }),
+      map(obs => obs)
+    );
   }
 
   selectOption(option: string) {
     this.selectedOption = option;
   }
-
+  
   continueTraining() {
-    const currentIndex = this.trainingWords.indexOf(this.currentWord);
-    const nextIndex = (currentIndex + 1) % this.trainingWords.length;
+    this.continueTraining$ = this.trainingWords$.pipe(
+      take(1),
+      withLatestFrom(this.currentWord$),
+      mergeMap(([words, currentWord]) => {
+        return forkJoin([
+          of(words),
+          of(currentWord),
+          this.wordService.updateLearnLevel(currentWord.id, currentWord.translatedName === this.selectedOption)
+        ]);
+      }),
+      tap(([words, currentWord, updatedLearnLevel]) => {
+        const currentIndex = words.findIndex((word: WordModel) => word.id === currentWord.id);
+        const nextIndex = (currentIndex + 1) % words.length;
 
-    if (nextIndex === 0) {
-      this.isTrainingFinished = true;
-    } else {
-      this.currentWord = this.trainingWords[nextIndex];
-      this.selectedOption = '';
-      this.options = this.getRandomOptions();
-    }
+        if (nextIndex === 0) {
+          this.isTrainingFinished = true;
+        } else {
+          this.currentWord$ = of(words[nextIndex]);
+          this.selectedOption = '';
+          this.options$ = this.getRandomOptions();
+        }
+      })
+    );
   }
 }

@@ -21,8 +21,13 @@ export class WordService {
     return this.http.post<boolean>(`${this.apiUrl}/Language/${languageId}/Word`, word);
   }
 
-  updateLearnLevel(updateData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/Word/updateLearnLevel`, updateData);
+  updateLearnLevel(wordId: number, wasSuccessful: boolean): Observable<boolean> {
+    return this.http.put<boolean>(`${this.apiUrl}/Word/updateLearnLevel`, null, {
+      params: {
+        wordId: wordId.toString(),
+        wasSuccessful: wasSuccessful.toString()
+      }
+    });
   }
 
   deleteWord(wordId: number): Observable<any> {

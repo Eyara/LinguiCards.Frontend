@@ -9,13 +9,13 @@
     </ng-template>
     <ng-template #activeTraining>
         <div class="training-page__current-word">
-            <card [name]="currentWord.name" [height]="'150px'" [width]="'350px'"></card>
+            <card [name]="(currentWord$ | async)?.name ?? ''" [height]="'150px'" [width]="'350px'"></card>
         </div>
         <div class="training-page__options">
-            <div *ngFor="let option of options" class="training-page__option">
+            <div *ngFor="let option of (options$ | async)" class="training-page__option">
                 <card [name]="option"
-                    [backgroundGreen]="option === currentWord.translatedName && selectedOption === option"
-                    [backgroundRed]="option !== currentWord.translatedName && selectedOption === option"
+                    [backgroundGreen]="option === (currentWord$ | async)?.translatedName && selectedOption === option"
+                    [backgroundRed]="option !== (currentWord$ | async)?.translatedName && selectedOption === option"
                     (click)="selectOption(option)"></card>
             </div>
         </div>
@@ -26,3 +26,6 @@
         </div>
     </ng-template>
 </div>
+
+<ng-container *ngIf="continueTraining$ | async">
+</ng-container>
