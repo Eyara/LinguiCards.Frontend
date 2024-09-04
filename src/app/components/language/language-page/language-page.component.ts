@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CardComponent } from '../../../shared/card/card.component';
-import { ButtonComponent } from "../../../shared/button/button.component";
-import { map, Observable, of, tap } from 'rxjs';
-import { DictionarExtendedyModel, LanguageCreateModel, LanguageModel } from '../../../models/language.model';
-import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { LanguageService } from '../language.service';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {CardComponent} from '../../../shared/card/card.component';
+import {ButtonComponent} from "../../../shared/button/button.component";
+import {map, Observable, tap} from 'rxjs';
+import {DictionarExtendedyModel, LanguageCreateModel, LanguageModel} from '../../../models/language.model';
+import {CommonModule} from '@angular/common';
+import {Router, RouterModule} from '@angular/router';
+import {LanguageService} from '../language.service';
 
 @Component({
   selector: 'language-page',
@@ -29,9 +29,9 @@ export class LanguagePageComponent {
     this.languageCards$ = this.languageCards$
       .pipe(
         map(cards => [...cards,
-        {
-          editMode: true
-        } as LanguageModel])
+          {
+            editMode: true
+          } as LanguageModel])
       );
   }
 
@@ -45,7 +45,7 @@ export class LanguagePageComponent {
   getLanguageCards(): Observable<LanguageModel[]> {
     return this.languageService.getAllLanguages()
       .pipe(
-        map(languages => languages.map(language => ({ ...language, editMode: false })))
+        map(languages => languages.map(language => ({...language, editMode: false})))
       );
   }
 

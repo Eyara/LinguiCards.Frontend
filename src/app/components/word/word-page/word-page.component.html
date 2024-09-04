@@ -1,60 +1,62 @@
 <table mat-table [dataSource]="(words$ | async) || []" class="mat-elevation-z8 word-table">
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Слово </th>
-        <td mat-cell *matCellDef="let word">
-            <ng-container *ngIf="!word.isEditMode; else editMode">
-                {{word.name}}
-            </ng-container>
-            <ng-template #editMode>
-                <mat-form-field class="word-edit-form" appearance="outline">
-                    <input matInput [(ngModel)]="word.name" />
-                </mat-form-field>
-            </ng-template>
-        </td>
-    </ng-container>
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Слово</th>
+    <td mat-cell *matCellDef="let word">
+      <ng-container *ngIf="!word.isEditMode; else editMode">
+        {{word.name}}
+      </ng-container>
+      <ng-template #editMode>
+        <mat-form-field class="word-edit-form" appearance="outline">
+          <input matInput [(ngModel)]="word.name"/>
+        </mat-form-field>
+      </ng-template>
+    </td>
+  </ng-container>
 
-    <ng-container matColumnDef="translatedName">
-        <th mat-header-cell *matHeaderCellDef> Перевод </th>
-        <td mat-cell *matCellDef="let word">
-            <ng-container *ngIf="!word.isEditMode; else editMode">
-                {{word.translatedName}}
-            </ng-container>
-            <ng-template #editMode>
-                <mat-form-field class="word-edit-form" appearance="outline">
-                    <input matInput [(ngModel)]="word.translatedName" />
-                </mat-form-field>
-            </ng-template>
-        </td>
-    </ng-container>
+  <ng-container matColumnDef="translatedName">
+    <th mat-header-cell *matHeaderCellDef> Перевод</th>
+    <td mat-cell *matCellDef="let word">
+      <ng-container *ngIf="!word.isEditMode; else editMode">
+        {{word.translatedName}}
+      </ng-container>
+      <ng-template #editMode>
+        <mat-form-field class="word-edit-form" appearance="outline">
+          <input matInput [(ngModel)]="word.translatedName"/>
+        </mat-form-field>
+      </ng-template>
+    </td>
+  </ng-container>
 
-    <ng-container matColumnDef="learnedPercent">
-        <th mat-header-cell *matHeaderCellDef> Выучено на </th>
-        <td mat-cell *matCellDef="let word"> {{word.learnedPercent}}% </td>
-    </ng-container>
+  <ng-container matColumnDef="learnedPercent">
+    <th mat-header-cell *matHeaderCellDef> Выучено на</th>
+    <td mat-cell *matCellDef="let word"> {{word.learnedPercent}}%</td>
+  </ng-container>
 
-    <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef> Действие </th>
-        <td mat-cell *matCellDef="let word">
-            <ng-container *ngIf="word.isEditMode; else deleteMode">
-                <button mat-icon-button class="action-table-button" (click)="createWord(word)">
-                    <mat-icon>check</mat-icon>
-                </button>
-            </ng-container>
-            <ng-template #deleteMode>
-                <button mat-icon-button class="action-table-button" (click)="deleteWord(word)">
-                    <mat-icon>close</mat-icon>
-                </button>
-            </ng-template>
-        </td>
-    </ng-container>
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef> Действие</th>
+    <td mat-cell *matCellDef="let word">
+      <ng-container *ngIf="word.isEditMode; else deleteMode">
+        <button mat-icon-button class="action-table-button" (click)="createWord(word)">
+          <mat-icon>check</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #deleteMode>
+        <button mat-icon-button class="action-table-button" (click)="deleteWord(word)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </ng-template>
+    </td>
+  </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['name', 'translatedName', 'learnedPercent', 'action']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['name', 'translatedName', 'learnedPercent', 'action'];"></tr>
+  <tr mat-header-row *matHeaderRowDef="['name', 'translatedName', 'learnedPercent', 'action']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['name', 'translatedName', 'learnedPercent', 'action'];"></tr>
 </table>
 <div class="action-buttons">
-    <button mat-flat-button color="primary" class="action-button" (click)="addWord()">Добавить слово</button>
-    <button mat-flat-button class="action-button highlight-button" [routerLink]="['/training-page', languageId]">Начать тренировку</button>
+  <button mat-flat-button color="primary" class="action-button" (click)="addWord()">Добавить слово</button>
+  <button mat-flat-button class="action-button highlight-button" [routerLink]="['/training-page', languageId]">Начать
+    тренировку
+  </button>
 </div>
 
 <ng-container *ngIf="wordCommandObservable$ | async">

@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatCard, MatCardContent } from '@angular/material/card';
-import { SIZES } from '../../styles';
-import { MatOption } from '@angular/material/core';
-import { MatFormField, MatSelect } from '@angular/material/select';
-import { MatInput } from '@angular/material/input';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatIcon } from '@angular/material/icon';
-import { DictionarExtendedyModel, LanguageCreateModel, LanguageModel } from '../../models/language.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {SIZES} from '../../styles';
+import {MatOption} from '@angular/material/core';
+import {MatFormField, MatSelect} from '@angular/material/select';
+import {MatInput} from '@angular/material/input';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {MatIcon} from '@angular/material/icon';
+import {DictionarExtendedyModel, LanguageCreateModel} from '../../models/language.model';
 
 @Component({
   selector: 'card',

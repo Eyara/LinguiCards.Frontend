@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { WordModel } from '../../../models/word.model';
-import { CardComponent } from "../../../shared/card/card.component";
-import { CommonModule } from '@angular/common';
-import { forkJoin, map, mergeMap, Observable, of, switchMap, take, tap, withLatestFrom } from 'rxjs';
-import { WordService } from '../../word/word.service';
-import { ActivatedRoute } from '@angular/router';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {WordModel} from '../../../models/word.model';
+import {CardComponent} from "../../../shared/card/card.component";
+import {CommonModule} from '@angular/common';
+import {forkJoin, map, mergeMap, Observable, of, switchMap, take, tap, withLatestFrom} from 'rxjs';
+import {WordService} from '../../word/word.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'training-page',
@@ -56,7 +56,7 @@ export class TrainingPageComponent {
   selectOption(option: string) {
     this.selectedOption = option;
   }
-  
+
   continueTraining() {
     this.continueTraining$ = this.trainingWords$.pipe(
       take(1),

@@ -1,8 +1,8 @@
 <div class="language-card-container">
   <ng-container *ngFor="let languageCard of (languageCards$ | async)">
     <card [name]="languageCard.name" [imgSrc]="languageCard.url" [editMode]="languageCard.editMode"
-      [dictionaries]="languageDictionary$ | async" (saveEmit)="saveLanguage($event)"
-      (click)="navigateToWordPage(languageCard.id)">
+          [dictionaries]="languageDictionary$ | async" (saveEmit)="saveLanguage($event)"
+          (click)="navigateToWordPage(languageCard.id)">
     </card>
   </ng-container>
   <app-button icon="add" (click)="addLanguage()"></app-button>

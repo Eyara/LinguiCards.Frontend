@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { COLORS, SIZES } from '../../styles';
-import { MatIconModule } from '@angular/material/icon';
+import {Component, Input} from '@angular/core';
+import {COLORS, SIZES} from '../../styles';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-button',

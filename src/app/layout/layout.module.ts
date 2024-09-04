@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { SideNavComponent } from './side-nav/side-nav.component';
-import { HeaderComponent } from './header/header.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterModule} from '@angular/router';
+import {SideNavComponent} from './side-nav/side-nav.component';
+import {HeaderComponent} from './header/header.component';
 
 @NgModule({
   declarations: [],
@@ -17,4 +17,5 @@ import { HeaderComponent } from './header/header.component';
     HeaderComponent
   ]
 })
-export class LayoutModule { }
+export class LayoutModule {
+}

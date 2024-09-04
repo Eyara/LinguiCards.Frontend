@@ -1,7 +1,7 @@
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { LoginService } from '../components/login/login.service';
-import { map, take } from 'rxjs/operators';
+import {inject} from '@angular/core';
+import {Router} from '@angular/router';
+import {LoginService} from '../components/login/login.service';
+import {map, take} from 'rxjs/operators';
 
 export const authGuard = () => {
   const loginService = inject(LoginService);

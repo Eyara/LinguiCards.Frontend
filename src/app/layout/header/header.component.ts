@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { SideNavService } from '../side-nav/side-nav.service';
+import {Component} from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {SideNavService} from '../side-nav/side-nav.service';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +11,8 @@ import { SideNavService } from '../side-nav/side-nav.service';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  constructor(private sidenavService: SideNavService) {}
+  constructor(private sidenavService: SideNavService) {
+  }
 
   toggleSidenav() {
     this.sidenavService.toggle();

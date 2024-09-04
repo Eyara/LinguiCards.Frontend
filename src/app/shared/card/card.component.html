@@ -1,5 +1,5 @@
-<mat-card class="minimalistic-card" [style.width]="width" [style.height]="height" 
-  [ngClass]="{'back-green': backgroundGreen, 'back-red': backgroundRed}">
+<mat-card class="minimalistic-card" [style.width]="width" [style.height]="height"
+          [ngClass]="{'back-green': backgroundGreen, 'back-red': backgroundRed}">
   <mat-card-content class="content-container">
     <ng-container *ngIf="!editMode; else editTemplate">
       <span class="item-name">{{name}}</span>
@@ -12,7 +12,9 @@
             {{item.name}}
           </mat-option>
         </mat-select>
-        <button mat-fab color="primary" class="save-button" (click)="saveItem()" [disabled]="!selectedItem.id">Сохранить</button>
+        <button mat-fab color="primary" class="save-button" (click)="saveItem()" [disabled]="!selectedItem.id">
+          Сохранить
+        </button>
       </div>
     </ng-template>
   </mat-card-content>

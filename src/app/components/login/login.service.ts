@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
 
 interface User {
   username: string;
@@ -16,12 +16,13 @@ export class LoginService {
   private authStatusSubject = new BehaviorSubject<boolean>(this.hasToken());
   public authStatus$ = this.authStatusSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   signIn(user: User): Observable<boolean> {
     return this.http.post(`${this.apiUrl}/user/login`, user, {
       responseType: 'text',
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
     }).pipe(
       tap(token => this.setToken(token)),
       map(() => true)
@@ -31,7 +32,7 @@ export class LoginService {
   signUp(user: User): Observable<boolean> {
     return this.http.post(`${this.apiUrl}/user/register`, user, {
       responseType: 'text',
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
     }).pipe(
       tap(token => this.setToken(token)),
       map(() => true)

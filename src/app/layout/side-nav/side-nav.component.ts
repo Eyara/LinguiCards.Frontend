@@ -1,14 +1,13 @@
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenav } from '@angular/material/sidenav';
-import { SideNavService } from './side-nav.service';
-import { Observable, map, switchMap } from 'rxjs';
-import { Router, RouterModule, RouterOutlet } from '@angular/router';
-import { LoginService } from '../../components/login/login.service';
-import { CommonModule } from '@angular/common';
+import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
+import {MatListModule} from '@angular/material/list';
+import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {SideNavService} from './side-nav.service';
+import {map, Observable, switchMap} from 'rxjs';
+import {Router, RouterModule, RouterOutlet} from '@angular/router';
+import {LoginService} from '../../components/login/login.service';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'side-nav',

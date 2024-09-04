@@ -1,22 +1,22 @@
 export interface LanguageCreateModel {
-    name: string;
-    languageDictionaryId: number;
+  name: string;
+  languageDictionaryId: number;
 }
 
 export interface LanguageResponseModel extends LanguageCreateModel {
-    id: number;
-    name: string;
-    url: string;
-    languageDictionaryId: number;
+  id: number;
+  name: string;
+  url: string;
+  languageDictionaryId: number;
 }
 
 export interface LanguageModel extends LanguageResponseModel {
-    editMode: boolean;
+  editMode: boolean;
 }
 
 export interface DictionarExtendedyModel {
-    id: number;
-    name: string;
-    src: string;
+  id: number;
+  name: string;
+  src: string;
 }
 

@@ -1,30 +1,31 @@
 <div class="training-page">
-    <ng-container *ngIf="isTrainingFinished; then finishedTraining; else activeTraining">
-    </ng-container>
-    <ng-template #finishedTraining>
-        <div class="training-page__finished-training">
-            <h1>Тренировка на сегодня закончена</h1>
-            <p>Вы можете продолжить ее завтра</p>
-        </div>
-    </ng-template>
-    <ng-template #activeTraining>
-        <div class="training-page__current-word">
-            <card [name]="(currentWord$ | async)?.name ?? ''" [height]="'150px'" [width]="'350px'"></card>
-        </div>
-        <div class="training-page__options">
-            <div *ngFor="let option of (options$ | async)" class="training-page__option">
-                <card [name]="option"
-                    [backgroundGreen]="option === (currentWord$ | async)?.translatedName && selectedOption === option"
-                    [backgroundRed]="option !== (currentWord$ | async)?.translatedName && selectedOption === option"
-                    (click)="selectOption(option)"></card>
-            </div>
-        </div>
-        <div class="action-buttons">
-            <button mat-flat-button color="primary" class="action-button">Закончить</button>
-            <button mat-flat-button class="action-button highlight-button" (click)="continueTraining()"
-                [disabled]="!selectedOption">Продолжить</button>
-        </div>
-    </ng-template>
+  <ng-container *ngIf="isTrainingFinished; then finishedTraining; else activeTraining">
+  </ng-container>
+  <ng-template #finishedTraining>
+    <div class="training-page__finished-training">
+      <h1>Тренировка на сегодня закончена</h1>
+      <p>Вы можете продолжить ее завтра</p>
+    </div>
+  </ng-template>
+  <ng-template #activeTraining>
+    <div class="training-page__current-word">
+      <card [name]="(currentWord$ | async)?.name ?? ''" [height]="'150px'" [width]="'350px'"></card>
+    </div>
+    <div class="training-page__options">
+      <div *ngFor="let option of (options$ | async)" class="training-page__option">
+        <card [name]="option"
+              [backgroundGreen]="option === (currentWord$ | async)?.translatedName && selectedOption === option"
+              [backgroundRed]="option !== (currentWord$ | async)?.translatedName && selectedOption === option"
+              (click)="selectOption(option)"></card>
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button mat-flat-button color="primary" class="action-button">Закончить</button>
+      <button mat-flat-button class="action-button highlight-button" (click)="continueTraining()"
+              [disabled]="!selectedOption">Продолжить
+      </button>
+    </div>
+  </ng-template>
 </div>
 
 <ng-container *ngIf="continueTraining$ | async">

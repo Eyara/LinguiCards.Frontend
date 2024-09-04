@@ -1,27 +1,27 @@
 mat-toolbar {
-    .spacer {
-        flex: 1 1 auto;
-    }
+  .spacer {
+    flex: 1 1 auto;
+  }
 }
 
 .main {
-    padding: 20px;
+  padding: 20px;
 }
 
 .content {
-    max-width: 800px;
-    margin: 0 auto;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .app-title {
-    margin-left: 16px;
+  margin-left: 16px;
 }
 
 .menu-icon {
-    border: none;
-    background-color: transparent;
+  border: none;
+  background-color: transparent;
 
-    &:hover {
-        background-color: #e0e0e0;
-    }
+  &:hover {
+    background-color: #e0e0e0;
+  }
 }

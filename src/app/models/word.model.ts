@@ -1,14 +1,14 @@
 export interface WordViewModel extends WordModel {
-    isEditMode: boolean;
+  isEditMode: boolean;
 }
 
 export interface WordModel extends WordCreateModel {
-    id: number;
-    learnedPercent: number;
-    languageId: number;
+  id: number;
+  learnedPercent: number;
+  languageId: number;
 }
 
 export interface WordCreateModel {
-    name: string;
-    translatedName: string;
+  name: string;
+  translatedName: string;
 }

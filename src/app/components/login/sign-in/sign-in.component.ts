@@ -1,14 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { LoginService } from '../login.service';
-import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { MatButtonModule } from '@angular/material/button';
-import { MatError, MatFormFieldModule } from '@angular/material/form-field';
-import { MatCardModule, MatCardActions } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
+import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {LoginService} from '../login.service';
+import {Observable, of} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
+import {MatButtonModule} from '@angular/material/button';
+import {MatError, MatFormFieldModule} from '@angular/material/form-field';
+import {MatCardActions, MatCardModule} from '@angular/material/card';
+import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'sign-in',

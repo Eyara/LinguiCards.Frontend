@@ -1,14 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardActions, MatCardModule } from '@angular/material/card';
-import { MatError, MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
-import { LoginService } from '../login.service';
-import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardActions, MatCardModule} from '@angular/material/card';
+import {MatError, MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {Router} from '@angular/router';
+import {LoginService} from '../login.service';
+import {Observable, of} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'sign-up',
@@ -37,7 +37,7 @@ export class SignUpComponent {
       username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
-    }, { validator: this.passwordMatchValidator });
+    }, {validator: this.passwordMatchValidator});
   }
 
   onSubmit() {
@@ -60,7 +60,7 @@ export class SignUpComponent {
     const password = form.get('password');
     const confirmPassword = form.get('confirmPassword');
     return password && confirmPassword && password.value === confirmPassword.value
-      ? null : { passwordMismatch: true };
+      ? null : {passwordMismatch: true};
   }
 
 }

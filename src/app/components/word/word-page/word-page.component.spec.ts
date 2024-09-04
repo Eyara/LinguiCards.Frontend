@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { WordPageComponent } from './word-page.component';
+import {WordPageComponent} from './word-page.component';
 
 describe('WordPageComponent', () => {
   let component: WordPageComponent;
@@ -10,7 +10,7 @@ describe('WordPageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [WordPageComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(WordPageComponent);
     component = fixture.componentInstance;
