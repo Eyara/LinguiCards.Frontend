@@ -68,7 +68,7 @@ export class TrainingPageComponent {
           this.wordService.updateLearnLevel(currentWord.id, currentWord.translatedName === this.selectedOption)
         ]);
       }),
-      tap(([words, currentWord, updatedLearnLevel]) => {
+      tap(([words, currentWord]) => {
         const currentIndex = words.findIndex((word: WordModel) => word.id === currentWord.id);
         const nextIndex = (currentIndex + 1) % words.length;
 

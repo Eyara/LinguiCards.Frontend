@@ -31,8 +31,8 @@ export class WordService {
     });
   }
 
-  deleteWord(wordId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/Word`,
+  deleteWord(wordId: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiUrl}/Word`,
       {
         params: {id: wordId.toString()}
       }

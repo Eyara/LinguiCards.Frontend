@@ -24,7 +24,7 @@ export class LanguageService {
     return this.http.post<boolean>(`${this.apiUrl}`, languageData);
   }
 
-  deleteLanguage(languageId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}`, {params: {id: languageId}});
+  deleteLanguage(languageId: string): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiUrl}`, {params: {id: languageId}});
   }
 }
