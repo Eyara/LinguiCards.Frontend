@@ -50,4 +50,33 @@
       }
     }
   }
+
+  @media (max-width: 1200px) {
+    mat-card {
+      width: 90%;
+      padding: 10px;
+
+      mat-card-header {
+        margin-bottom: 10px;
+      }
+
+      mat-card-content {
+        form {
+          gap: 8px;
+
+          mat-form-field {
+            width: 100%;
+          }
+
+          button[type="submit"] {
+            margin-top: 12px;
+          }
+        }
+      }
+
+      mat-card-actions {
+        margin-top: 12px;
+      }
+    }
+  }
 }
