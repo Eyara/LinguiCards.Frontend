@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import {LoginService} from '../login.service';
 import {Observable, of} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
@@ -21,7 +21,8 @@ import {MatInputModule} from '@angular/material/input';
     MatButtonModule,
     MatCardModule,
     MatError,
-    MatCardActions
+    MatCardActions,
+    RouterModule
   ],
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.scss', '../shared/login.shared.scss'],

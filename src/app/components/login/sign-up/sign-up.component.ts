@@ -5,7 +5,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardActions, MatCardModule} from '@angular/material/card';
 import {MatError, MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {Router} from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import {LoginService} from '../login.service';
 import {Observable, of} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
@@ -21,7 +21,8 @@ import {catchError, tap} from 'rxjs/operators';
     MatButtonModule,
     MatCardModule,
     MatError,
-    MatCardActions
+    MatCardActions,
+    RouterModule
   ],
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss', '../shared/login.shared.scss'],
