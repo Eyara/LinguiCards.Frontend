@@ -1,5 +1,11 @@
 export interface WordViewModel extends WordModel {
-  isEditMode: boolean;
+  editMode: EditMode;
+}
+
+export enum EditMode {
+  None,
+  Update,
+  Create
 }
 
 export interface WordModel extends WordCreateModel {

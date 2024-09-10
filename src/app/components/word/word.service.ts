@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {WordCreateModel, WordModel} from '../../models/word.model';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { WordCreateModel, WordModel } from '../../models/word.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +14,22 @@ export class WordService {
 
   getUnlearnedWords(languageId: number): Observable<WordModel[]> {
     return this.http.get<WordModel[]>(`${this.apiUrl}/Word/unlearned`, {
-      params: {languageId: languageId.toString()}
+      params: { languageId: languageId.toString() }
     });
   }
 
   addWordToLanguage(languageId: number, word: WordCreateModel): Observable<boolean> {
     return this.http.post<boolean>(`${this.apiUrl}/Language/${languageId}/Word`, word);
+  }
+
+  updateWord(wordId: number, name: string, translationName: string): Observable<boolean> {
+    return this.http.put<boolean>(`${this.apiUrl}/Word`, null, {
+      params: {
+        wordId: wordId.toString(),
+        name: name,
+        translationName: translationName
+      }
+    });
   }
 
   updateLearnLevel(wordId: number, wasSuccessful: boolean): Observable<boolean> {
@@ -34,7 +44,7 @@ export class WordService {
   deleteWord(wordId: number): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/Word`,
       {
-        params: {id: wordId.toString()}
+        params: { id: wordId.toString() }
       }
     );
   }
