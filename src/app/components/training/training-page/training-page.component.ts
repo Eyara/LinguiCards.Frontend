@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { WordModel } from '../../../models/word.model';
 import { CardComponent } from "../../../shared/card/card.component";
 import { CommonModule } from '@angular/common';
-import { combineLatest, forkJoin, map, mergeMap, Observable, of, startWith, switchMap, take, tap, withLatestFrom, BehaviorSubject, filter } from 'rxjs';
+import { combineLatest, forkJoin, map, mergeMap, Observable, of, startWith, switchMap, take, tap, withLatestFrom, BehaviorSubject, filter, Subscription } from 'rxjs';
 import { WordService } from '../../word/word.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -21,6 +21,7 @@ export class TrainingPageComponent {
   trainingWords$: Observable<WordModel[]>;
   private currentWordSubject = new BehaviorSubject<WordModel | null>(null);
   currentWord$: Observable<WordModel> = this.currentWordSubject.asObservable().pipe(filter(word => word !== null));
+  traningWordsSubscription$: Subscription = Subscription.EMPTY;
 
   continueTraining$: Observable<[WordModel[], WordModel, boolean]> = of();
 
@@ -31,16 +32,21 @@ export class TrainingPageComponent {
     this.languageId = this.route.snapshot.params['languageId'];
     this.trainingWords$ = this.getWords();
 
-    this.trainingWords$.pipe(
+    this.traningWordsSubscription$ = this.trainingWords$.pipe(
       take(1),
       tap(words => {
         if (words.length > 0) {
-          this.currentWordSubject.next(words[0]); // Set the first word as current
+          this.currentWordSubject.next(words[0]);
         }
-      })
+      }),
+      map(() => true)
     ).subscribe();
 
     this.options$ = this.getRandomOptions();
+  }
+
+  ngOnDestroy(): void {
+    this.traningWordsSubscription$.unsubscribe();
   }
 
   getWords(): Observable<WordModel[]> {
