@@ -21,7 +21,7 @@ export class TrainingPageComponent {
   trainingWords$: Observable<WordModel[]>;
   private currentWordSubject = new BehaviorSubject<WordModel | null>(null);
   currentWord$: Observable<WordModel> = this.currentWordSubject.asObservable().pipe(filter(word => word !== null));
-  traningWordsSubscription$: Subscription = Subscription.EMPTY;
+  trainingWordsSubscription$: Subscription = Subscription.EMPTY;
 
   continueTraining$: Observable<[WordModel[], WordModel, boolean]> = of();
 
@@ -32,7 +32,7 @@ export class TrainingPageComponent {
     this.languageId = this.route.snapshot.params['languageId'];
     this.trainingWords$ = this.getWords();
 
-    this.traningWordsSubscription$ = this.trainingWords$.pipe(
+    this.trainingWordsSubscription$ = this.trainingWords$.pipe(
       take(1),
       tap(words => {
         if (words.length > 0) {
@@ -46,7 +46,7 @@ export class TrainingPageComponent {
   }
 
   ngOnDestroy(): void {
-    this.traningWordsSubscription$.unsubscribe();
+    this.trainingWordsSubscription$.unsubscribe();
   }
 
   getWords(): Observable<WordModel[]> {
