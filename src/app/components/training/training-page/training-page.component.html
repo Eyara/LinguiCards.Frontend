@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="action-buttons">
-      <button mat-flat-button color="primary" class="action-button">Закончить</button>
+      <button mat-flat-button color="primary" class="action-button" (click)="finishTraining()">Закончить</button>
       <button mat-flat-button class="action-button highlight-button" (click)="continueTraining()"
         [disabled]="!(selectedOption$ | async)">Продолжить
       </button>

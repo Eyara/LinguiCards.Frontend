@@ -101,12 +101,16 @@ export class TrainingPageComponent {
         if (nextIndex === 0) {
           this.isTrainingFinished = true;
         } else {
-          this.currentWordSubject.next(words[nextIndex]); // Update current word
+          this.currentWordSubject.next(words[nextIndex]);
           this.selectedOption$ = of('');
           this.options$ = this.getRandomOptions();
         }
       })
     );
+  }
+
+  finishTraining() {
+    this.isTrainingFinished = true;
   }
 
   getBackgroundColor$(option: string): Observable<string> {
