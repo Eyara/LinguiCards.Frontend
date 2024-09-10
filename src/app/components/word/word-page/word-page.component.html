@@ -7,7 +7,7 @@
         {{word.name}}
       </ng-container>
       <ng-template #editMode>
-        <mat-form-field class="word-edit-form" appearance="outline">
+        <mat-form-field class="word-edit-form">
           <input matInput [(ngModel)]="word.name"/>
         </mat-form-field>
       </ng-template>
@@ -21,7 +21,7 @@
         {{word.translatedName}}
       </ng-container>
       <ng-template #editMode>
-        <mat-form-field class="word-edit-form" appearance="outline">
+        <mat-form-field class="word-edit-form">
           <input matInput [(ngModel)]="word.translatedName"/>
         </mat-form-field>
       </ng-template>

@@ -79,4 +79,31 @@
       }
     }
   }
+
+  @media (max-width: 366px) {
+    padding: 5px;
+
+    mat-card {
+      width: 100%;
+      padding: 10px;
+
+      mat-card-header {
+        margin-bottom: 10px;
+      }
+
+      mat-card-content {
+        form {
+          gap: 8px;
+
+          button[type="submit"] {
+            margin-top: 8px;
+          }
+        }
+      }
+
+      mat-card-actions {
+        margin-top: 8px;
+      }
+    }
+  }
 }

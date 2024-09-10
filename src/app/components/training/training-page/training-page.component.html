@@ -9,20 +9,19 @@
   </ng-template>
   <ng-template #activeTraining>
     <div class="training-page__current-word">
-      <card [name]="(currentWord$ | async)?.name ?? ''" [height]="'150px'" [width]="'350px'"></card>
+      <card [name]="(currentWord$ | async)?.name ?? ''" customClassName="minimalistic-card__medium"></card>
     </div>
     <div class="training-page__options">
       <div *ngFor="let option of (options$ | async)" class="training-page__option">
-        <card [name]="option"
-              [backgroundGreen]="option === (currentWord$ | async)?.translatedName && selectedOption === option"
-              [backgroundRed]="option !== (currentWord$ | async)?.translatedName && selectedOption === option"
-              (click)="selectOption(option)"></card>
+        <card [name]="option" (click)="selectOption(option)"
+          [customClassName]="'minimalistic-card__small ' + (getBackgroundColor$(option) | async)">
+        </card>
       </div>
     </div>
     <div class="action-buttons">
       <button mat-flat-button color="primary" class="action-button">Закончить</button>
       <button mat-flat-button class="action-button highlight-button" (click)="continueTraining()"
-              [disabled]="!selectedOption">Продолжить
+        [disabled]="!(selectedOption$ | async)">Продолжить
       </button>
     </div>
   </ng-template>

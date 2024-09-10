@@ -19,6 +19,7 @@ import {DictionarExtendedyModel, LanguageCreateModel} from '../../models/languag
 })
 
 export class CardComponent {
+  @Input() customClassName: string = '';
   @Input() width: string = SIZES.CARD_WIDTH;
   @Input() height: string = SIZES.CARD_HEIGHT;
   @Input() imgSrc: string = '';

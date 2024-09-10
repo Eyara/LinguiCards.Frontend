@@ -14,4 +14,22 @@ mat-sidenav {
 
 .content-padding {
   padding: 20px 60px;
+
+  @media (max-width: 500px) {
+    padding: 0;
+  }
+}
+
+@media (max-width: 366px) {
+  :host {
+    flex-direction: column;
+  }
+
+  mat-sidenav {
+    width: 100%;
+  }
+
+  .content-padding {
+    padding: 10px;
+  }
 }

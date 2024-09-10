@@ -6,15 +6,33 @@
 
   @media (max-width: 1280px) {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 500px) {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 366px) {
+    padding: 10px;
   }
 }
 
-.language-card-container > * {
+.language-card-container>* {
   margin-right: 50px;
 
-  @media (max-width: 1280px) {
+  @media (max-width: 500px) {
     margin-right: 0;
-    margin-bottom: 20px;
+  }
+}
+
+:host  {
+  @media (max-width: 500px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
