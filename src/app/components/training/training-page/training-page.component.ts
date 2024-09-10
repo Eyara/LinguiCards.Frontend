@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { WordModel } from '../../../models/word.model';
 import { CardComponent } from "../../../shared/card/card.component";
 import { CommonModule } from '@angular/common';
-import { combineLatest, forkJoin, map, mergeMap, Observable, of, startWith, switchMap, take, tap, withLatestFrom, BehaviorSubject, filter, Subscription } from 'rxjs';
+import { forkJoin, map, mergeMap, Observable, of, startWith, switchMap, take, tap, withLatestFrom, BehaviorSubject, filter, Subscription } from 'rxjs';
 import { WordService } from '../../word/word.service';
 import { ActivatedRoute } from '@angular/router';
 
