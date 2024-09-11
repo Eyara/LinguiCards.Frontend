@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button class="menu-icon" (click)="toggleSidenav()">
+  <button *ngIf="isAuthenticated$ | async" mat-icon-button class="menu-icon" (click)="toggleSidenav()">
     <mat-icon>menu</mat-icon>
   </button>
   <span class="app-title">Lingui Cards</span>

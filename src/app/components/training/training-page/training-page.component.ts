@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { WordModel } from '../../../models/word.model';
 import { CardComponent } from "../../../shared/card/card.component";
 import { CommonModule } from '@angular/common';
-import { forkJoin, map, mergeMap, Observable, of, startWith, switchMap, take, tap, withLatestFrom, BehaviorSubject, filter, Subscription } from 'rxjs';
+import { forkJoin, map, mergeMap, Observable, of, startWith, switchMap, take, tap, withLatestFrom, BehaviorSubject, filter, Subscription, delay } from 'rxjs';
 import { WordService } from '../../word/word.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -73,6 +73,7 @@ export class TrainingPageComponent {
 
   selectOption(option: string) {
     this.selectedOption$ = of(option);
+    this.continueTraining();
   }
 
   continueTraining() {
@@ -93,8 +94,8 @@ export class TrainingPageComponent {
           this.wordService.updateLearnLevel(currentWord.id, currentWord.translatedName === selectedOption)
         ]);
       }),
+      delay(300),
       tap(([words, currentWord]) => {
-        console.log(words, currentWord);
         const currentIndex = words.findIndex((word: WordModel) => word.id === currentWord.id);
         const nextIndex = (currentIndex + 1) % words.length;
 

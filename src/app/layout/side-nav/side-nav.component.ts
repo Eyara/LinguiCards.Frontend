@@ -35,8 +35,12 @@ export class SideNavComponent {
   }
 
   logout() {
-    this.sidenav.toggle();
+    this.closeAfterClick();
     this.loginService.logout();
     this.router.navigate(['/sign-in']);
+  }
+
+  closeAfterClick() {
+    this.sidenav.close(); 
   }
 }
