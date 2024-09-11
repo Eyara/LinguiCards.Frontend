@@ -33,7 +33,7 @@ export class WordPageComponent {
   }
 
   getWords(): Observable<WordViewModel[]> {
-    return this.wordService.getUnlearnedWords(this.languageId).pipe(
+    return this.wordService.getAllWords(this.languageId).pipe(
       map(words => words.map(word => ({ ...word, editMode: EditMode.None })))
     );
   }

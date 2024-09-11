@@ -12,6 +12,10 @@ export class WordService {
   constructor(private http: HttpClient) {
   }
 
+  getAllWords(languageId: number): Observable<WordModel[]> {
+    return this.http.get<WordModel[]>(`${this.apiUrl}/Language/${languageId}/Word`);
+  }
+
   getUnlearnedWords(languageId: number): Observable<WordModel[]> {
     return this.http.get<WordModel[]>(`${this.apiUrl}/Word/unlearned`, {
       params: { languageId: languageId.toString() }
