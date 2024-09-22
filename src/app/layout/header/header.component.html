@@ -3,4 +3,18 @@
     <mat-icon>menu</mat-icon>
   </button>
   <span class="app-title">Lingui Cards</span>
+  <div class="language-selector" *ngIf="isAuthenticated$ | async">
+    <mat-select [(value)]="selectedLanguage.id" (selectionChange)="changeLanguage($event)">
+      <mat-select-trigger>
+        <div class="language-option">
+          <img [src]="selectedLanguage.url" alt="{{ selectedLanguage.name }}" class="language-flag" width="20" height="20">
+        </div>
+      </mat-select-trigger>
+      <mat-option *ngFor="let language of languages$ | async" [value]="language.id">
+        <div class="language-option">
+          <img [src]="language.url" alt="{{ language.name }}" class="language-flag" width="20" height="20">
+        </div>
+      </mat-option>
+    </mat-select>
+  </div>
 </mat-toolbar>

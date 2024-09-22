@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { EditMode, WordCreateModel, WordModel, WordViewModel } from '../../../models/word.model';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { map, Observable, of, tap } from 'rxjs';
+import { map, Observable, of, tap, switchMap } from 'rxjs';
 import { WordService } from '../word.service';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,14 +18,21 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './word-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WordPageComponent {
-  languageId: number;
+export class WordPageComponent implements OnInit {
+  languageId!: number;
   words$: Observable<WordViewModel[]> = of([]);
   wordCommandObservable$: Observable<boolean> | undefined;
 
   constructor(private route: ActivatedRoute, private wordService: WordService) {
-    this.languageId = this.route.snapshot.params['id'];
-    this.words$ = this.getWords();
+  }
+
+  ngOnInit(): void {
+    this.words$ = this.route.paramMap.pipe(
+      tap(params => {
+        this.languageId = +params.get('id')!;
+      }),
+      switchMap(() => this.getWords())
+    );
   }
 
   isEditMode(word: WordViewModel): boolean {
