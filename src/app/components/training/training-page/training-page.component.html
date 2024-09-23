@@ -9,10 +9,12 @@
   </ng-template>
   <ng-template #activeTraining>
     <div class="training-page__current-word">
-      <card [name]="(currentWord$ | async)?.name ?? ''" customClassName="minimalistic-card__medium"></card>
+      <card
+        [name]="((currentWord$ | async)?.type === 0 ? (currentWord$ | async)?.name : (currentWord$ | async)?.translatedName) ?? ''"
+        customClassName="minimalistic-card__medium"></card>
     </div>
     <div class="training-page__options">
-      <div *ngFor="let option of (options$ | async)" class="training-page__option">
+      <div *ngFor="let option of options" class="training-page__option">
         <card [name]="option" (click)="selectOption(option)"
           [customClassName]="'minimalistic-card__small ' + (getBackgroundColor$(option) | async)">
         </card>

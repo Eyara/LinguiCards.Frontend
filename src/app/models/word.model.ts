@@ -8,6 +8,18 @@ export enum EditMode {
   Create
 }
 
+export enum TrainingType {
+  FromLearnLanguage,
+  FromNativeLanguage,
+  Writing,
+  Sentence
+}
+
+export interface WordTrainingModel extends WordModel {
+  type: TrainingType;
+  options: string[];
+}
+
 export interface WordModel extends WordCreateModel {
   id: number;
   learnedPercent: number;

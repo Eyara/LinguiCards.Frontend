@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { WordModel } from '../../../models/word.model';
+import { TrainingType, WordModel, WordTrainingModel } from '../../../models/word.model';
 import { CardComponent } from "../../../shared/card/card.component";
 import { CommonModule } from '@angular/common';
-import { forkJoin, map, mergeMap, Observable, of, startWith, switchMap, take, tap, withLatestFrom, BehaviorSubject, filter, Subscription, delay } from 'rxjs';
+import { forkJoin, map, mergeMap, Observable, of, startWith, switchMap, take, tap, withLatestFrom, BehaviorSubject, filter, Subscription, delay, shareReplay } from 'rxjs';
 import { WordService } from '../../word/word.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -15,60 +15,30 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrainingPageComponent {
-  options$: Observable<string[]>;
   selectedOption$: Observable<string> = of('');
+  trainingWords$: Observable<WordTrainingModel[]>;
+  options: string[] = [];
+  currentWord$: Observable<WordTrainingModel>;
 
-  trainingWords$: Observable<WordModel[]>;
-  private currentWordSubject = new BehaviorSubject<WordModel | null>(null);
-  currentWord$: Observable<WordModel> = this.currentWordSubject.asObservable().pipe(filter(word => word !== null));
-  trainingWordsSubscription$: Subscription = Subscription.EMPTY;
-
-  continueTraining$: Observable<[WordModel[], WordModel, boolean]> = of();
+  continueTraining$: Observable<[WordTrainingModel[], WordTrainingModel, boolean]> = of();
 
   languageId: number;
   isTrainingFinished: boolean = false;
 
   constructor(private route: ActivatedRoute, private wordService: WordService) {
     this.languageId = this.route.snapshot.params['languageId'];
-    this.trainingWords$ = this.getWords();
-
-    this.trainingWordsSubscription$ = this.trainingWords$.pipe(
-      take(1),
-      tap(words => {
-        if (words.length > 0) {
-          this.currentWordSubject.next(words[0]);
-        }
-      }),
-      map(() => true)
-    ).subscribe();
-
-    this.options$ = this.getRandomOptions();
-  }
-
-  ngOnDestroy(): void {
-    this.trainingWordsSubscription$.unsubscribe();
-  }
-
-  getWords(): Observable<WordModel[]> {
-    return this.wordService.getUnlearnedWords(this.languageId);
-  }
-
-  getRandomOptions(): Observable<string[]> {
-    return this.currentWord$.pipe(
-      switchMap(currentWord => {
-        return this.trainingWords$.pipe(
-          map(words => {
-            const allOptions = words.map(word => word.translatedName);
-            const shuffled = allOptions.filter(option => option !== currentWord?.translatedName)
-              .sort(() => 0.5 - Math.random());
-            const randomOptions = shuffled.slice(0, 3);
-            randomOptions.push(currentWord?.translatedName);
-            return randomOptions.sort(() => 0.5 - Math.random());
-          })
-        );
-      }),
-      map(obs => obs)
+    this.trainingWords$ = this.getWords().pipe(
+      shareReplay(1)
     );
+    this.currentWord$ = this.trainingWords$.pipe(
+      take(1),
+      map(words => words[0]),
+      tap(word => this.options = word.options)
+    );
+  }
+
+  getWords(): Observable<WordTrainingModel[]> {
+    return this.wordService.getUnlearnedWords(this.languageId);
   }
 
   selectOption(option: string) {
@@ -91,7 +61,9 @@ export class TrainingPageComponent {
         return forkJoin([
           of(words),
           of(currentWord),
-          this.wordService.updateLearnLevel(currentWord.id, currentWord.translatedName === selectedOption)
+          this.wordService.updateLearnLevel(
+            currentWord.id,
+            currentWord.type === TrainingType.FromLearnLanguage ? currentWord.translatedName === selectedOption : currentWord.name === selectedOption)
         ]);
       }),
       delay(300),
@@ -102,9 +74,9 @@ export class TrainingPageComponent {
         if (nextIndex === 0) {
           this.isTrainingFinished = true;
         } else {
-          this.currentWordSubject.next(words[nextIndex]);
           this.selectedOption$ = of('');
-          this.options$ = this.getRandomOptions();
+          this.currentWord$ = of(words[nextIndex]);
+          this.options = words[nextIndex].options;
         }
       })
     );
@@ -121,7 +93,9 @@ export class TrainingPageComponent {
       map(([selectedOption, currentWord]) => {
         if (currentWord && currentWord.translatedName) {
           if (selectedOption === option) {
-            return currentWord.translatedName === selectedOption ? 'background-green' : 'background-red';
+            const isCorrect = (currentWord.type === TrainingType.FromLearnLanguage && currentWord.translatedName === selectedOption) ||
+                              (currentWord.type !== TrainingType.FromLearnLanguage && currentWord.name === selectedOption);
+            return isCorrect ? 'background-green' : 'background-red';
           }
         }
         return '';

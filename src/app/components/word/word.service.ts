@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { WordCreateModel, WordModel } from '../../models/word.model';
+import { WordCreateModel, WordModel, WordTrainingModel } from '../../models/word.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +16,8 @@ export class WordService {
     return this.http.get<WordModel[]>(`${this.apiUrl}/Language/${languageId}/Word`);
   }
 
-  getUnlearnedWords(languageId: number): Observable<WordModel[]> {
-    return this.http.get<WordModel[]>(`${this.apiUrl}/Word/unlearned`, {
+  getUnlearnedWords(languageId: number): Observable<WordTrainingModel[]> {
+    return this.http.get<WordTrainingModel[]>(`${this.apiUrl}/Word/unlearned`, {
       params: { languageId: languageId.toString() }
     });
   }
