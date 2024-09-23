@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { combineLatest, map, Observable, Subscription } from 'rxjs';
+import { combineLatest, map, Observable, shareReplay, Subscription } from 'rxjs';
 import { SelectedLanguageService } from '../../components/language/selected-language.service';
 import { LanguageModel } from '../../models/language.model';
 import { LanguageService } from '../../components/language/language.service';
@@ -40,6 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) { }
   ngOnInit() {
     this.languages$ = this.languageService.getAllLanguages().pipe(
+      shareReplay(1),
       map(languages => languages.map(language => ({ ...language, editMode: false })))
     );
 

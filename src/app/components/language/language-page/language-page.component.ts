@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CardComponent} from '../../../shared/card/card.component';
 import {ButtonComponent} from "../../../shared/button/button.component";
-import {map, Observable, tap} from 'rxjs';
+import {map, Observable, shareReplay, tap} from 'rxjs';
 import {DictionarExtendedyModel, LanguageCreateModel, LanguageModel} from '../../../models/language.model';
 import {CommonModule} from '@angular/common';
 import {Router, RouterModule} from '@angular/router';
@@ -22,7 +22,9 @@ export class LanguagePageComponent {
 
   constructor(private router: Router, private languageService: LanguageService) {
     this.languageCards$ = this.getLanguageCards();
-    this.languageDictionary$ = this.languageService.getDictionary();
+    this.languageDictionary$ = this.languageService.getDictionary().pipe(
+      shareReplay(1)
+    );
   }
 
   addLanguage() {
@@ -45,6 +47,7 @@ export class LanguagePageComponent {
   getLanguageCards(): Observable<LanguageModel[]> {
     return this.languageService.getAllLanguages()
       .pipe(
+        shareReplay(1),
         map(languages => languages.map(language => ({...language, editMode: false})))
       );
   }
