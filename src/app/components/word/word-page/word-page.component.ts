@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { map, Observable, of, tap, switchMap, shareReplay, startWith } from 'rxjs';
+import { map, Observable, of, tap, shareReplay } from 'rxjs';
 import { WordService } from '../word.service';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';

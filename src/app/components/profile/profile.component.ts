@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { UserInfoService } from './profile.service';
 import { map, Observable, shareReplay } from 'rxjs';
-import { LanguageStats, UserInfo } from '../../models/userInfo.model';
+import { LanguageStats } from '../../models/userInfo.model';
 
 @Component({
   selector: 'app-profile',
