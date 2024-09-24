@@ -1,7 +1,8 @@
 <mat-sidenav-container>
   <mat-sidenav #sidenav mode="over">
     <mat-nav-list *ngIf="loginService.isAuthenticated() | async">
-      <a mat-list-item [routerLink]="['/language-page']" routerLinkActive="active" (click)="closeAfterClick()">Главная</a>
+      <a mat-list-item [routerLink]="['/profile']" routerLinkActive="active" (click)="closeAfterClick()">Профиль</a>
+      <a mat-list-item [routerLink]="['/language-page']" routerLinkActive="active" (click)="closeAfterClick()">Мои языки</a>
       <a mat-list-item (click)="logout()">Выход</a>
     </mat-nav-list>
   </mat-sidenav>

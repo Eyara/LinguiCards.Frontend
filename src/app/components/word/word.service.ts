@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WordCreateModel, WordModel, WordTrainingModel } from '../../models/word.model';
+import { Paginated } from '../../models/paginated.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,10 @@ export class WordService {
   constructor(private http: HttpClient) {
   }
 
-  getAllWords(languageId: number): Observable<WordModel[]> {
-    return this.http.get<WordModel[]>(`${this.apiUrl}/Language/${languageId}/Word`);
+  getAllPaginatedWords(languageId: number, page: number, pageSize: number): Observable<Paginated<WordModel[]>> {
+    return this.http.get<Paginated<WordModel[]>>(`${this.apiUrl}/Language/${languageId}/Word`, {
+      params: { pageNumber: page.toString(), pageSize: pageSize.toString() }
+    });
   }
 
   getUnlearnedWords(languageId: number): Observable<WordTrainingModel[]> {

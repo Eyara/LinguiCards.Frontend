@@ -1,48 +1,56 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { EditMode, WordCreateModel, WordModel, WordViewModel } from '../../../models/word.model';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { map, Observable, of, tap, switchMap, shareReplay } from 'rxjs';
+import { map, Observable, of, tap, switchMap, shareReplay, startWith } from 'rxjs';
 import { WordService } from '../word.service';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'word-page',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatIconModule, RouterModule, FormsModule, MatFormFieldModule, MatInputModule],
+  imports: [CommonModule, MatTableModule, MatIconModule, RouterModule, FormsModule, MatFormFieldModule, MatInputModule, MatPaginatorModule],
   templateUrl: './word-page.component.html',
   styleUrl: './word-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WordPageComponent implements OnInit {
+export class WordPageComponent implements OnInit, AfterViewInit {
   languageId!: number;
+  totalCount: number = 0;
+  pageIndex: number = 0;
+
   words$: Observable<WordViewModel[]> = of([]);
   wordCommandObservable$: Observable<boolean> | undefined;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private route: ActivatedRoute, private wordService: WordService) {
-  }
+  constructor(private route: ActivatedRoute, private wordService: WordService) {}
 
   ngOnInit(): void {
-    this.words$ = this.route.paramMap.pipe(
+    this.route.paramMap.pipe(
       tap(params => {
         this.languageId = +params.get('id')!;
-      }),
-      switchMap(() => this.getWords())
-    );
+      })
+    ).subscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize);
   }
 
   isEditMode(word: WordViewModel): boolean {
     return word.editMode === EditMode.Update || word.editMode === EditMode.Create;
   }
 
-  getWords(): Observable<WordViewModel[]> {
-    return this.wordService.getAllWords(this.languageId).pipe(
+  getWords(pageIndex: number, pageSize: number): Observable<WordViewModel[]> {
+    return this.wordService.getAllPaginatedWords(this.languageId, pageIndex + 1, pageSize).pipe(
       shareReplay(1),
-      map(words => words.map(word => ({ ...word, editMode: EditMode.None })))
+      tap(response => this.totalCount = response.totalCount),
+      map(response => response.items.map(word => ({ ...word, editMode: EditMode.None } as unknown as WordViewModel)))
     );
   }
 
@@ -79,7 +87,7 @@ export class WordPageComponent implements OnInit {
     this.wordCommandObservable$ = this.wordService.addWordToLanguage(this.languageId, createModel)
       .pipe(
         tap(() =>
-          this.words$ = this.getWords())
+          this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize))
       )
   }
 
@@ -87,7 +95,7 @@ export class WordPageComponent implements OnInit {
     this.wordCommandObservable$ = this.wordService.updateWord(model.id, model.name, model.translatedName)
       .pipe(
         tap(() =>
-          this.words$ = this.getWords())
+          this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize))
       );
   }
 
@@ -95,7 +103,12 @@ export class WordPageComponent implements OnInit {
     this.wordCommandObservable$ = this.wordService.deleteWord(word.id)
       .pipe(
         tap(() =>
-          this.words$ = this.getWords())
+          this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize))
       )
+  }
+
+  handlePageEvent(e: PageEvent) {
+    this.pageIndex = e.pageIndex;
+    this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize);
   }
 }

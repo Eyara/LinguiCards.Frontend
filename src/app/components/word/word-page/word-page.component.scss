@@ -1,7 +1,12 @@
+.word-page-container {
+  overflow-y: auto;
+}
+
 .word-table {
   width: 100%;
   margin-bottom: 30px;
   table-layout: fixed;
+  overflow: hidden;
 }
 
 .word-table td {

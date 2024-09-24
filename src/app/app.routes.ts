@@ -2,7 +2,12 @@ import {Routes} from '@angular/router';
 import {authGuard} from './guards/auth,guard';
 
 export const routes: Routes = [
-  {path: '', redirectTo: '/language-page', pathMatch: 'full'},
+  {path: '', redirectTo: '/profile', pathMatch: 'full'},
+  {
+    path: 'profile',
+    loadComponent: () => import('./components/profile/profile.component').then(m => m.ProfileComponent),
+    canActivate: [authGuard]
+  },
   {
     path: 'language-page',
     loadComponent: () => import('./components/language/language-page/language-page.component').then(m => m.LanguagePageComponent),

@@ -1,0 +1,13 @@
+<div class="profile-container">
+  <h2>Статистика</h2>
+  <mat-divider></mat-divider>
+  
+  <div class="language-section" *ngFor="let language of (languages$ | async) || []">
+    <h3>{{ language.languageName }}</h3>
+    <p>Количество слов, добавленных Вами: {{ language.totalWords }}</p>
+    <p>Количество выученных слов: {{ language.learnedWords }}</p>
+    <p>Процент выученных слов: {{ language.learnedPercent }}%</p>
+    <p>Дней с тренировками: {{ language.totalTrainingDays }}</p>
+    <mat-divider></mat-divider>
+  </div>
+</div>
