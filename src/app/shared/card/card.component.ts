@@ -23,12 +23,15 @@ export class CardComponent {
   @Input() width: string = SIZES.CARD_WIDTH;
   @Input() height: string = SIZES.CARD_HEIGHT;
   @Input() imgSrc: string = '';
+  @Input() id: number = 0;
   @Input() name: string = '';
   @Input() editMode: boolean = false;
+  @Input() isShowActions: boolean = false;
   @Input() dictionaries: DictionarExtendedyModel[] | null = null;
   @Input() backgroundGreen: boolean = false;
   @Input() backgroundRed: boolean = false;
   @Output() saveEmit: EventEmitter<LanguageCreateModel> = new EventEmitter<LanguageCreateModel>();
+  @Output() closeEmit: EventEmitter<number> = new EventEmitter<number>();
   selectedItem: DictionarExtendedyModel = {} as DictionarExtendedyModel;
 
   saveItem() {
@@ -36,5 +39,10 @@ export class CardComponent {
       name: this.selectedItem.name,
       languageDictionaryId: this.selectedItem.id
     } as LanguageCreateModel);
+  }
+
+  emitClose(event: MouseEvent) {
+    event.stopPropagation();
+    this.closeEmit.emit(this.id);
   }
 }

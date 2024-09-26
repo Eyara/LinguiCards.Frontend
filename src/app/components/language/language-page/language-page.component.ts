@@ -1,11 +1,11 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {CardComponent} from '../../../shared/card/card.component';
-import {ButtonComponent} from "../../../shared/button/button.component";
-import {map, Observable, shareReplay, tap} from 'rxjs';
-import {DictionarExtendedyModel, LanguageCreateModel, LanguageModel} from '../../../models/language.model';
-import {CommonModule} from '@angular/common';
-import {Router, RouterModule} from '@angular/router';
-import {LanguageService} from '../language.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CardComponent } from '../../../shared/card/card.component';
+import { ButtonComponent } from "../../../shared/button/button.component";
+import { map, Observable, of, shareReplay, tap, switchMap, mergeMap, combineLatest } from 'rxjs';
+import { DictionarExtendedyModel, LanguageCreateModel, LanguageModel } from '../../../models/language.model';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { LanguageService } from '../language.service';
 
 @Component({
   selector: 'language-page',
@@ -19,21 +19,31 @@ export class LanguagePageComponent {
   languageCards$: Observable<LanguageModel[]>;
   languageDictionary$: Observable<DictionarExtendedyModel[]>;
   languageCreateObservable$: Observable<boolean> | undefined;
+  languageCloseObservable$: Observable<boolean> | undefined;
 
   constructor(private router: Router, private languageService: LanguageService) {
     this.languageCards$ = this.getLanguageCards();
-    this.languageDictionary$ = this.languageService.getDictionary().pipe(
-      shareReplay(1)
-    );
+    this.languageDictionary$ = combineLatest([
+      this.languageService.getDictionary().pipe(shareReplay(1)),
+      this.languageCards$
+    ])
+      .pipe(
+        map(([dictionary, languageCards]) =>
+          dictionary.filter(dict =>
+            languageCards.find(card => card.name !== dict.name)
+          ))
+      ),
+      shareReplay(1);
   }
 
   addLanguage() {
     this.languageCards$ = this.languageCards$
       .pipe(
         map(cards => [...cards,
-          {
-            editMode: true
-          } as LanguageModel])
+        {
+          id: 0,
+          editMode: true
+        } as LanguageModel])
       );
   }
 
@@ -48,12 +58,37 @@ export class LanguagePageComponent {
     return this.languageService.getAllLanguages()
       .pipe(
         shareReplay(1),
-        map(languages => languages.map(language => ({...language, editMode: false})))
+        map(languages => languages.map(language => ({ ...language, editMode: false })))
       );
   }
 
-
   navigateToWordPage(id: number) {
-    this.router.navigate(['/word-page', id]);
+    if (id) {
+      this.router.navigate(['/word-page', id]);
+    }
+  }
+
+  closeLanguage(id: number) {
+    this.languageCloseObservable$ = this.languageCards$
+      .pipe(
+        map(cards => {
+          const cardToRemove = cards.find(card => card.id === id);
+          const filteredCards = cards.filter(card => card.id !== id);
+          return { cardToRemove, filteredCards };
+        }),
+        switchMap(({ cardToRemove, filteredCards }) => {
+          if (!cardToRemove?.editMode && cardToRemove) {
+            return this.languageService.deleteLanguage(cardToRemove.id.toString()).pipe(
+              map(() => filteredCards)
+            );
+          } else {
+            return of(filteredCards);
+          }
+        }),
+        tap(updatedCards => {
+          this.languageCards$ = of(updatedCards);
+        }),
+        map(() => true)
+      );
   }
 }
