@@ -23,17 +23,7 @@ export class LanguagePageComponent {
 
   constructor(private router: Router, private languageService: LanguageService) {
     this.languageCards$ = this.getLanguageCards();
-    this.languageDictionary$ = combineLatest([
-      this.languageService.getDictionary().pipe(shareReplay(1)),
-      this.languageCards$
-    ])
-      .pipe(
-        map(([dictionary, languageCards]) =>
-          dictionary.filter(dict =>
-            languageCards.find(card => card.name !== dict.name)
-          ))
-      ),
-      shareReplay(1);
+    this.languageDictionary$ = this.getAvailableLanguages();
   }
 
   addLanguage() {
@@ -50,7 +40,10 @@ export class LanguagePageComponent {
   saveLanguage(model: LanguageCreateModel) {
     this.languageCreateObservable$ = this.languageService.createLanguage(model)
       .pipe(
-        tap(() => this.languageCards$ = this.getLanguageCards())
+        tap(() => {
+          this.languageCards$ = this.getLanguageCards()
+          this.languageDictionary$ = this.getAvailableLanguages();
+        })
       );
   }
 
@@ -59,6 +52,13 @@ export class LanguagePageComponent {
       .pipe(
         shareReplay(1),
         map(languages => languages.map(language => ({ ...language, editMode: false })))
+      );
+  }
+
+  getAvailableLanguages(): Observable<DictionarExtendedyModel[]> {
+    return this.languageService.getAvailableLanguages()
+      .pipe(
+        shareReplay(1),
       );
   }
 
@@ -87,6 +87,7 @@ export class LanguagePageComponent {
         }),
         tap(updatedCards => {
           this.languageCards$ = of(updatedCards);
+          this.languageDictionary$ = this.getAvailableLanguages();
         }),
         map(() => true)
       );

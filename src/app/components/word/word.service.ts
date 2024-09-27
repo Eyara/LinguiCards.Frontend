@@ -40,7 +40,7 @@ export class WordService {
   }
 
   updateLearnLevel(wordId: number, wasSuccessful: boolean): Observable<boolean> {
-    return this.http.put<boolean>(`${this.apiUrl}/Word/updateLearnLevel`, null, {
+    return this.http.patch<boolean>(`${this.apiUrl}/Word/updateLearnLevel`, null, {
       params: {
         wordId: wordId.toString(),
         wasSuccessful: wasSuccessful.toString()

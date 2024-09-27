@@ -16,6 +16,10 @@ export class LanguageService {
     return this.http.get<LanguageResponseModel[]>(`${this.apiUrl}/all`);
   }
 
+  getAvailableLanguages(): Observable<DictionarExtendedyModel[]> {
+    return this.http.get<DictionarExtendedyModel[]>(`${this.apiUrl}/available`);
+  }
+
   getDictionary(): Observable<DictionarExtendedyModel[]> {
     return this.http.get<DictionarExtendedyModel[]>(`${this.apiUrl}/dictionary`);
   }
