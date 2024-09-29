@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { combineLatest, map, Observable, shareReplay, Subscription } from 'rxjs';
+import { combineLatest, map, Observable, shareReplay, Subscription, tap } from 'rxjs';
 import { SelectedLanguageService } from '../../components/language/selected-language.service';
 import { LanguageModel } from '../../models/language.model';
 import { LanguageService } from '../../components/language/language.service';
@@ -27,6 +27,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     url: '',
     languageDictionaryId: 0
   };
+  selectedLanguage$: Observable<LanguageModel> | undefined;
   isAuthenticated$: Observable<boolean> | undefined;
   languages$: Observable<LanguageModel[]> | undefined;
   private languageSubscription: Subscription = new Subscription();
@@ -35,31 +36,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private languageService: LanguageService,
     private selectedLanguageService: SelectedLanguageService,
     private loginService: LoginService,
-    private sidenavService: SideNavService,
-    private router: Router
-  ) { }
+    private sidenavService: SideNavService
+  ) {
+    this.selectedLanguage$ = this.selectedLanguageService.selectedLanguage$
+      .pipe(
+        shareReplay(1),
+        tap(language => this.selectedLanguage = language)
+      );
+  }
+
   ngOnInit() {
     this.languages$ = this.languageService.getAllLanguages().pipe(
       shareReplay(1),
       map(languages => languages.map(language => ({ ...language, editMode: false })))
     );
-
-    this.languageSubscription.add(
-      combineLatest([
-        this.selectedLanguageService.selectedLanguage$,
-        this.languages$
-      ]).pipe(
-        map(([selected, languages]) => {
-          if (!selected || !languages.some(lang => lang.id === selected.id)) {
-            return languages[0];
-          }
-          return selected;
-        })
-      ).subscribe(language => {
-        this.selectedLanguage = language;
-      })
-    );
-
 
     this.isAuthenticated$ = this.loginService.isAuthenticated();
   }
@@ -67,13 +57,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   changeLanguage(event: any) {
     const newLanguageId = event.value;
     if (this.languages$) {
-      this.languages$.subscribe(languages => {
+      this.languageSubscription.add(this.languages$.subscribe(languages => {
         const newLanguage = languages.find(lang => lang.id === newLanguageId);
         if (newLanguage) {
           this.selectedLanguageService.setLanguage(newLanguage);
-          this.router.navigate(['/word-page', newLanguage.id]);
         }
-      });
+      }));
     }
   }
 

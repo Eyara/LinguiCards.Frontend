@@ -3,7 +3,7 @@
     <card [id]="languageCard.id" [name]="languageCard.name" [imgSrc]="languageCard.url" [editMode]="languageCard.editMode"
           [isShowActions]="true" [dictionaries]="languageDictionary$ | async"
           (saveEmit)="saveLanguage($event)" (closeEmit)="closeLanguage($event)"
-          (click)="navigateToWordPage(languageCard.id)" customClassName="minimalistic-card__medium">
+          (click)="navigateToWordPage(languageCard)" customClassName="minimalistic-card__medium">
     </card>
   </ng-container>
   <app-button *ngIf="(languageDictionary$ | async)?.length !== 0" icon="add" (click)="addLanguage()"></app-button>

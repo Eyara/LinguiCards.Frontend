@@ -10,13 +10,28 @@ export class SelectedLanguageService {
   private selectedLanguageSubject: BehaviorSubject<LanguageModel> = new BehaviorSubject<LanguageModel>(this.defaultLanguage);
   public selectedLanguage$: Observable<LanguageModel> = this.selectedLanguageSubject.asObservable();
 
-  constructor() { }
+  constructor() {
+    const storedLanguage = localStorage.getItem('selectedLanguage');
+    if (storedLanguage) {
+      this.selectedLanguageSubject.next(JSON.parse(storedLanguage));
+    }
+  }
 
   setLanguage(language: LanguageModel): void {
+    localStorage.setItem('selectedLanguage', JSON.stringify(language));
     this.selectedLanguageSubject.next(language);
   }
 
   getSelectedLanguage(): LanguageModel {
     return this.selectedLanguageSubject.value;
+  }
+
+  getSelectedLanguageSubject$(): BehaviorSubject<LanguageModel> {
+    return this.selectedLanguageSubject;
+  }
+
+  clear(): void {
+    localStorage.removeItem('selectedLanguage');
+    this.selectedLanguageSubject.next(this.defaultLanguage);
   }
 }

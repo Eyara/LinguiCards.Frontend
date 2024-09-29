@@ -6,6 +6,7 @@ import { DictionarExtendedyModel, LanguageCreateModel, LanguageModel } from '../
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { LanguageService } from '../language.service';
+import { SelectedLanguageService } from '../selected-language.service';
 
 @Component({
   selector: 'language-page',
@@ -21,7 +22,7 @@ export class LanguagePageComponent {
   languageCreateObservable$: Observable<boolean> | undefined;
   languageCloseObservable$: Observable<boolean> | undefined;
 
-  constructor(private router: Router, private languageService: LanguageService) {
+  constructor(private router: Router, private languageService: LanguageService, private selectedLanguageService: SelectedLanguageService) {
     this.languageCards$ = this.getLanguageCards();
     this.languageDictionary$ = this.getAvailableLanguages();
   }
@@ -62,9 +63,9 @@ export class LanguagePageComponent {
       );
   }
 
-  navigateToWordPage(id: number) {
-    if (id) {
-      this.router.navigate(['/word-page', id]);
+  navigateToWordPage(language: LanguageModel) {
+    if (language) {
+      this.selectedLanguageService.setLanguage(language);
     }
   }
 
