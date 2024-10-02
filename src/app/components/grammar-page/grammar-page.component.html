@@ -1,0 +1,15 @@
+<ng-container *ngIf="cribs$ | async as cribs">
+  <div class="grammar-cribs" *ngIf="cribs.length > 0; else noCribs">
+    <div class="crib-card" *ngFor="let crib of cribs">
+      <div class="crib-content" *ngFor="let innerCrib of crib.cribDescriptions">
+        <h3 class="crib-header">{{ innerCrib.header }}</h3>
+        <p class="crib-description">{{ innerCrib.description }}</p>
+      </div>
+    </div>
+  </div>
+  <ng-template #noCribs>
+    <div class="no-cribs-message">
+      <p>В данный момент нет доступных материалов по грамматике для этого языка.</p>
+    </div>
+  </ng-template>
+</ng-container>

@@ -1,0 +1,42 @@
+.grammar-cribs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.crib-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.crib-content {
+  margin-bottom: 15px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.crib-header {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.crib-description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.no-cribs-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #777;
+  padding: 20px;
+}
