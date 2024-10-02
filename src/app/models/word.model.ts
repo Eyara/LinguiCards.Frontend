@@ -11,7 +11,8 @@ export enum EditMode {
 export enum TrainingType {
   FromLearnLanguage,
   FromNativeLanguage,
-  Writing,
+  WritingFromLearnLanguage,
+  WritingFromNativeLanguage,
   Sentence
 }
 

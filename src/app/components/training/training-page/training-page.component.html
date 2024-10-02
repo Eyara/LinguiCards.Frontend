@@ -9,17 +9,27 @@
   </ng-template>
   <ng-template #activeTraining>
     <div class="training-page__current-word">
-      <card
-        [name]="((currentWord$ | async)?.type === 0 ? (currentWord$ | async)?.name : (currentWord$ | async)?.translatedName) ?? ''"
-        customClassName="minimalistic-card__medium"></card>
+      <card [name]="getCardName((currentWord$ | async) ?? null)" customClassName="minimalistic-card__medium"></card>
     </div>
-    <div class="training-page__options">
-      <div *ngFor="let option of options" class="training-page__option">
-        <card [name]="option" (click)="selectOption(option)"
-          [customClassName]="'minimalistic-card__small ' + (getBackgroundColor$(option) | async)">
-        </card>
+    <ng-container *ngIf="currentWord$ | async as currentWord">
+      <div *ngIf="needShowOptions(currentWord); else showInputBlock" class="training-page__options">
+        <div *ngFor="let option of options" class="training-page__option">
+          <card [name]="option" (click)="selectOption(option)"
+            [customClassName]="'minimalistic-card__small ' + (getBackgroundColor$(option) | async)">
+          </card>
+        </div>
       </div>
-    </div>
+      <ng-template #showInputBlock>
+        <div class="training-page__input-block">
+          <mat-form-field appearance="outline">
+            <input matInput [(ngModel)]="writtenTranslation">
+            <button matSuffix mat-icon-button aria-label="Clear" (click)="continueTraining()">
+              <mat-icon>send</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </ng-template>
+    </ng-container>
     <div class="action-buttons">
       <button mat-flat-button color="primary" class="action-button" (click)="finishTraining()">Закончить</button>
     </div>

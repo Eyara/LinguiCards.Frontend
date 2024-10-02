@@ -5,11 +5,16 @@ import { CommonModule } from '@angular/common';
 import { forkJoin, map, mergeMap, Observable, of, startWith, take, tap, withLatestFrom, delay, shareReplay } from 'rxjs';
 import { WordService } from '../../word/word.service';
 import { ActivatedRoute } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'training-page',
   standalone: true,
-  imports: [CommonModule, CardComponent],
+  imports: [CommonModule, CardComponent, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, FormsModule],
   templateUrl: './training-page.component.html',
   styleUrls: ['./training-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,6 +29,7 @@ export class TrainingPageComponent {
 
   languageId: number;
   isTrainingFinished: boolean = false;
+  writtenTranslation: string = '';
 
   constructor(private route: ActivatedRoute, private wordService: WordService) {
     this.languageId = this.route.snapshot.params['languageId'];
@@ -63,13 +69,15 @@ export class TrainingPageComponent {
           of(currentWord),
           this.wordService.updateLearnLevel(
             currentWord.id,
-            currentWord.type === TrainingType.FromLearnLanguage ? currentWord.translatedName === selectedOption : currentWord.name === selectedOption)
+            this.getResult(currentWord, selectedOption)
+          )
         ]);
       }),
       delay(300),
       tap(([words, currentWord]) => {
         const currentIndex = words.findIndex((word: WordModel) => word.id === currentWord.id);
         const nextIndex = (currentIndex + 1) % words.length;
+        this.writtenTranslation = '';
 
         if (nextIndex === 0) {
           this.isTrainingFinished = true;
@@ -86,6 +94,41 @@ export class TrainingPageComponent {
     this.isTrainingFinished = true;
   }
 
+  getCardName(word: WordTrainingModel | null): string {
+    if (!word) {
+      return '';
+    }
+    return word.type === TrainingType.FromLearnLanguage || word.type === TrainingType.WritingFromLearnLanguage
+      ? word.name
+      : word.translatedName;
+  }
+
+  needShowOptions(word: WordTrainingModel | null): boolean {
+    return word?.type === TrainingType.FromLearnLanguage || word?.type === TrainingType.FromNativeLanguage;
+  }
+
+  getResult(word: WordTrainingModel | null, selectedOption: string): boolean {
+    if (!word) {
+      return false;
+    }
+    let result = false;
+
+    if (word.type === TrainingType.FromLearnLanguage) {
+      result = word.translatedName === selectedOption;
+    }
+    else if (word.type === TrainingType.FromNativeLanguage) {
+      result = word.name === selectedOption;
+    }
+    else if (word.type === TrainingType.WritingFromLearnLanguage) {
+      result = word.translatedName.toLowerCase().trim() === this.writtenTranslation.toLowerCase().trim();
+    }
+    else if (word.type === TrainingType.WritingFromNativeLanguage) {
+      result = word.name.toLowerCase().trim() === this.writtenTranslation.toLowerCase().trim();
+    }
+
+    return result;
+  }
+
   getBackgroundColor$(option: string): Observable<string> {
     return this.selectedOption$.pipe(
       startWith(''),
@@ -94,7 +137,7 @@ export class TrainingPageComponent {
         if (currentWord && currentWord.translatedName) {
           if (selectedOption === option) {
             const isCorrect = (currentWord.type === TrainingType.FromLearnLanguage && currentWord.translatedName === selectedOption) ||
-                              (currentWord.type !== TrainingType.FromLearnLanguage && currentWord.name === selectedOption);
+              (currentWord.type !== TrainingType.FromLearnLanguage && currentWord.name === selectedOption);
             return isCorrect ? 'background-green' : 'background-red';
           }
         }
