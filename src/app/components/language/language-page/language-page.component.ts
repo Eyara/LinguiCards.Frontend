@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CardComponent } from '../../../shared/card/card.component';
 import { ButtonComponent } from "../../../shared/button/button.component";
-import { map, Observable, of, shareReplay, tap, switchMap, mergeMap, combineLatest } from 'rxjs';
+import { map, Observable, of, shareReplay, tap, switchMap } from 'rxjs';
 import { DictionarExtendedyModel, LanguageCreateModel, LanguageModel } from '../../../models/language.model';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -63,9 +63,10 @@ export class LanguagePageComponent {
       );
   }
 
-  navigateToWordPage(language: LanguageModel) {
+  navigateToOverview(language: LanguageModel) {
     if (language) {
       this.selectedLanguageService.setLanguage(language);
+      this.router.navigate(['/language-overview', language.id]);
     }
   }
 

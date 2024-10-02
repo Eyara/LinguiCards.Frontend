@@ -33,7 +33,7 @@ export class WordPageComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.route.paramMap.pipe(
       tap(params => {
-        this.languageId = +params.get('id')!;
+        this.languageId = +params.get('languageId')!;
       })
     ).subscribe();
   }

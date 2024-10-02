@@ -14,7 +14,12 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path: 'word-page/:id',
+    path: 'language-overview/:languageId',
+    loadComponent: () => import('./components/language/language-overview/language-overview.component').then(m => m.LanguageOverviewComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'word-page/:languageId',
     loadComponent: () => import('./components/word/word-page/word-page.component').then(m => m.WordPageComponent),
     canActivate: [authGuard]
   },

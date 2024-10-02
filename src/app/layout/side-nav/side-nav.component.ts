@@ -33,10 +33,6 @@ export class SideNavComponent {
         return isAuthenticated;
       })
     );
-
-    this.selectedLanguageService.getSelectedLanguageSubject$().subscribe(language => {
-      this.router.navigate(['/word-page', language.id]);
-    });
   }
 
   logout() {
