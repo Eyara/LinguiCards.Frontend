@@ -39,7 +39,7 @@ export class LanguageOverviewComponent {
   }
   navigateToGrammar() {
     if (this.currentLanguage) {
-      this.router.navigate(['/grammar', this.currentLanguage.id]);
+      this.router.navigate(['/grammar-page', this.currentLanguage.id]);
     }
   }
 }
