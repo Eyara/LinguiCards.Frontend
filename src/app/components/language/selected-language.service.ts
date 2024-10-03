@@ -6,7 +6,13 @@ import { LanguageModel } from '../../models/language.model';
   providedIn: 'root'
 })
 export class SelectedLanguageService {
-  private defaultLanguage!: LanguageModel;
+  private defaultLanguage: LanguageModel = {
+    id: 0,
+    name: '',
+    editMode: false,
+    url: '',
+    languageDictionaryId: 0
+  };
   private selectedLanguageSubject: BehaviorSubject<LanguageModel> = new BehaviorSubject<LanguageModel>(this.defaultLanguage);
   public selectedLanguage$: Observable<LanguageModel> = this.selectedLanguageSubject.asObservable();
 
