@@ -23,7 +23,8 @@ export interface WordTrainingModel extends WordModel {
 
 export interface WordModel extends WordCreateModel {
   id: number;
-  learnedPercent: number;
+  activeLearnedPercent: number;
+  passiveLearnedPercent: number;
   languageId: number;
 }
 

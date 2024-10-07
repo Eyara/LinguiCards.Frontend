@@ -20,3 +20,16 @@ export interface DictionarExtendedyModel {
   src: string;
 }
 
+export interface LanguageStatisticsModel {
+  totalWords: number;
+  activeLearnedPercent: number;
+  passiveLearnedPercent: number;
+  activeAverageAccuracy: number;
+  passiveAverageAccuracy: number;
+  totalTrainingDays: number;
+  bestActiveWordsByAccuracy: string[];
+  bestPassiveWordsByAccuracy: string[];
+  worstActiveWordsByAccuracy: string[];
+  worstPassiveWordsByAccuracy: string[];
+}
+

@@ -30,6 +30,7 @@ export class TrainingPageComponent {
   languageId: number;
   isTrainingFinished: boolean = false;
   writtenTranslation: string = '';
+  currentIndex: number = 0;
 
   constructor(private route: ActivatedRoute, private wordService: WordService) {
     this.languageId = this.route.snapshot.params['languageId'];
@@ -69,22 +70,21 @@ export class TrainingPageComponent {
           of(currentWord),
           this.wordService.updateLearnLevel(
             currentWord.id,
-            this.getResult(currentWord, selectedOption)
+            this.getResult(currentWord, selectedOption),
+            currentWord.type
           )
         ]);
       }),
       delay(300),
-      tap(([words, currentWord]) => {
-        const currentIndex = words.findIndex((word: WordModel) => word.id === currentWord.id);
-        const nextIndex = (currentIndex + 1) % words.length;
+      tap(([words]) => {
         this.writtenTranslation = '';
-
-        if (nextIndex === 0) {
+        if (this.currentIndex === words.length - 1) {
           this.isTrainingFinished = true;
         } else {
+          this.currentIndex++;
           this.selectedOption$ = of('');
-          this.currentWord$ = of(words[nextIndex]);
-          this.options = words[nextIndex].options;
+          this.currentWord$ = of(words[this.currentIndex]);
+          this.options = words[this.currentIndex].options;
         }
       })
     );

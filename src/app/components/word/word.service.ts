@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { WordCreateModel, WordModel, WordTrainingModel } from '../../models/word.model';
+import { TrainingType, WordCreateModel, WordModel, WordTrainingModel } from '../../models/word.model';
 import { Paginated } from '../../models/paginated.model';
 
 @Injectable({
@@ -39,11 +39,12 @@ export class WordService {
     });
   }
 
-  updateLearnLevel(wordId: number, wasSuccessful: boolean): Observable<boolean> {
+  updateLearnLevel(wordId: number, wasSuccessful: boolean, trainingType: TrainingType): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/Word/updateLearnLevel`, null, {
       params: {
         wordId: wordId.toString(),
-        wasSuccessful: wasSuccessful.toString()
+        wasSuccessful: wasSuccessful.toString(),
+        trainingType: trainingType
       }
     });
   }

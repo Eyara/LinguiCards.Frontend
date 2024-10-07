@@ -1,4 +1,7 @@
 export interface UserInfo {
+    level: number;
+    xp: number;
+    xpToNextLevel: number;
     languageStats: LanguageStats[];
 }
 

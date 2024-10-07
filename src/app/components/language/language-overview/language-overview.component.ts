@@ -1,30 +1,103 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, AfterViewInit, HostListener } from '@angular/core';
 import { SelectedLanguageService } from '../selected-language.service';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LanguageModel } from '../../../models/language.model';
+import { tap, switchMap, map, shareReplay } from 'rxjs/operators';
+import { LanguageModel, LanguageStatisticsModel } from '../../../models/language.model';
+import { LanguageService } from '../language.service';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { Observable } from 'rxjs';
+import { Color, ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-language-overview',
   standalone: true,
-  imports: [],
+  imports: [NgxChartsModule],
   templateUrl: './language-overview.component.html',
-  styleUrl: './language-overview.component.scss'
+  styleUrl: './language-overview.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LanguageOverviewComponent {
+export class LanguageOverviewComponent implements OnInit, AfterViewInit {
   private currentLanguage: LanguageModel | null = null;
+  languageStats$: Observable<LanguageStatisticsModel> = new Observable<LanguageStatisticsModel>();
 
-  constructor(private selectedLanguageService: SelectedLanguageService, private router: Router) {
-    this.selectedLanguageService.getSelectedLanguageSubject$()
+  // Chart data
+  learnedWordsData$: Observable<any[]> = new Observable<any[]>();
+  accuracyData$: Observable<any[]> = new Observable<any[]>();
+
+  chartWidth: number = 0;
+  chartHeight: number = 0;
+
+  colorScheme: Color = {
+    name: 'customScheme',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: [
+      '#3366cc', // blue
+      '#dc3912', // red
+      '#0099c6', // cyan
+    ]
+  };
+
+  constructor(
+    private selectedLanguageService: SelectedLanguageService,
+    private router: Router,
+    private languageService: LanguageService
+  ) { }
+
+  ngOnInit() {
+    this.updateChartDimensions();
+    this.languageStats$ = this.selectedLanguageService.getSelectedLanguageSubject$()
       .pipe(
         tap(language => {
           this.router.navigate(['/language-overview', language.id]);
           this.currentLanguage = language;
         }),
-        takeUntilDestroyed()
+        switchMap(language => this.languageService.getLanguageStatistics(language.id)),
+        tap(_ => {
+          this.updateChartData();
+        }),
+        shareReplay(1),
       )
-      .subscribe();
+  }
+
+  ngAfterViewInit() {
+    this.updateChartDimensions();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.updateChartDimensions();
+  }
+
+  private updateChartDimensions() {
+    const containerWidth = document.querySelector('.chart-container')?.clientWidth || window.innerWidth;
+    
+    if (window.innerWidth >= 768) {
+      // Desktop
+      this.chartWidth = Math.min(containerWidth, 600);
+      this.chartHeight = Math.min(this.chartWidth * 0.75, 450);
+    } else {
+      // Mobile
+      this.chartWidth = Math.min(containerWidth - 32, 400); // 32px for padding
+      this.chartHeight = Math.min(this.chartWidth * 0.75, 300);
+    }
+  }
+
+  updateChartData() {
+    this.learnedWordsData$ = this.languageStats$.pipe(
+      shareReplay(1),
+      map(stats => [
+        { name: 'Активный', value: stats.activeLearnedPercent * 100},
+        { name: 'Пассивный', value: stats.passiveLearnedPercent * 100 },
+      ])
+    );
+    this.accuracyData$ = this.languageStats$.pipe(
+      shareReplay(1),
+      map(stats => [
+        { name: 'Активный', value: stats.activeAverageAccuracy * 100 },
+        { name: 'Пассивный', value: stats.passiveAverageAccuracy * 100 }
+      ])
+    );
   }
 
   navigateToTraining() {
