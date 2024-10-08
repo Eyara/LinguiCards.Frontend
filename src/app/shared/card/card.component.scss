@@ -107,3 +107,11 @@
   width: 3500px;
   height: 150px;
 }
+
+::ng-deep .mat-mdc-card-content:last-child {
+  padding-bottom: 0 !important;
+}
+
+::ng-deep .mat-mdc-card-content:first-child {
+  padding-top: 0 !important;
+}

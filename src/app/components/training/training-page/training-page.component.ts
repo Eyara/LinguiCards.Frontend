@@ -77,7 +77,6 @@ export class TrainingPageComponent {
       }),
       delay(300),
       tap(([words]) => {
-        this.writtenTranslation = '';
         if (this.currentIndex === words.length - 1) {
           this.isTrainingFinished = true;
         } else {
@@ -85,6 +84,7 @@ export class TrainingPageComponent {
           this.selectedOption$ = of('');
           this.currentWord$ = of(words[this.currentIndex]);
           this.options = words[this.currentIndex].options;
+          this.writtenTranslation = '';
         }
       })
     );

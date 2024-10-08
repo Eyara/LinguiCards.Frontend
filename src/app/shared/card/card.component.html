@@ -1,4 +1,4 @@
-<mat-card class="minimalistic-card" [ngClass]="customClassName">
+<mat-card class="minimalistic-card" [ngClass]="customClassName" (click)="clickEvent($event)">
   <div *ngIf="editMode || isShowActions" class="item-actions">
     <mat-icon class="close-icon" (click)="emitClose($event)">close</mat-icon>
   </div>

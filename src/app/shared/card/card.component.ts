@@ -45,4 +45,10 @@ export class CardComponent {
     event.stopPropagation();
     this.closeEmit.emit(this.id);
   }
+
+  clickEvent(event: MouseEvent) {
+    if (this.editMode) {
+      event.stopPropagation();
+    }
+  }
 }
