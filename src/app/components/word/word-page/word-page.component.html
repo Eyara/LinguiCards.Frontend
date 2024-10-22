@@ -50,7 +50,7 @@
         <th mat-header-cell *matHeaderCellDef> Действие</th>
         <td mat-cell *matCellDef="let word">
           <ng-container *ngIf="isEditMode(word); else defaultMode">
-            <button mat-icon-button class="action-table-button" (click)="finishEditing(word)">
+            <button mat-icon-button class="action-table-button" (click)="finishEditing(word)" (keyup.enter)="finishEditing(word)">
               <mat-icon>check</mat-icon>
             </button>
           </ng-container>
