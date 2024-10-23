@@ -22,6 +22,10 @@
             <div class="stat-value">{{ stats.totalWords }}</div>
             <div class="stat-label">Добавлено слов</div>
         </div>
+        <div class="stat-item" *ngIf="stats.learnedWords">
+            <div class="stat-value">{{ stats.learnedWords }}</div>
+            <div class="stat-label">Выучено слов</div>
+        </div>
         <div class="stat-item">
             <div class="stat-value">{{ stats.totalTrainingDays }}</div>
             <div class="stat-label">Дней тренировки</div>
@@ -29,7 +33,7 @@
     </div>
 
     <div class="word-performance" *ngIf="languageStats$ | async as stats">
-        <div class="word-list best-words">
+        <div class="word-list best-words" *ngIf="stats.bestActiveWordsByAccuracy.length">
             <h3>Лучшие слова</h3>
             <div class="word-columns">
                 <div>
@@ -50,7 +54,7 @@
                 </div>
             </div>
         </div>
-        <div class="word-list worst-words">
+        <div class="word-list worst-words" *ngIf="stats.worstActiveWordsByAccuracy.length">
             <h3>Слова для улучшения</h3>
             <div class="word-columns">
                 <div>
@@ -74,18 +78,31 @@
     </div>
 
     <div class="charts-container">
-        <div class="chart-wrapper pie-chart">
-            <h3>Уровень владения</h3>
-            <ngx-charts-bar-vertical [view]="[chartWidth, chartHeight]" [results]="learnedWordsData$ | async"
-                [xAxis]="true" [yAxis]="true" [scheme]="colorScheme" [animations]="true">
-            </ngx-charts-bar-vertical>
+        <div class="chart-wrapper-inner" *ngIf="(learnedWordsData$ | async) as learnedWordsData">
+            <div class="chart-wrapper bar-chart" *ngIf="learnedWordsData.length">
+                <h3>Уровень владения</h3>
+                <ngx-charts-bar-vertical [view]="[chartWidth, chartHeight]" [results]="learnedWordsData"
+                    [scheme]="colorScheme" [animations]="true" [showDataLabel]="true">
+                </ngx-charts-bar-vertical>
+            </div>
         </div>
 
-        <div class="chart-wrapper bar-chart">
-            <h3>Средняя точность</h3>
-            <ngx-charts-bar-vertical [view]="[chartWidth, chartHeight]" [results]="accuracyData$ | async"
-                [gradient]="true" [xAxis]="true" [yAxis]="true" [scheme]="colorScheme" [animations]="true">
-            </ngx-charts-bar-vertical>
+        <div class="chart-wrapper-inner" *ngIf="(accuracyData$ | async) as accuracyData">
+            <div class="chart-wrapper bar-chart" *ngIf="accuracyData.length">
+                <h3>Средняя точность</h3>
+                <ngx-charts-bar-vertical [view]="[chartWidth, chartHeight]" [results]="accuracyData"
+                    [scheme]="colorScheme" [animations]="true" [showDataLabel]="true">
+                </ngx-charts-bar-vertical>
+            </div>
+        </div>
+
+        <div class="chart-wrapper-inner" *ngIf="(averageLearnedPercentData$ | async) as averageLearnedPercentData">
+            <div class="chart-wrapper bar-chart" *ngIf="averageLearnedPercentData.length">
+                <h3>Средний процент выученных слов</h3>
+                <ngx-charts-bar-vertical [view]="[chartWidth, chartHeight]" [results]="averageLearnedPercentData"
+                    [scheme]="colorScheme" [animations]="true" [showDataLabel]="true">
+                </ngx-charts-bar-vertical>
+            </div>
         </div>
     </div>
 </div>

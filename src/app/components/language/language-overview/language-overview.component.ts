@@ -23,6 +23,7 @@ export class LanguageOverviewComponent implements OnInit, AfterViewInit {
   // Chart data
   learnedWordsData$: Observable<any[]> = new Observable<any[]>();
   accuracyData$: Observable<any[]> = new Observable<any[]>();
+  averageLearnedPercentData$: Observable<any[]> = new Observable<any[]>();
 
   chartWidth: number = 0;
   chartHeight: number = 0;
@@ -86,17 +87,39 @@ export class LanguageOverviewComponent implements OnInit, AfterViewInit {
   updateChartData() {
     this.learnedWordsData$ = this.languageStats$.pipe(
       shareReplay(1),
-      map(stats => [
-        { name: 'Активный', value: stats.activeLearnedPercent * 100},
-        { name: 'Пассивный', value: stats.passiveLearnedPercent * 100 },
-      ])
+      map(stats => {
+        if (stats.activeLearnedPercent && stats.passiveLearnedPercent) {
+          return  [
+            { name: 'Активный', value: stats.activeLearnedPercent * 100},
+            { name: 'Пассивный', value: stats.passiveLearnedPercent * 100 },
+            ];
+        }
+        return [];
+      })
     );
     this.accuracyData$ = this.languageStats$.pipe(
       shareReplay(1),
-      map(stats => [
-        { name: 'Активный', value: stats.activeAverageAccuracy * 100 },
-        { name: 'Пассивный', value: stats.passiveAverageAccuracy * 100 }
-      ])
+      map(stats => {
+        if (stats.activeAverageAccuracy && stats.passiveAverageAccuracy) {
+          return [
+            { name: 'Активный', value: stats.activeAverageAccuracy * 100 },
+            { name: 'Пассивный', value: stats.passiveAverageAccuracy * 100 }
+          ];
+        }
+        return [];
+      })
+    );
+    this.averageLearnedPercentData$ = this.languageStats$.pipe(
+      shareReplay(1),
+      map(stats => {
+        if (stats.activeAverageLearnedPercent && stats.passiveAverageLearnedPercent) {
+          return  [
+            { name: 'Активный', value: stats.activeAverageLearnedPercent },
+            { name: 'Пассивный', value: stats.passiveAverageLearnedPercent }
+            ];
+        }
+        return [];
+      })
     );
   }
 

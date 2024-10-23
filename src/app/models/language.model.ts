@@ -22,8 +22,11 @@ export interface DictionarExtendedyModel {
 
 export interface LanguageStatisticsModel {
   totalWords: number;
+  learnedWords: number;
   activeLearnedPercent: number;
   passiveLearnedPercent: number;
+  activeAverageLearnedPercent: number;
+  passiveAverageLearnedPercent: number;
   activeAverageAccuracy: number;
   passiveAverageAccuracy: number;
   totalTrainingDays: number;
