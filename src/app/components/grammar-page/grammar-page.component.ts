@@ -4,11 +4,12 @@ import { CribResponseModel } from '../../models/crib.model';
 import { Observable, of, shareReplay } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
   selector: 'app-grammar-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MarkdownModule],
   templateUrl: './grammar-page.component.html',
   styleUrl: './grammar-page.component.scss'
 })

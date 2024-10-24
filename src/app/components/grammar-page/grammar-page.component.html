@@ -3,7 +3,7 @@
     <div class="crib-card" *ngFor="let crib of cribs">
       <div class="crib-content" *ngFor="let innerCrib of crib.cribDescriptions">
         <h3 class="crib-header">{{ innerCrib.header }}</h3>
-        <p class="crib-description">{{ innerCrib.description }}</p>
+        <markdown class="crib-description" [data]="innerCrib.description"></markdown>
       </div>
     </div>
   </div>
