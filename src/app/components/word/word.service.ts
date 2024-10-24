@@ -39,12 +39,14 @@ export class WordService {
     });
   }
 
-  updateLearnLevel(wordId: number, wasSuccessful: boolean, trainingType: TrainingType): Observable<boolean> {
+  updateLearnLevel(wordId: number, wasSuccessful: boolean, trainingType: TrainingType, trainingId: string, answer: string): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/Word/updateLearnLevel`, null, {
       params: {
         wordId: wordId.toString(),
         wasSuccessful: wasSuccessful.toString(),
-        trainingType: trainingType
+        trainingType: trainingType,
+        trainingId: trainingId,
+        answer: answer
       }
     });
   }

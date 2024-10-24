@@ -19,6 +19,7 @@ export enum TrainingType {
 export interface WordTrainingModel extends WordModel {
   type: TrainingType;
   options: string[];
+  trainingId: string;
 }
 
 export interface WordModel extends WordCreateModel {

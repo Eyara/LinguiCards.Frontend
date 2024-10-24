@@ -71,7 +71,9 @@ export class TrainingPageComponent {
           this.wordService.updateLearnLevel(
             currentWord.id,
             this.getResult(currentWord, selectedOption),
-            currentWord.type
+            currentWord.type,
+            currentWord.trainingId,
+            this.needShowOptions(currentWord) ? selectedOption : this.writtenTranslation
           )
         ]);
       }),
