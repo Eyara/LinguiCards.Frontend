@@ -3,8 +3,23 @@
   </ng-container>
   <ng-template #finishedTraining>
     <div class="training-page__finished-training">
-      <h1>Тренировка на сегодня закончена</h1>
-      <p>Вы можете продолжить ее завтра</p>
+      <div *ngIf="trainingResult$ | async as trainingResult">
+        <table mat-table [dataSource]="trainingResult" class="mat-elevation-z8 results-table">
+          <ng-container matColumnDef="correctAnswer">
+            <th mat-header-cell *matHeaderCellDef> Правильный ответ </th>
+            <td mat-cell *matCellDef="let element"> {{element.correctAnswer}} </td>
+          </ng-container>
+          <ng-container matColumnDef="userAnswer">
+            <th mat-header-cell *matHeaderCellDef> Ваш ответ </th>
+            <td mat-cell *matCellDef="let element"
+              [ngClass]="{'correct-answer': element.isCorrectAnswer, 'incorrect-answer': !element.isCorrectAnswer}">
+              {{element.answer}}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['correctAnswer', 'userAnswer']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['correctAnswer', 'userAnswer'];"></tr>
+        </table>
+      </div>
     </div>
   </ng-template>
   <ng-template #activeTraining>

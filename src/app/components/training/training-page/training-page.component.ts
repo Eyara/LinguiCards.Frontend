@@ -10,11 +10,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { TrainingModel } from '../../../models/training.model';
+import { TrainingService } from '../training.service';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'training-page',
   standalone: true,
-  imports: [CommonModule, CardComponent, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, FormsModule],
+  imports: [CommonModule, CardComponent, MatFormFieldModule, MatTableModule, MatInputModule, MatButtonModule, MatIconModule, FormsModule],
   templateUrl: './training-page.component.html',
   styleUrls: ['./training-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,6 +27,7 @@ export class TrainingPageComponent {
   trainingWords$: Observable<WordTrainingModel[]>;
   options: string[] = [];
   currentWord$: Observable<WordTrainingModel>;
+  trainingResult$: Observable<TrainingModel[]> = of();
 
   continueTraining$: Observable<[WordTrainingModel[], WordTrainingModel, boolean]> = of();
 
@@ -32,7 +36,7 @@ export class TrainingPageComponent {
   writtenTranslation: string = '';
   currentIndex: number = 0;
 
-  constructor(private route: ActivatedRoute, private wordService: WordService) {
+  constructor(private route: ActivatedRoute, private wordService: WordService, private trainingService: TrainingService) {
     this.languageId = this.route.snapshot.params['languageId'];
     this.trainingWords$ = this.getWords().pipe(
       shareReplay(1)
@@ -46,6 +50,10 @@ export class TrainingPageComponent {
 
   getWords(): Observable<WordTrainingModel[]> {
     return this.wordService.getUnlearnedWords(this.languageId);
+  }
+
+  getTrainingResult(trainingId: string): Observable<TrainingModel[]> {
+    return this.trainingService.getTrainingById(trainingId);
   }
 
   selectOption(option: string) {
@@ -81,6 +89,7 @@ export class TrainingPageComponent {
       tap(([words]) => {
         if (this.currentIndex === words.length - 1) {
           this.isTrainingFinished = true;
+          this.trainingResult$ = this.getTrainingResult(words[0].trainingId);
         } else {
           this.currentIndex++;
           this.selectedOption$ = of('');
