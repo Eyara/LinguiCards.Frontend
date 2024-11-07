@@ -17,6 +17,35 @@
     </div>
     <p class="xp-remaining">{{ xpToNextLevel - xp }} XP до следующего уровня</p>
   </div>
+  
+</div>
+
+<div class="settings-section">
+  <div class="settings-card">
+    <h2 class="settings-title">Настройки тренировок</h2>
+    
+    <div class="settings-form">
+      <div class="form-field">
+        <mat-form-field appearance="outline">
+          <mat-label>Размер активной тренировки</mat-label>
+          <input matInput type="number" [(ngModel)]="activeTrainingSize" min="0">
+        </mat-form-field>
+      </div>
+
+      <div class="form-field">
+        <mat-form-field appearance="outline">
+          <mat-label>Размер пассивной тренировки</mat-label>
+          <input matInput type="number" [(ngModel)]="passiveTrainingSize" min="0">
+        </mat-form-field>
+      </div>
+
+      <button mat-raised-button color="primary" (click)="saveSettings()">
+        Сохранить настройки
+      </button>
+    </div>
+  </div>
 </div>
 
 <ng-container *ngIf="languages$ | async as languages"></ng-container>
+<ng-container *ngIf="userSettings$ | async as userSettings"></ng-container>
+<ng-container *ngIf="saveUserSettings$ | async as saveUserSettings"></ng-container>
