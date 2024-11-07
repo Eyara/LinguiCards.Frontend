@@ -28,6 +28,9 @@ export class WordPageComponent implements OnInit, AfterViewInit {
   wordCommandObservable$: Observable<boolean> | undefined;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  nameFilter: string = '';
+  translationFilter: string = '';
+
   constructor(private route: ActivatedRoute, private wordService: WordService) {}
 
   ngOnInit(): void {
@@ -46,8 +49,8 @@ export class WordPageComponent implements OnInit, AfterViewInit {
     return word.editMode === EditMode.Update || word.editMode === EditMode.Create;
   }
 
-  getWords(pageIndex: number, pageSize: number): Observable<WordViewModel[]> {
-    return this.wordService.getAllPaginatedWords(this.languageId, pageIndex + 1, pageSize).pipe(
+  getWords(pageIndex: number, pageSize: number, nameFilterQuery?: string, translationNameFilterQuery?: string): Observable<WordViewModel[]> {
+    return this.wordService.getAllPaginatedWords(this.languageId, pageIndex + 1, pageSize, nameFilterQuery, translationNameFilterQuery).pipe(
       shareReplay(1),
       tap(response => this.totalCount = response.totalCount),
       map(response => response.items.map(word => ({ ...word, editMode: EditMode.None } as unknown as WordViewModel)))
@@ -110,5 +113,23 @@ export class WordPageComponent implements OnInit, AfterViewInit {
   handlePageEvent(e: PageEvent) {
     this.pageIndex = e.pageIndex;
     this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize);
+  }
+
+  clearNameFilter() {
+    this.nameFilter = '';
+    this.applyFilters();
+  }
+
+  clearTranslationFilter() {
+    this.translationFilter = '';
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    this.loadWords();
+  }
+
+  loadWords() {
+    this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize, this.nameFilter, this.translationFilter);
   }
 }

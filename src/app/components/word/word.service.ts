@@ -13,9 +13,20 @@ export class WordService {
   constructor(private http: HttpClient) {
   }
 
-  getAllPaginatedWords(languageId: number, page: number, pageSize: number): Observable<Paginated<WordModel[]>> {
+  getAllPaginatedWords(
+    languageId: number,
+    page: number = 1,
+    pageSize: number = 15,
+    nameFilterQuery?: string,
+    translationNameFilterQuery?: string
+  ): Observable<Paginated<WordModel[]>> {
     return this.http.get<Paginated<WordModel[]>>(`${this.apiUrl}/Language/${languageId}/Word`, {
-      params: { pageNumber: page.toString(), pageSize: pageSize.toString() }
+      params: {
+        pageNumber: page.toString(),
+        pageSize: pageSize.toString(),
+        ...(nameFilterQuery && { nameFilterQuery }),
+        ...(translationNameFilterQuery && { translationNameFilterQuery })
+      }
     });
   }
 
