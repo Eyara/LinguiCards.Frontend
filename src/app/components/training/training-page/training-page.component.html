@@ -4,6 +4,9 @@
   <ng-template #finishedTraining>
     <div class="training-page__finished-training">
       <div *ngIf="trainingResult$ | async as trainingResult">
+        <div class="action-buttons">
+          <button mat-flat-button color="primary" class="action-button" (click)="startNewTraining()">Начать новую тренировку</button>
+        </div>
         <table mat-table [dataSource]="trainingResult" class="mat-elevation-z8 results-table">
           <ng-container matColumnDef="correctAnswer">
             <th mat-header-cell *matHeaderCellDef> Правильный ответ </th>

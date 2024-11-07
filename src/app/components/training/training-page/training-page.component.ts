@@ -156,4 +156,20 @@ export class TrainingPageComponent {
       })
     );
   }
+
+  startNewTraining() {
+    this.isTrainingFinished = false;
+    this.currentIndex = 0;
+    this.writtenTranslation = '';
+    
+    this.trainingWords$ = this.getWords().pipe(
+      shareReplay(1)
+    );
+    
+    this.currentWord$ = this.trainingWords$.pipe(
+      take(1),
+      map(words => words[0]),
+      tap(word => this.options = word.options)
+    );
+  }
 }
