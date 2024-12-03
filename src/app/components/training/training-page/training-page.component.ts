@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TrainingType, WordModel, WordTrainingModel } from '../../../models/word.model';
+import { TrainingType, WordConnection, WordModel, WordTrainingModel } from '../../../models/word.model';
 import { CardComponent } from "../../../shared/card/card.component";
 import { CommonModule } from '@angular/common';
-import { forkJoin, map, mergeMap, Observable, of, startWith, take, tap, withLatestFrom, delay, shareReplay } from 'rxjs';
+import { forkJoin, map, mergeMap, Observable, of, startWith, take, tap, withLatestFrom, delay, shareReplay, BehaviorSubject, Subject, switchMap } from 'rxjs';
 import { WordService } from '../../word/word.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,14 +10,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { TrainingModel } from '../../../models/training.model';
+import { TrainingModel, TrainingRenderType } from '../../../models/training.model';
 import { TrainingService } from '../training.service';
 import { MatTableModule } from '@angular/material/table';
+import { TrainingConnectionComponent } from './training-connection/training-connection.component';
 
 @Component({
   selector: 'training-page',
   standalone: true,
-  imports: [CommonModule, CardComponent, MatFormFieldModule, MatTableModule, MatInputModule, MatButtonModule, MatIconModule, FormsModule],
+  imports: [CommonModule, CardComponent, MatFormFieldModule, MatTableModule, MatInputModule, MatButtonModule, MatIconModule, FormsModule,
+    TrainingConnectionComponent],
   templateUrl: './training-page.component.html',
   styleUrls: ['./training-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -36,6 +38,13 @@ export class TrainingPageComponent {
   writtenTranslation: string = '';
   currentIndex: number = 0;
 
+  connectionWords$ = new BehaviorSubject<string[]>([]);
+  connectionTranslations$ = new BehaviorSubject<string[]>([]);
+  expectedMatches$ = new BehaviorSubject<WordConnection[]>([]);
+  handleLearnLevelUpdate$ = new Observable<boolean>();
+
+  matches: { [key: string]: string } = {};
+
   constructor(private route: ActivatedRoute, private wordService: WordService, private trainingService: TrainingService) {
     this.languageId = this.route.snapshot.params['languageId'];
     this.trainingWords$ = this.getWords().pipe(
@@ -50,6 +59,16 @@ export class TrainingPageComponent {
 
   getWords(): Observable<WordTrainingModel[]> {
     return this.wordService.getUnlearnedWords(this.languageId);
+  }
+
+  getTrainingRenderType(word: WordTrainingModel): TrainingRenderType {
+    if (word?.type === TrainingType.WordConnect) {
+      return TrainingRenderType.Connection;
+    }
+    else if (this.needShowOptions(word)) {
+      return TrainingRenderType.Options;
+    }
+    return TrainingRenderType.Input;
   }
 
   getTrainingResult(trainingId: string): Observable<TrainingModel[]> {
@@ -76,13 +95,9 @@ export class TrainingPageComponent {
         return forkJoin([
           of(words),
           of(currentWord),
-          this.wordService.updateLearnLevel(
-            currentWord.id,
-            this.getResult(currentWord, selectedOption),
-            currentWord.type,
-            currentWord.trainingId,
-            this.needShowOptions(currentWord) ? selectedOption : this.writtenTranslation
-          )
+          currentWord.type !== TrainingType.WordConnect 
+            ? this.callUpdateLearnLevel(currentWord, selectedOption)
+            : of(false)
         ]);
       }),
       delay(300),
@@ -96,13 +111,46 @@ export class TrainingPageComponent {
           this.currentWord$ = of(words[this.currentIndex]);
           this.options = words[this.currentIndex].options;
           this.writtenTranslation = '';
+          if (this.getTrainingRenderType(words[this.currentIndex]) === TrainingRenderType.Connection) {
+            this.connectionWords$.next(words[this.currentIndex].connectionTargets);
+            this.connectionTranslations$.next(words[this.currentIndex].options);
+            this.expectedMatches$.next(words[this.currentIndex].connectionMatches);
+          }
         }
       })
     );
   }
 
+  callUpdateLearnLevel(currentWord: WordTrainingModel, selectedOption: string): Observable<boolean> {
+    return this.wordService.updateLearnLevel(
+      currentWord.id,
+      this.getResult(currentWord, selectedOption),
+      currentWord.type,
+      currentWord.trainingId,
+      this.needShowOptions(currentWord) ? selectedOption : this.writtenTranslation
+    )
+  }
+
+  handleWordConnectionMatch(word: WordConnection, translation: string) {
+    this.handleLearnLevelUpdate$ = this.wordService.updateLearnLevel(
+      word.id,
+      word.translatedName === translation,
+      TrainingType.WordConnect,
+      word.trainingId,
+      translation
+    ).pipe(
+      tap(() => {}),
+      shareReplay(1)
+    );
+  }
+
   finishTraining() {
     this.isTrainingFinished = true;
+    this.trainingResult$ = this.trainingWords$.pipe(
+      take(1),
+      map(words => words[0].trainingId),
+      switchMap(trainingId => this.getTrainingResult(trainingId))
+    );
   }
 
   getCardName(word: WordTrainingModel | null): string {
@@ -161,11 +209,11 @@ export class TrainingPageComponent {
     this.isTrainingFinished = false;
     this.currentIndex = 0;
     this.writtenTranslation = '';
-    
+
     this.trainingWords$ = this.getWords().pipe(
       shareReplay(1)
     );
-    
+
     this.currentWord$ = this.trainingWords$.pipe(
       take(1),
       map(words => words[0]),

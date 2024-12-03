@@ -1,0 +1,116 @@
+.match-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 3rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.word-column, .translation-column {
+  flex: 1;
+
+  h3 {
+    font-size: 1.4rem;
+    color: #444;
+    margin-bottom: 2rem;
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+}
+
+.training-page__word-item,
+.training-page__translation-item {
+  padding: 1.25rem 2rem;
+  margin: 1rem 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+  text-align: center;
+  background: white;
+  
+  &:hover:not(.matched) {
+    background-color: #fafafa;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  &.selected {
+    background-color: #f0f7ff;
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+  }
+
+  &.matched {
+    background-color: #f0fdf4;
+    border-color: #86efac;
+    animation: matchedAnimation 0.4s ease-out;
+  }
+
+  &.incorrect-match {
+    background-color: #fef2f2;
+    border-color: #fca5a5;
+    animation: matchedAnimation 0.4s ease-out;
+  }
+}
+
+@keyframes matchedAnimation {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+@media (max-width: 1024px) {
+  .match-container {
+    max-width: 90%;
+    padding: 2rem;
+    gap: 2rem;
+  }
+
+  .training-page__word-item,
+  .training-page__translation-item {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .match-container {
+    gap: 1.5rem;
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .word-column h3,
+  .translation-column h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .training-page__word-item,
+  .training-page__translation-item {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+    margin: 0.75rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .match-container {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+
+  .training-page__word-item,
+  .training-page__translation-item {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+  }
+}

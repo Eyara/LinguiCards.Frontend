@@ -13,12 +13,23 @@ export enum TrainingType {
   FromNativeLanguage,
   WritingFromLearnLanguage,
   WritingFromNativeLanguage,
+  WordConnect,
   Sentence
 }
 
 export interface WordTrainingModel extends WordModel {
   type: TrainingType;
   options: string[];
+  trainingId: string;
+  connectionTargets: string[];
+  connectionMatches: WordConnection[];
+}
+
+export interface WordConnection {
+  id: number;
+  name: string;
+  translatedName: string;
+  type: TrainingType;
   trainingId: string;
 }
 

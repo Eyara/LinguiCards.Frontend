@@ -5,7 +5,8 @@
     <div class="training-page__finished-training">
       <div *ngIf="trainingResult$ | async as trainingResult">
         <div class="action-buttons">
-          <button mat-flat-button color="primary" class="action-button" (click)="startNewTraining()">Начать новую тренировку</button>
+          <button mat-flat-button color="primary" class="action-button" (click)="startNewTraining()">Начать новую
+            тренировку</button>
         </div>
         <table mat-table [dataSource]="trainingResult" class="mat-elevation-z8 results-table">
           <ng-container matColumnDef="correctAnswer">
@@ -26,18 +27,18 @@
     </div>
   </ng-template>
   <ng-template #activeTraining>
-    <div class="training-page__current-word">
-      <card [name]="getCardName((currentWord$ | async) ?? null)" customClassName="minimalistic-card__medium"></card>
+    <div class="training-page__current-word" *ngIf="getTrainingRenderType((currentWord$ | async)!) !== 2">
+      <card [name]="getCardName((currentWord$ | async)!)" customClassName="minimalistic-card__medium"></card>
     </div>
     <ng-container *ngIf="currentWord$ | async as currentWord">
-      <div *ngIf="needShowOptions(currentWord); else showInputBlock" class="training-page__options">
+      <div *ngIf="getTrainingRenderType(currentWord) === 0;" class="training-page__options">
         <div *ngFor="let option of options" class="training-page__option">
           <card [name]="option" (click)="selectOption(option)"
             [customClassName]="'minimalistic-card__small ' + (getBackgroundColor$(option) | async)">
           </card>
         </div>
       </div>
-      <ng-template #showInputBlock>
+      <div *ngIf="getTrainingRenderType(currentWord) === 1;" class="training-page__input-block">
         <div class="training-page__input-block">
           <mat-form-field appearance="outline">
             <input matInput [(ngModel)]="writtenTranslation" (keyup.enter)="continueTraining()">
@@ -46,7 +47,13 @@
             </button>
           </mat-form-field>
         </div>
-      </ng-template>
+      </div>
+      <div *ngIf="getTrainingRenderType(currentWord) === 2;" class="training-page__connection-block">
+        <training-connection [connectionWords]="(connectionWords$ | async) ?? []"
+          [connectionTranslations]="(connectionTranslations$ | async) ?? []"
+          [expectedMatches]="(expectedMatches$ | async) ?? []" (matchesComplete)="continueTraining()"
+          (updateLearnLevel)="handleWordConnectionMatch($event.word, $event.translation)"></training-connection>
+      </div>
     </ng-container>
     <div class="action-buttons">
       <button mat-flat-button color="primary" class="action-button" (click)="finishTraining()">Закончить</button>
@@ -55,4 +62,7 @@
 </div>
 
 <ng-container *ngIf="(continueTraining$ | async) || (selectedOption$ | async)">
+</ng-container>
+
+<ng-container *ngIf="(handleLearnLevelUpdate$ | async)">
 </ng-container>

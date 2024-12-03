@@ -1,0 +1,22 @@
+<div class="match-container">
+    <div class="word-column">
+        <div *ngFor="let word of connectionWords" 
+            (click)="!isWordMatched(word) && selectWord(word, 'word')"
+            [class.selected]="selectedWordConnection?.name === word"
+            [class.matched]="isWordMatched(word) && isCorrectWordMatch(word)"
+            [class.incorrect-match]="isWordMatched(word) && !isCorrectWordMatch(word)"
+            class="training-page__word-item">
+            {{ word }}
+        </div>
+    </div>
+    <div class="translation-column">
+        <div *ngFor="let translation of connectionTranslations"
+            (click)="!isTranslationMatched(translation) && selectWord(translation, 'translation')"
+            [class.selected]="selectedTranslationConnection === translation"
+            [class.matched]="isTranslationMatched(translation) && isCorrectTranslationMatch(translation)"
+            [class.incorrect-match]="isTranslationMatched(translation) && !isCorrectTranslationMatch(translation)"
+            class="training-page__translation-item">
+            {{ translation }}
+        </div>
+    </div>
+</div>

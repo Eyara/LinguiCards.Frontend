@@ -8,3 +8,9 @@ export interface TrainingModel {
   answer: string;
   correctAnswer: string;
 }
+
+export enum TrainingRenderType {
+  Options,
+  Input,
+  Connection
+}
