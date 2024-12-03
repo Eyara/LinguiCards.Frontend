@@ -7,6 +7,8 @@
         <div class="action-buttons">
           <button mat-flat-button color="primary" class="action-button" (click)="startNewTraining()">Начать новую
             тренировку</button>
+          <button mat-flat-button color="primary" class="action-button" (click)="goToDashboard()">Вернуться к
+            дашборду</button>
         </div>
         <table mat-table [dataSource]="trainingResult" class="mat-elevation-z8 results-table">
           <ng-container matColumnDef="correctAnswer">

@@ -4,7 +4,7 @@ import { CardComponent } from "../../../shared/card/card.component";
 import { CommonModule } from '@angular/common';
 import { forkJoin, map, mergeMap, Observable, of, startWith, take, tap, withLatestFrom, delay, shareReplay, BehaviorSubject, Subject, switchMap } from 'rxjs';
 import { WordService } from '../../word/word.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -45,7 +45,7 @@ export class TrainingPageComponent {
 
   matches: { [key: string]: string } = {};
 
-  constructor(private route: ActivatedRoute, private wordService: WordService, private trainingService: TrainingService) {
+  constructor(private route: ActivatedRoute, private wordService: WordService, private trainingService: TrainingService, private router: Router) {
     this.languageId = this.route.snapshot.params['languageId'];
     this.trainingWords$ = this.getWords().pipe(
       shareReplay(1)
@@ -219,5 +219,9 @@ export class TrainingPageComponent {
       map(words => words[0]),
       tap(word => this.options = word.options)
     );
+  }
+
+  goToDashboard() {
+    this.router.navigate(['/language-overview', this.languageId]);
   }
 }
