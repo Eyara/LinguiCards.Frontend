@@ -1,9 +1,33 @@
 mat-toolbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  position: relative;
+
+  .app-title {
+    position: relative;
+    margin-left: 16px;
+    z-index: 1;
+
+    @media (max-width: 480px) {
+      font-size: 16px;
+      margin-left: 8px;
+    }
+  }
+
+  .menu-icon {
+    position: relative;
+    z-index: 2;
+  }
+
   .language-selector {
+    position: relative;
+    z-index: 2;
     margin-left: auto;
+    margin-right: 16px;
+
+    @media (max-width: 480px) {
+      margin-right: -15px;
+    }
   }
 }
 

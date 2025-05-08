@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, AfterViewInit, HostListener } from '@angular/core';
 import { SelectedLanguageService } from '../selected-language.service';
 import { Router } from '@angular/router';
-import { tap, switchMap, map, shareReplay } from 'rxjs/operators';
+import { tap, switchMap, map, shareReplay, distinctUntilChanged, catchError } from 'rxjs/operators';
 import { LanguageModel, LanguageStatisticsModel } from '../../../models/language.model';
 import { LanguageService } from '../language.service';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
@@ -50,15 +50,41 @@ export class LanguageOverviewComponent implements OnInit, AfterViewInit {
     this.languageStats$ = this.selectedLanguageService.getSelectedLanguageSubject$()
       .pipe(
         tap(language => {
-          this.router.navigate(['/language-overview', language.id]);
-          this.currentLanguage = language;
+          if (language && language.id) {
+            this.currentLanguage = language;
+            this.router.navigate(['/language-overview', language.id]);
+          }
         }),
-        switchMap(language => this.languageService.getLanguageStatistics(language.id)),
+        switchMap(language => 
+          this.languageService.getLanguageStatistics(language.id).pipe(
+            catchError(error => {
+              console.error('Error fetching language statistics:', error);
+              return of({
+                totalWords: 0,
+                learnedWords: 0,
+                accuracy: 0,
+                activeLearnedPercent: 0,
+                passiveLearnedPercent: 0,
+                activeAverageLearnedPercent: 0,
+                passiveAverageLearnedPercent: 0,
+                activeAverageAccuracy: 0,
+                passiveAverageAccuracy: 0,
+                activeTrainingSize: 0,
+                passiveTrainingSize: 0,
+                totalTrainingDays: 0,
+                bestActiveWordsByAccuracy: [],
+                bestPassiveWordsByAccuracy: [],
+                worstActiveWordsByAccuracy: [],
+                worstPassiveWordsByAccuracy: []
+              } as LanguageStatisticsModel);
+            })
+          )
+        ),
         tap(_ => {
           this.updateChartData();
         }),
-        shareReplay(1),
-      )
+        shareReplay(1)
+      );
   }
 
   ngAfterViewInit() {

@@ -3,7 +3,7 @@
     <mat-icon>menu</mat-icon>
   </button>
   <span class="app-title">Lingui Cards</span>
-  <div class="language-selector" *ngIf="isAuthenticated$ | async">
+  <div class="language-selector" *ngIf="showLanguageSelector$ | async">
     <mat-select [(value)]="selectedLanguage.id" (selectionChange)="changeLanguage($event)">
       <mat-select-trigger>
         <div class="language-option">

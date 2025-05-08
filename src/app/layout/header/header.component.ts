@@ -10,12 +10,12 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LoginService } from '../../components/login/login.service';
 import { SideNavService } from '../side-nav/side-nav.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, MatToolbarModule, MatIconModule, MatFormFieldModule, MatSelectModule],
+  imports: [CommonModule, MatToolbarModule, MatIconModule, MatFormFieldModule, MatSelectModule, RouterModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -30,13 +30,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   selectedLanguage$: Observable<LanguageModel> | undefined;
   isAuthenticated$: Observable<boolean> | undefined;
   languages$: Observable<LanguageModel[]> | undefined;
+  showLanguageSelector$: Observable<boolean> | undefined;
   private languageSubscription: Subscription = new Subscription();
 
   constructor(
     private languageService: LanguageService,
     private selectedLanguageService: SelectedLanguageService,
     private loginService: LoginService,
-    private sidenavService: SideNavService
+    private sidenavService: SideNavService,
+    private router: Router
   ) {
     this.selectedLanguage$ = this.selectedLanguageService.selectedLanguage$
       .pipe(
@@ -52,6 +54,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
 
     this.isAuthenticated$ = this.loginService.isAuthenticated();
+    
+    this.showLanguageSelector$ = combineLatest([
+      this.isAuthenticated$,
+      this.router.events.pipe(
+        map(() => !this.router.url.includes('/language-page'))
+      )
+    ]).pipe(
+      map(([isAuthenticated, isNotLanguagePage]) => isAuthenticated && isNotLanguagePage),
+      shareReplay(1)
+    );
   }
 
   changeLanguage(event: any) {
