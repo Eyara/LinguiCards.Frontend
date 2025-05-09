@@ -41,6 +41,14 @@
         </div>
       </div>
       <div *ngIf="getTrainingRenderType(currentWord) === 1;" class="training-page__input-block">
+        <div class="hint-container">
+          <span class="revealed-letters">{{ revealedLetters }}</span>
+          <span class="hidden-letters">{{ getHiddenLetters(currentWord) }}</span>
+        </div>
+        <button mat-button (click)="getHint()" [disabled]="isHintDisabled(currentWord)">
+          <mat-icon>lightbulb</mat-icon>
+          Подсказка
+        </button>
         <div class="training-page__input-block">
           <mat-form-field appearance="outline">
             <input matInput [(ngModel)]="writtenTranslation" (keyup.enter)="continueTraining()">

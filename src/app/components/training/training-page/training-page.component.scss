@@ -104,6 +104,24 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
+
+  .hint-container {
+    margin-bottom: 16px;
+    font-size: 24px;
+    letter-spacing: 2px;
+    
+    .revealed-letters {
+      color: #333;
+    }
+    
+    .hidden-letters {
+      color: #999;
+    }
+  }
+
+  button[mat-button] {
+    width: 150px;
+  }
 }
 
 .training-page__finished-training {

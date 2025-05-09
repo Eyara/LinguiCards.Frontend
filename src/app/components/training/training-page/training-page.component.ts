@@ -45,6 +45,9 @@ export class TrainingPageComponent {
 
   matches: { [key: string]: string } = {};
 
+  currentHintIndex: number = 0;
+  revealedLetters: string = '';
+
   constructor(private route: ActivatedRoute, private wordService: WordService, private trainingService: TrainingService, private router: Router) {
     this.languageId = this.route.snapshot.params['languageId'];
     this.trainingWords$ = this.getWords().pipe(
@@ -111,6 +114,8 @@ export class TrainingPageComponent {
           this.currentWord$ = of(words[this.currentIndex]);
           this.options = words[this.currentIndex].options;
           this.writtenTranslation = '';
+          this.currentHintIndex = 0;
+          this.revealedLetters = '';
           if (this.getTrainingRenderType(words[this.currentIndex]) === TrainingRenderType.Connection) {
             this.connectionWords$.next(words[this.currentIndex].connectionTargets);
             this.connectionTranslations$.next(words[this.currentIndex].options);
@@ -127,8 +132,9 @@ export class TrainingPageComponent {
       this.getResult(currentWord, selectedOption),
       currentWord.type,
       currentWord.trainingId,
-      this.needShowOptions(currentWord) ? selectedOption : this.writtenTranslation
-    )
+      this.needShowOptions(currentWord) ? selectedOption : this.writtenTranslation,
+      this.currentHintIndex
+    );
   }
 
   handleWordConnectionMatch(word: WordConnection, translation: string) {
@@ -160,6 +166,15 @@ export class TrainingPageComponent {
     return word.type === TrainingType.FromLearnLanguage || word.type === TrainingType.WritingFromLearnLanguage
       ? word.name
       : word.translatedName;
+  }
+
+  getTargetWord(word: WordTrainingModel | null): string {
+    if (!word) {
+      return '';
+    }
+    return word.type === TrainingType.FromLearnLanguage || word.type === TrainingType.WritingFromLearnLanguage
+      ? word.translatedName
+      : word.name;
   }
 
   needShowOptions(word: WordTrainingModel | null): boolean {
@@ -223,5 +238,31 @@ export class TrainingPageComponent {
 
   goToDashboard() {
     this.router.navigate(['/language-overview', this.languageId]);
+  }
+
+  getHiddenLetters(word: WordTrainingModel | null): string {
+    if (!word) return '';
+    const targetWord = this.getTargetWord(word);
+    return '_'.repeat(targetWord.length - this.currentHintIndex);
+  }
+
+  isHintDisabled(word: WordTrainingModel | null): boolean {
+    if (!word) return true;
+    const targetWord = this.getTargetWord(word);
+    return this.currentHintIndex >= targetWord.length;
+  }
+
+  getHint() {
+    this.currentWord$.pipe(
+      take(1)
+    ).subscribe(word => {
+      if (word) {
+        const targetWord = this.getTargetWord(word);
+        if (this.currentHintIndex < targetWord.length) {
+          this.revealedLetters = targetWord.substring(0, this.currentHintIndex + 1);
+          this.currentHintIndex++;
+        }
+      }
+    });
   }
 }
