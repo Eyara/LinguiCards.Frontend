@@ -7,11 +7,13 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { LanguageService } from '../language.service';
 import { SelectedLanguageService } from '../selected-language.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'language-page',
   standalone: true,
-  imports: [CommonModule, CardComponent, ButtonComponent, RouterModule],
+  imports: [CommonModule, CardComponent, ButtonComponent, RouterModule, MatDialogModule],
   templateUrl: './language-page.component.html',
   styleUrl: './language-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -22,7 +24,7 @@ export class LanguagePageComponent {
   languageCreateObservable$: Observable<boolean> | undefined;
   languageCloseObservable$: Observable<boolean> | undefined;
 
-  constructor(private router: Router, private languageService: LanguageService, private selectedLanguageService: SelectedLanguageService) {
+  constructor(private router: Router, private languageService: LanguageService, private selectedLanguageService: SelectedLanguageService, private dialog: MatDialog) {
     this.languageCards$ = this.getLanguageCards();
     this.languageDictionary$ = this.getAvailableLanguages();
   }
@@ -71,27 +73,35 @@ export class LanguagePageComponent {
   }
 
   closeLanguage(id: number) {
-    this.languageCloseObservable$ = this.languageCards$
-      .pipe(
-        map(cards => {
-          const cardToRemove = cards.find(card => card.id === id);
-          const filteredCards = cards.filter(card => card.id !== id);
-          return { cardToRemove, filteredCards };
-        }),
-        switchMap(({ cardToRemove, filteredCards }) => {
-          if (!cardToRemove?.editMode && cardToRemove) {
-            return this.languageService.deleteLanguage(cardToRemove.id.toString()).pipe(
-              map(() => filteredCards)
-            );
-          } else {
-            return of(filteredCards);
-          }
-        }),
-        tap(updatedCards => {
-          this.languageCards$ = of(updatedCards);
-          this.languageDictionary$ = this.getAvailableLanguages();
-        }),
-        map(() => true)
-      );
+    this.languageCloseObservable$ = this.dialog.open(ConfirmationDialogComponent, {
+      maxWidth: '350px',
+      width: '90vw',
+      panelClass: 'confirmation-dialog'
+    }).afterClosed().pipe(
+      switchMap(result => {
+        if (!result) return of(false);
+        return this.languageCards$.pipe(
+          map(cards => {
+            const cardToRemove = cards.find(card => card.id === id);
+            const filteredCards = cards.filter(card => card.id !== id);
+            return { cardToRemove, filteredCards };
+          }),
+          switchMap(({ cardToRemove, filteredCards }) => {
+            if (!cardToRemove?.editMode && cardToRemove) {
+              return this.languageService.deleteLanguage(cardToRemove.id.toString()).pipe(
+                map(() => filteredCards)
+              );
+            } else {
+              return of(filteredCards);
+            }
+          }),
+          tap(updatedCards => {
+            this.languageCards$ = of(updatedCards);
+            this.languageDictionary$ = this.getAvailableLanguages();
+          }),
+          map(() => true)
+        );
+      })
+    );
   }
 }

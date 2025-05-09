@@ -4,17 +4,29 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { map, Observable, of, tap, shareReplay } from 'rxjs';
+import { map, Observable, of, tap, shareReplay, switchMap } from 'rxjs';
 import { WordService } from '../word.service';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'word-page',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatIconModule, RouterModule, FormsModule, MatFormFieldModule, MatInputModule, MatPaginatorModule],
+  imports: [
+    CommonModule, 
+    MatTableModule, 
+    MatIconModule, 
+    RouterModule, 
+    FormsModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatPaginatorModule,
+    MatDialogModule
+  ],
   templateUrl: './word-page.component.html',
   styleUrl: './word-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -31,7 +43,11 @@ export class WordPageComponent implements OnInit, AfterViewInit {
   nameFilter: string = '';
   translationFilter: string = '';
 
-  constructor(private route: ActivatedRoute, private wordService: WordService) {}
+  constructor(
+    private route: ActivatedRoute, 
+    private wordService: WordService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
@@ -103,11 +119,18 @@ export class WordPageComponent implements OnInit, AfterViewInit {
   }
 
   deleteWord(word: WordModel) {
-    this.wordCommandObservable$ = this.wordService.deleteWord(word.id)
-      .pipe(
-        tap(() =>
-          this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize))
-      )
+    this.wordCommandObservable$ = this.dialog.open(ConfirmationDialogComponent, {
+      panelClass: 'confirmation-dialog'
+    }).afterClosed().pipe(
+      switchMap(result => {
+        if (result) {
+          return this.wordService.deleteWord(word.id).pipe(
+            tap(() => this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize))
+          );
+        }
+        return of(false);
+      })
+    );
   }
 
   handlePageEvent(e: PageEvent) {
