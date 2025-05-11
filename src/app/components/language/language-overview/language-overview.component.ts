@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, AfterViewInit, HostListener } from '@angular/core';
 import { SelectedLanguageService } from '../selected-language.service';
 import { Router } from '@angular/router';
-import { tap, switchMap, map, shareReplay, distinctUntilChanged, catchError } from 'rxjs/operators';
+import { tap, switchMap, map, shareReplay, catchError } from 'rxjs/operators';
 import { LanguageModel, LanguageStatisticsModel } from '../../../models/language.model';
 import { LanguageService } from '../language.service';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -21,9 +21,9 @@ export class LanguageOverviewComponent implements OnInit, AfterViewInit {
   languageStats$: Observable<LanguageStatisticsModel> = new Observable<LanguageStatisticsModel>();
 
   // Chart data
-  learnedWordsData$: Observable<any[]> = new Observable<any[]>();
-  accuracyData$: Observable<any[]> = new Observable<any[]>();
-  averageLearnedPercentData$: Observable<any[]> = new Observable<any[]>();
+  learnedWordsData$: Observable<unknown[]> = new Observable<unknown[]>();
+  accuracyData$: Observable<unknown[]> = new Observable<unknown[]>();
+  averageLearnedPercentData$: Observable<unknown[]> = new Observable<unknown[]>();
 
   chartWidth: number = 0;
   chartHeight: number = 0;
@@ -80,7 +80,7 @@ export class LanguageOverviewComponent implements OnInit, AfterViewInit {
             })
           )
         ),
-        tap(_ => {
+        tap(() => {
           this.updateChartData();
         }),
         shareReplay(1)

@@ -66,8 +66,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
   }
 
-  changeLanguage(event: any) {
-    const newLanguageId = event.value;
+  changeLanguage(event: unknown) {
+    const newLanguageId = (event as { value: number }).value;
     if (this.languages$) {
       this.languageSubscription.add(this.languages$.subscribe(languages => {
         const newLanguage = languages.find(lang => lang.id === newLanguageId);

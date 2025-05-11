@@ -7,7 +7,7 @@
   padding: 3rem;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
 }
 
 .word-column, .translation-column {
@@ -38,13 +38,13 @@
   &:hover:not(.matched) {
     background-color: #fafafa;
     transform: translateY(-2px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3px 6px rgb(0 0 0 / 0.08);
   }
 
   &.selected {
     background-color: #f0f7ff;
     border-color: #60a5fa;
-    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+    box-shadow: 0 0 0 2px rgb(96 165 250 / 0.2);
   }
 
   &.matched {
@@ -66,7 +66,7 @@
   100% { transform: scale(1); }
 }
 
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .match-container {
     max-width: 90%;
     padding: 2rem;
@@ -80,7 +80,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .match-container {
     gap: 1.5rem;
     padding: 1.5rem;
@@ -101,7 +101,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .match-container {
     margin: 0.5rem;
     padding: 1rem;

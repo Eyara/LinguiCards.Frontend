@@ -1,6 +1,8 @@
+@import '../../../colors';
+
 .profile-container {
   padding: 16px;
-  background-color: #f9f9f9;
+  background-color: $background-main;
 }
 
 .level-section {
@@ -11,9 +13,9 @@
 }
 
 .level-card {
-  background-color: #ffffff;
+  background-color: $background-card;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: $shadow-main;
   padding: 24px;
   width: 100%;
   max-width: 400px;
@@ -29,13 +31,13 @@
 .level-title {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: $text-main;
   margin: 0;
 }
 
 .level-badge {
-  background-color: #4caf50;
-  color: white;
+  background-color: $accent-green;
+  color: $background-card;
   font-size: 18px;
   font-weight: bold;
   width: 40px;
@@ -60,7 +62,7 @@
   justify-content: space-between;
   margin-top: 8px;
   font-size: 14px;
-  color: #666;
+  color: $text-light;
 }
 
 .xp-current {
@@ -69,7 +71,7 @@
 
 .xp-remaining {
   font-size: 14px;
-  color: #888;
+  color: $text-light;
   text-align: center;
   margin: 0;
 }
@@ -77,11 +79,11 @@
 // Custom progress bar colors
 ::ng-deep {
   .mat-progress-bar-fill::after {
-    background-color: #4caf50;
+    background-color: $accent-green;
   }
   
   .mat-progress-bar-buffer {
-    background-color: #c8e6c9;
+    background-color: $background-green;
   }
 }
 
@@ -93,9 +95,9 @@
 }
 
 .settings-card {
-  background-color: #ffffff;
+  background-color: $background-card;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: $shadow-main;
   padding: 24px;
   width: 100%;
   max-width: 400px;
@@ -104,8 +106,8 @@
 .settings-title {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
-  margin: 0 0 20px 0;
+  color: $text-main;
+  margin: 0 0 20px;
 }
 
 .settings-form {

@@ -17,12 +17,12 @@ mat-sidenav {
 .content-padding {
   padding: 20px 60px;
 
-  @media (max-width: 500px) {
+  @media (width <= 500px) {
     padding: 0;
   }
 }
 
-@media (max-width: 366px) {
+@media (width <= 366px) {
   :host {
     flex-direction: column;
   }

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TrainingType, WordConnection, WordModel, WordTrainingModel } from '../../../models/word.model';
+import { TrainingType, WordConnection, WordTrainingModel } from '../../../models/word.model';
 import { CardComponent } from "../../../shared/card/card.component";
 import { CommonModule } from '@angular/common';
-import { forkJoin, map, mergeMap, Observable, of, startWith, take, tap, withLatestFrom, delay, shareReplay, BehaviorSubject, Subject, switchMap } from 'rxjs';
+import { forkJoin, map, mergeMap, Observable, of, startWith, take, tap, withLatestFrom, delay, shareReplay, BehaviorSubject, switchMap } from 'rxjs';
 import { WordService } from '../../word/word.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -224,6 +224,8 @@ export class TrainingPageComponent {
     this.isTrainingFinished = false;
     this.currentIndex = 0;
     this.writtenTranslation = '';
+    this.currentHintIndex = 0;
+    this.revealedLetters = '';
 
     this.trainingWords$ = this.getWords().pipe(
       shareReplay(1)

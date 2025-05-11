@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MatDividerModule } from '@angular/material/divider';
 import { UserInfoService } from './profile.service';
 import { catchError, map, Observable, of, shareReplay, tap } from 'rxjs';
 import { LanguageStats } from '../../models/userInfo.model';
@@ -60,7 +59,7 @@ export class ProfileComponent {
       this.passiveTrainingSize
     ).pipe(
       tap(() => console.log('Settings saved successfully')),
-      catchError((error: any) => {
+      catchError((error: unknown) => {
         console.error('Error saving settings:', error);
         return of(null);
       })

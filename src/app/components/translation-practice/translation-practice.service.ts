@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { TrainingModel } from '../../models/training.model';
 import { TranslationEvaluationResponse } from '../../models/translation-evaluation.model';
 
 @Injectable({
@@ -13,7 +12,7 @@ export class TranslationPracticeService {
 
   constructor(private http: HttpClient) {}
 
-  private buildParams(paramsObj: { [key: string]: any }): HttpParams {
+  private buildParams(paramsObj: { [key: string]: unknown }): HttpParams {
     let params = new HttpParams();
     Object.entries(paramsObj).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') {
@@ -23,7 +22,7 @@ export class TranslationPracticeService {
     return params;
   }
 
-  private getWithParams<T>(endpoint: string, paramsObj: { [key: string]: any }): Observable<T> {
+  private getWithParams<T>(endpoint: string, paramsObj: { [key: string]: unknown }): Observable<T> {
     const params = this.buildParams(paramsObj);
     return this.http.get<T>(`${this.apiUrl}${endpoint}`, { params });
   }

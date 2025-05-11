@@ -1,3 +1,5 @@
+@import '../../../colors';
+
 mat-toolbar {
   display: flex;
   align-items: center;
@@ -8,7 +10,7 @@ mat-toolbar {
     margin-left: 16px;
     z-index: 1;
 
-    @media (max-width: 480px) {
+    @media (width <= 480px) {
       font-size: 16px;
       margin-left: 8px;
     }
@@ -25,7 +27,7 @@ mat-toolbar {
     margin-left: auto;
     margin-right: 16px;
 
-    @media (max-width: 480px) {
+    @media (width <= 480px) {
       margin-right: -15px;
     }
   }
@@ -43,7 +45,7 @@ mat-toolbar {
 .app-title {
   margin-left: 16px;
 
-  @media (max-width: 480px) {
+  @media (width <= 480px) {
     font-size: 16px;
     margin-left: 8px;
   }
@@ -54,10 +56,10 @@ mat-toolbar {
   background-color: transparent;
 
   &:hover {
-    background-color: #e0e0e0;
+    background-color: $border-main;
   }
 
-  @media (max-width: 480px) {
+  @media (width <= 480px) {
     padding: 4px;
   }
 }
@@ -66,12 +68,12 @@ mat-toolbar {
   margin-left: auto;
   margin-right: 30px;
 
-  @media (max-width: 480px) {
+  @media (width <= 480px) {
     margin-right: 10px;
   }
 
   mat-select {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgb(255 255 255 / 0.2);
     border: none;
     border-radius: 20px;
     padding: 5px 4px 5px 8px;
@@ -81,7 +83,7 @@ mat-toolbar {
     min-width: 60px;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.3);
+      background-color: rgb(255 255 255 / 0.3);
     }
 
     ::ng-deep {
@@ -97,7 +99,7 @@ mat-toolbar {
       }
 
       .mat-mdc-select-arrow {
-        color: #ffffff;
+        color: $background-card;
       }
     }
   }
@@ -112,12 +114,12 @@ mat-toolbar {
   padding: 8px 0;
   transition: background-color 0.2s ease;
 
-  @media (max-width: 480px) {
+  @media (width <= 480px) {
     padding: 6px 0;
   }
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: rgb(0 0 0 / 0.04);
   }
 
   span {
@@ -125,7 +127,7 @@ mat-toolbar {
     font-weight: 500;
     margin-right: 5px;
 
-    @media (max-width: 480px) {
+    @media (width <= 480px) {
       font-size: 12px;
     }
   }
@@ -136,10 +138,10 @@ mat-toolbar {
   vertical-align: middle;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: $shadow-main;
   transition: transform 0.2s ease;
 
-  @media (max-width: 480px) {
+  @media (width <= 480px) {
     width: 20px;
     height: 20px;
     margin-left: 8px;
@@ -158,11 +160,11 @@ mat-toolbar {
 
   .mat-mdc-option {
     &:hover:not(.mat-mdc-option-disabled) {
-      background-color: rgba(0, 0, 0, 0.04);
+      background-color: rgb(0 0 0 / 0.04);
     }
 
     &.mat-mdc-option-active {
-      background-color: rgba(0, 0, 0, 0.08);
+      background-color: rgb(0 0 0 / 0.08);
     }
   }
 }
@@ -173,7 +175,7 @@ mat-toolbar {
     line-height: 36px;
     white-space: nowrap;
 
-    @media (max-width: 480px) {
+    @media (width <= 480px) {
       font-size: 12px;
       line-height: 32px;
     }

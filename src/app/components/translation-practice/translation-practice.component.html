@@ -43,6 +43,10 @@
           <div class="accuracy-section">
             <h3>Точность: {{evaluationResult.accuracy}}%</h3>
           </div>
+          <div class="user-translation-section">
+            <h3>Ваш перевод:</h3>
+            <p>{{userTranslation}}</p>
+          </div>
           <div class="correct-translation-section" *ngIf="evaluationResult.correctTranslation">
             <h3>Правильный перевод:</h3>
             <p>{{evaluationResult.correctTranslation}}</p>

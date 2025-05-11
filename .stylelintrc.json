@@ -1,0 +1,53 @@
+{
+  "extends": "stylelint-config-standard-scss",
+  "rules": {
+    "at-rule-no-unknown": null,
+    "scss/at-rule-no-unknown": true,
+    "selector-class-pattern": null,
+    "no-descending-specificity": null,
+    "scss/dollar-variable-pattern": "^[a-z0-9-]+$",
+    "scss/selector-no-redundant-nesting-selector": true,
+    "scss/at-mixin-pattern": "^[a-z][a-zA-Z0-9]+$",
+    "scss/percent-placeholder-pattern": "^[a-z][a-zA-Z0-9]+$",
+    "scss/at-function-pattern": "^[a-z][a-zA-Z0-9]+$",
+    "scss/at-extend-no-missing-placeholder": null,
+    "scss/at-mixin-argumentless-call-parentheses": "always",
+    "scss/at-import-no-partial-leading-underscore": null,
+    "scss/at-import-partial-extension": null,
+    "scss/at-mixin-named-arguments": "always",
+    "scss/comment-no-empty": true,
+    "scss/double-slash-comment-whitespace-inside": "always",
+    "scss/no-global-function-names": true,
+    "scss/operator-no-newline-after": true,
+    "scss/operator-no-newline-before": true,
+    "scss/operator-no-unspaced": true,
+    "scss/selector-no-redundant-nesting-selector": true,
+    "scss/selector-no-union-class-name": true,
+    "color-function-notation": "modern",
+    "alpha-value-notation": "number",
+    "color-no-hex": null,
+    "declaration-block-no-redundant-longhand-properties": true,
+    "font-family-name-quotes": "always-where-recommended",
+    "function-url-quotes": "always",
+    "import-notation": "url",
+    "keyframes-name-pattern": "^[a-z][a-zA-Z0-9]+$",
+    "length-zero-no-unit": true,
+    "media-feature-name-value-no-unknown": true,
+    "no-unknown-animations": true,
+    "property-no-vendor-prefix": true,
+    "selector-attribute-quotes": "always",
+    "selector-not-notation": "simple",
+    "selector-pseudo-element-colon-notation": "double",
+    "shorthand-property-no-redundant-values": true,
+    "value-keyword-case": "lower",
+    "value-no-vendor-prefix": true,
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": ["ng-deep"]
+      }
+    ],
+    "no-duplicate-selectors": null,
+    "media-feature-range-notation": null
+  }
+} 
