@@ -29,6 +29,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'translation-practice/:languageId',
+    loadComponent: () => import('./components/translation-practice/translation-practice.component').then(m => m.TranslationPracticeComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'grammar-page/:languageId',
     loadComponent: () => import('./components/grammar-page/grammar-page.component').then(m => m.GrammarPageComponent),
     canActivate: [authGuard]
