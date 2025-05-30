@@ -19,7 +19,6 @@
             <span class="language-overview__block-header-title">Словарь</span>
         </div>
     </div>
-
 </div>
 <div class="language-overview__statistics">
     <div class="stats-summary" *ngIf="languageStats$ | async as stats">
@@ -34,6 +33,13 @@
         <div class="stat-item">
             <div class="stat-value">{{ stats.totalTrainingDays }}</div>
             <div class="stat-label">Дней тренировки</div>
+        </div>
+    </div>
+
+    <div class="word-of-the-day" *ngIf="(languageStats$ | async)?.wordOfTheDay">
+        <h3>Слово дня</h3>
+        <div class="word-of-the-day__content">
+            <span class="word-of-the-day__text">{{ (languageStats$ | async)?.wordOfTheDay }}</span>
         </div>
     </div>
 

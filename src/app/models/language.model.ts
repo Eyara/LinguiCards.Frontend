@@ -30,6 +30,7 @@ export interface LanguageStatisticsModel {
   activeAverageAccuracy: number;
   passiveAverageAccuracy: number;
   totalTrainingDays: number;
+  wordOfTheDay: string;
   bestActiveWordsByAccuracy: string[];
   bestPassiveWordsByAccuracy: string[];
   worstActiveWordsByAccuracy: string[];

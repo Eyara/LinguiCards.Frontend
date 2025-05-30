@@ -1,3 +1,5 @@
+@import '../../../../colors';
+
 .language-overview {
     display: flex;
     gap: 16px;
@@ -266,4 +268,60 @@
             font-size: 20px;
         }
     }
+}
+
+.word-of-the-day {
+  background-color: $background-main;
+  border-radius: 12px;
+  padding: 24p 0x;
+  box-shadow: 0 4px 6px rgb(0 0 0 / 0.1);
+  border-top: 4px solid $primary-blue;
+  width: 100%;
+  margin-top: 32px;
+
+  h3 {
+    font-size: 24px;
+    color: $primary-blue;
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  &__content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;   
+    border-radius: 8px;
+    padding-bottom: 24px;
+  }
+
+  &__text {
+    font-size: 32px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+}
+
+@media (width <= 768px) {
+  .word-of-the-day {
+    margin-top: 12px;
+
+    h3 {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    &__content {
+      min-height: 0;
+    }
+
+    &__text {
+      font-size: 24px;
+    }
+  }
 }

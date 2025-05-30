@@ -72,6 +72,7 @@ export class LanguageOverviewComponent implements OnInit, AfterViewInit {
                 activeTrainingSize: 0,
                 passiveTrainingSize: 0,
                 totalTrainingDays: 0,
+                wordOfTheDay: '',
                 bestActiveWordsByAccuracy: [],
                 bestPassiveWordsByAccuracy: [],
                 worstActiveWordsByAccuracy: [],
