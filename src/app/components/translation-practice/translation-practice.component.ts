@@ -10,6 +10,9 @@ import { TranslationPracticeService } from './translation-practice.service';
 import { TranslationEvaluationResponse } from '../../models/translation-evaluation.model';
 import { BehaviorSubject, Observable, of, switchMap, map, startWith, shareReplay } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
+import { ActivatedRoute } from '@angular/router';
+import { LanguageService } from '../language/language.service';
+import { DictionarExtendedyModel } from '../../models/language.model';
 
 @Component({
   selector: 'app-translation-practice',
@@ -32,6 +35,8 @@ export class TranslationPracticeComponent {
   level = '';
   topic = '';
   userTranslation = '';
+  languageId: number | null = null;
+  languages: DictionarExtendedyModel[] = [];
 
   private getTextTrigger$ = new BehaviorSubject<void>(undefined);
   private evaluateTrigger$ = new BehaviorSubject<void>(undefined);
@@ -51,12 +56,24 @@ export class TranslationPracticeComponent {
     { value: 'C2', label: 'В совершенстве (C2)' }
   ];
 
-  constructor(private translationService: TranslationPracticeService) {
+  constructor(
+    private translationService: TranslationPracticeService,
+    private languageService: LanguageService,
+    private route: ActivatedRoute
+  ) {
+    const paramId = this.route.snapshot.params['languageId'];
+    if (paramId) {
+      this.languageId = +paramId;
+    }
+    this.languageService.getAvailableLanguages().subscribe((langs: DictionarExtendedyModel[]) => {
+      this.languages = langs;
+    });
+    
     this.originalText$ = this.getTextTrigger$.pipe(
       switchMap(() => {
-        if (!this.level) return of('');
+        if (!this.level || !this.languageId) return of('');
         this.isLoadingText$.next(true);
-        return this.translationService.getEvaluation(this.length, this.level, this.topic).pipe(
+        return this.translationService.getEvaluation(this.languageId, this.length, this.level, this.topic).pipe(
           map(text => {
             this.isLoadingText$.next(false);
             return text.trim();
@@ -87,17 +104,16 @@ export class TranslationPracticeComponent {
                 return result;
               })
             );
-          }),
-          startWith(null)
+          })
         );
-      }),
-      shareReplay(1)
+      })
     );
   }
 
   getText() {
     this.getTextTrigger$.next();
     this.userTranslation = '';
+    this.evaluateTrigger$.next();
   }
 
   evaluateTranslation() {

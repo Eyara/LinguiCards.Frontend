@@ -7,8 +7,8 @@
       <div class="settings-form">
         <mat-form-field appearance="outline">
           <mat-label>Размер текста</mat-label>
-          <input matInput type="number" [(ngModel)]="length" min="1" max="10">
-          <mat-hint>Размер текста (в предложениях)</mat-hint>
+          <input matInput type="number" [(ngModel)]="length" min="10" max="250" class="no-spinners">
+          <mat-hint>Размер текста (в словах, от 10 до 250)</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline">

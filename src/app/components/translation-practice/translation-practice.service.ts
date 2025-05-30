@@ -27,8 +27,8 @@ export class TranslationPracticeService {
     return this.http.get<T>(`${this.apiUrl}${endpoint}`, { params });
   }
 
-  getEvaluation(length?: number, level?: string, topic?: string): Observable<string> {
-    const params = this.buildParams({ length, level, topic });
+  getEvaluation(languageId: number, length?: number, level?: string, topic?: string): Observable<string> {
+    const params = this.buildParams({ languageId, length, level, topic });
     return this.http.get(`${this.apiUrl}${this.translationEvaluationPath}`, { params, responseType: 'text' });
   }
 

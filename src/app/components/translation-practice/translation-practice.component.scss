@@ -278,6 +278,15 @@ button[mat-raised-button] {
   }
 }
 
+.no-spinners {
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  -moz-appearance: textfield;
+}
+
 @media (width <= 600px) {
   .translation-practice-container {
     margin: 16px auto;
