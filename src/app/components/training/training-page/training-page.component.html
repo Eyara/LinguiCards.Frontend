@@ -5,7 +5,7 @@
     <div class="training-page__finished-training">
       <div *ngIf="trainingResult$ | async as trainingResult">
         <div class="action-buttons">
-          <button mat-flat-button color="primary" class="action-button" (click)="startNewTraining()">Начать новую
+          <button mat-flat-button color="primary" class="action-button" (click)="startNewTraining()" [disabled]="isLoading">Начать новую
             тренировку</button>
           <button mat-flat-button color="primary" class="action-button" (click)="goToDashboard()">Вернуться к
             дашборду</button>
@@ -45,14 +45,14 @@
           <span class="revealed-letters">{{ revealedLetters }}</span>
           <span class="hidden-letters">{{ getHiddenLetters(currentWord) }}</span>
         </div>
-        <button mat-button (click)="getHint()" [disabled]="isHintDisabled(currentWord)">
+        <button mat-button (click)="getHint()" [disabled]="isHintDisabled(currentWord) || isLoading">
           <mat-icon>lightbulb</mat-icon>
           Подсказка
         </button>
         <div class="training-page__input-block">
           <mat-form-field appearance="outline">
-            <input matInput [(ngModel)]="writtenTranslation" (keyup.enter)="continueTraining()">
-            <button matSuffix mat-icon-button aria-label="Clear" (click)="continueTraining()">
+            <input matInput [(ngModel)]="writtenTranslation" (keyup.enter)="continueTraining()" [disabled]="isLoading">
+            <button matSuffix mat-icon-button aria-label="Clear" (click)="continueTraining()" [disabled]="isLoading">
               <mat-icon>send</mat-icon>
             </button>
           </mat-form-field>
@@ -66,7 +66,7 @@
       </div>
     </ng-container>
     <div class="action-buttons">
-      <button mat-flat-button color="primary" class="action-button" (click)="finishTraining()">Закончить</button>
+      <button mat-flat-button color="primary" class="action-button" (click)="finishTraining()" [disabled]="isLoading">Закончить</button>
     </div>
   </ng-template>
 </div>

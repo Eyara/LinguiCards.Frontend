@@ -27,7 +27,8 @@
         </mat-form-field>
 
         <button mat-raised-button color="primary" (click)="getText()" [disabled]="!level || (isLoadingText$ | async)">
-          Получить текст
+          <mat-spinner diameter="20" *ngIf="isLoadingText$ | async" class="button-spinner"></mat-spinner>
+          <span *ngIf="!(isLoadingText$ | async)">Получить текст</span>
         </button>
       </div>
     </mat-card-content>
@@ -93,7 +94,8 @@
           </mat-form-field>
           <button mat-raised-button color="primary" (click)="evaluateTranslation()" 
                   [disabled]="!userTranslation.trim() || (isLoadingEval$ | async)">
-            Оценить перевод
+            <mat-spinner diameter="20" *ngIf="isLoadingEval$ | async" class="button-spinner"></mat-spinner>
+            <span *ngIf="!(isLoadingEval$ | async)">Оценить перевод</span>
           </button>
         </div>
       </mat-card-content>

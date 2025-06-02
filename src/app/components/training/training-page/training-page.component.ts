@@ -48,6 +48,8 @@ export class TrainingPageComponent {
   currentHintIndex: number = 0;
   revealedLetters: string = '';
 
+  isLoading = false;
+
   constructor(private route: ActivatedRoute, private wordService: WordService, private trainingService: TrainingService, private router: Router) {
     this.languageId = this.route.snapshot.params['languageId'];
     this.trainingWords$ = this.getWords().pipe(
@@ -84,6 +86,7 @@ export class TrainingPageComponent {
   }
 
   continueTraining() {
+    this.isLoading = true;
     this.continueTraining$ = this.trainingWords$.pipe(
       take(1),
       withLatestFrom(this.currentWord$),
@@ -122,6 +125,7 @@ export class TrainingPageComponent {
             this.expectedMatches$.next(words[this.currentIndex].connectionMatches);
           }
         }
+        this.isLoading = false;
       })
     );
   }
@@ -151,11 +155,13 @@ export class TrainingPageComponent {
   }
 
   finishTraining() {
+    this.isLoading = true;
     this.isTrainingFinished = true;
     this.trainingResult$ = this.trainingWords$.pipe(
       take(1),
       map(words => words[0].trainingId),
-      switchMap(trainingId => this.getTrainingResult(trainingId))
+      switchMap(trainingId => this.getTrainingResult(trainingId)),
+      tap(() => this.isLoading = false)
     );
   }
 
@@ -221,6 +227,7 @@ export class TrainingPageComponent {
   }
 
   startNewTraining() {
+    this.isLoading = true;
     this.isTrainingFinished = false;
     this.currentIndex = 0;
     this.writtenTranslation = '';
@@ -228,7 +235,8 @@ export class TrainingPageComponent {
     this.revealedLetters = '';
 
     this.trainingWords$ = this.getWords().pipe(
-      shareReplay(1)
+      shareReplay(1),
+      tap(() => this.isLoading = false)
     );
 
     this.currentWord$ = this.trainingWords$.pipe(

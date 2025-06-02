@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslationPracticeService } from './translation-practice.service';
 import { TranslationEvaluationResponse } from '../../models/translation-evaluation.model';
 import { BehaviorSubject, Observable, of, switchMap, map, startWith, shareReplay } from 'rxjs';
@@ -25,7 +26,8 @@ import { DictionarExtendedyModel } from '../../models/language.model';
     MatSelectModule,
     MatButtonModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './translation-practice.component.html',
   styleUrl: './translation-practice.component.scss'
