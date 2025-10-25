@@ -1,6 +1,7 @@
 export interface UserInfo {
     level: number;
     xp: number;
+    dailyXp: number;
     xpToNextLevel: number;
     languageStats: LanguageStats[];
 }

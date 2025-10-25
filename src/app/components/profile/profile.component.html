@@ -16,8 +16,39 @@
       </div>
     </div>
     <p class="xp-remaining">{{ xpToNextLevel - xp }} XP до следующего уровня</p>
+  </div>  
+</div>
+
+<div class="daily-goal-section">
+  <div class="daily-goal-card">
+    <h2 class="daily-goal-title">Ежедневная цель XP</h2>
+    
+    <div class="daily-progress-container" *ngIf="dailyGoalXp > 0">
+      <mat-progress-bar
+        class="daily-progress"
+        [value]="(dailyXp / dailyGoalXp) * 100"
+        color="accent"
+      ></mat-progress-bar>
+      <div class="daily-progress-labels">
+        <span class="daily-xp-current">{{ dailyXp }} XP</span>
+        <span class="daily-xp-goal">{{ dailyGoalXp }} XP</span>
+      </div>
+      <p class="daily-xp-remaining" *ngIf="dailyXp < dailyGoalXp">
+        {{ dailyGoalXp - dailyXp }} XP до цели
+      </p>
+      <p class="daily-xp-completed" *ngIf="dailyXp >= dailyGoalXp">
+        🎉 Цель достигнута!
+      </p>
+    </div>
+    
+    <div class="daily-goal-form">
+      <mat-form-field appearance="outline">
+        <mat-label>XP в день</mat-label>
+        <input matInput type="number" [(ngModel)]="dailyGoalXp" min="0">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="saveSettings()">Сохранить</button>
+    </div>
   </div>
-  
 </div>
 
 <div class="settings-section">
@@ -40,7 +71,7 @@
       </div>
 
       <button mat-raised-button color="primary" (click)="saveSettings()">
-        Сохранить настройки
+        Сохранить
       </button>
     </div>
   </div>

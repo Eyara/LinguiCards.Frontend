@@ -28,10 +28,12 @@ export class ProfileComponent {
   level: number = 0;
   xp: number = 0;
   xpToNextLevel: number = 0;
+  dailyXp: number = 0;
   userSettings$: Observable<UserSettings>;
   saveUserSettings$: Observable<void | null> = of(null);
   activeTrainingSize: number = 0;
   passiveTrainingSize: number = 0;
+  dailyGoalXp: number = 0;
 
   constructor(private userInfoService: UserInfoService) { 
     this.languages$ = this.userInfoService.getUserInfo().pipe(
@@ -40,6 +42,7 @@ export class ProfileComponent {
         this.level = userInfo.level;
         this.xp = userInfo.xp;
         this.xpToNextLevel = userInfo.xpToNextLevel;
+        this.dailyXp = userInfo.dailyXp;
       }),
       map(userInfo => userInfo.languageStats)
     );
@@ -49,6 +52,7 @@ export class ProfileComponent {
       tap(settings => {
         this.activeTrainingSize = settings.activeTrainingSize;
         this.passiveTrainingSize = settings.passiveTrainingSize;
+        this.dailyGoalXp = settings.dailyGoalXp;
       })
     );
   }
@@ -56,7 +60,8 @@ export class ProfileComponent {
   saveSettings(): void {
     this.saveUserSettings$ = this.userInfoService.createOrUpdateUserSettings(
       this.activeTrainingSize,
-      this.passiveTrainingSize
+      this.passiveTrainingSize,
+      this.dailyGoalXp
     ).pipe(
       tap(() => console.log('Settings saved successfully')),
       catchError((error: unknown) => {
