@@ -20,7 +20,7 @@ export class LoginService {
   }
 
   signIn(user: User): Observable<boolean> {
-    return this.http.post(`${this.apiUrl}/user/login`, user, {
+    return this.http.post(`${this.apiUrl}/User/login`, user, {
       responseType: 'text',
       headers: new HttpHeaders({'Content-Type': 'application/json'})
     }).pipe(
@@ -30,7 +30,7 @@ export class LoginService {
   }
 
   signUp(user: User): Observable<boolean> {
-    return this.http.post(`${this.apiUrl}/user/register`, user, {
+    return this.http.post(`${this.apiUrl}/User/register`, user, {
       responseType: 'text',
       headers: new HttpHeaders({'Content-Type': 'application/json'})
     }).pipe(

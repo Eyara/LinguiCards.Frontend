@@ -3,10 +3,11 @@ export interface LanguageCreateModel {
   languageDictionaryId: number;
 }
 
-export interface LanguageResponseModel extends LanguageCreateModel {
+export interface LanguageResponseModel {
   id: number;
   name: string;
   url: string;
+  userId: number;
   languageDictionaryId: number;
 }
 
@@ -17,20 +18,25 @@ export interface LanguageModel extends LanguageResponseModel {
 export interface DictionarExtendedyModel {
   id: number;
   name: string;
-  src: string;
+  url: string;
+}
+
+export interface WordOfTheDay {
+  name: string;
+  translatedName: string;
 }
 
 export interface LanguageStatisticsModel {
-  totalWords: number;
-  learnedWords: number;
   activeLearnedPercent: number;
   passiveLearnedPercent: number;
-  activeAverageLearnedPercent: number;
-  passiveAverageLearnedPercent: number;
   activeAverageAccuracy: number;
   passiveAverageAccuracy: number;
+  activeAverageLearnedPercent: number;
+  passiveAverageLearnedPercent: number;
+  learnedWords: number;
+  totalWords: number;
   totalTrainingDays: number;
-  wordOfTheDay: string;
+  wordOfTheDay: WordOfTheDay;
   bestActiveWordsByAccuracy: string[];
   bestPassiveWordsByAccuracy: string[];
   worstActiveWordsByAccuracy: string[];

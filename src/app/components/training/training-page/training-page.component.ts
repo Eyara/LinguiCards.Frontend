@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, ElementRef, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { TrainingType, WordConnection, WordTrainingModel } from '../../../models/word.model';
 import { CardComponent } from "../../../shared/card/card.component";
 import { CommonModule } from '@angular/common';
@@ -24,7 +24,7 @@ import { TrainingConnectionComponent } from './training-connection/training-conn
   styleUrls: ['./training-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TrainingPageComponent {
+export class TrainingPageComponent implements AfterViewChecked {
   selectedOption$: Observable<string> = of('');
   trainingWords$: Observable<WordTrainingModel[]>;
   options: string[] = [];
@@ -50,7 +50,17 @@ export class TrainingPageComponent {
 
   isLoading = false;
 
-  constructor(private route: ActivatedRoute, private wordService: WordService, private trainingService: TrainingService, private router: Router) {
+  @ViewChild('translationInput') translationInput!: ElementRef<HTMLInputElement>;
+  
+  private shouldFocusInput = false;
+
+  constructor(
+    private route: ActivatedRoute, 
+    private wordService: WordService, 
+    private trainingService: TrainingService, 
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {
     this.languageId = this.route.snapshot.params['languageId'];
     this.trainingWords$ = this.getWords().pipe(
       shareReplay(1)
@@ -123,6 +133,10 @@ export class TrainingPageComponent {
             this.connectionWords$.next(words[this.currentIndex].connectionTargets);
             this.connectionTranslations$.next(words[this.currentIndex].options);
             this.expectedMatches$.next(words[this.currentIndex].connectionMatches);
+          } else if (this.getTrainingRenderType(words[this.currentIndex]) === TrainingRenderType.Input) {
+            // Mark that we should focus the input after view update
+            this.shouldFocusInput = true;
+            this.cdr.detectChanges();
           }
         }
         this.isLoading = false;
@@ -274,5 +288,17 @@ export class TrainingPageComponent {
         }
       }
     });
+  }
+
+  ngAfterViewChecked() {
+    if (this.shouldFocusInput && this.translationInput?.nativeElement) {
+      // Use requestAnimationFrame to ensure the view is fully rendered
+      requestAnimationFrame(() => {
+        if (this.translationInput?.nativeElement) {
+          this.translationInput.nativeElement.focus();
+          this.shouldFocusInput = false;
+        }
+      });
+    }
   }
 }

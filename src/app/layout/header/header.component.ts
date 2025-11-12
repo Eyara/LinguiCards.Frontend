@@ -25,7 +25,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     id: 1, name: 'English',
     editMode: false,
     url: '',
-    languageDictionaryId: 0
+    languageDictionaryId: 0,
+    userId: 0
   };
   selectedLanguage$: Observable<LanguageModel> | undefined;
   isAuthenticated$: Observable<boolean> | undefined;

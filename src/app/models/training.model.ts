@@ -3,6 +3,8 @@ export interface TrainingModel {
   isCorrectAnswer: boolean;
   passiveLearned: number;
   activeLearned: number;
+  trainingId: string;
+  wordId: number;
   vocabularyType: number;
   changedOn: string;
   answer: string;

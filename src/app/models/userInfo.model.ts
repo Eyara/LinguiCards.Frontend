@@ -3,10 +3,10 @@ export interface UserInfo {
     xp: number;
     dailyXp: number;
     xpToNextLevel: number;
-    languageStats: LanguageStats[];
+    languageStats: LanguageStat[];
 }
 
-export interface LanguageStats {
+export interface LanguageStat {
     languageName: string;
     totalWords: number;
     learnedWords: number;

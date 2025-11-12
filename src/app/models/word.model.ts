@@ -37,6 +37,7 @@ export interface WordModel extends WordCreateModel {
   id: number;
   activeLearnedPercent: number;
   passiveLearnedPercent: number;
+  lastUpdated: string;
   languageId: number;
 }
 

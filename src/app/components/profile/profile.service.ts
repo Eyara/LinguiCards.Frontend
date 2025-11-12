@@ -13,7 +13,7 @@ export class UserInfoService {
     constructor(private http: HttpClient) { }
 
     getUserInfo(): Observable<UserInfo> {
-        return this.http.get<UserInfo>(`${this.apiUrl}/user/info`);
+        return this.http.get<UserInfo>(`${this.apiUrl}/User/info`);
     }
 
     getUserSettings(): Observable<UserSettings> {

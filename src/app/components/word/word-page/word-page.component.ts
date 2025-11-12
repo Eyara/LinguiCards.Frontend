@@ -76,7 +76,7 @@ export class WordPageComponent implements OnInit, AfterViewInit {
   addWord() {
     this.words$ = this.words$.pipe(
       map(words => [
-        { id: 0, name: '', translatedName: '', activeLearnedPercent: 0, passiveLearnedPercent: 0, languageId: this.languageId, editMode: EditMode.Create },
+        { id: 0, name: '', translatedName: '', activeLearnedPercent: 0, passiveLearnedPercent: 0, lastUpdated: '', languageId: this.languageId, editMode: EditMode.Create },
         ...words
       ])
     );

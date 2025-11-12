@@ -11,7 +11,8 @@ export class SelectedLanguageService {
     name: '',
     editMode: false,
     url: '',
-    languageDictionaryId: 0
+    languageDictionaryId: 0,
+    userId: 0
   };
   private selectedLanguageSubject: BehaviorSubject<LanguageModel> = new BehaviorSubject<LanguageModel>(this.defaultLanguage);
   public selectedLanguage$: Observable<LanguageModel> = this.selectedLanguageSubject.asObservable();

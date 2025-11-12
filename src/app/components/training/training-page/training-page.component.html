@@ -51,7 +51,7 @@
         </button>
         <div class="training-page__input-block">
           <mat-form-field appearance="outline">
-            <input matInput [(ngModel)]="writtenTranslation" (keyup.enter)="continueTraining()" [disabled]="isLoading">
+            <input #translationInput matInput [(ngModel)]="writtenTranslation" (keyup.enter)="continueTraining()" [disabled]="isLoading">
             <button matSuffix mat-icon-button aria-label="Clear" (click)="continueTraining()" [disabled]="isLoading">
               <mat-icon>send</mat-icon>
             </button>

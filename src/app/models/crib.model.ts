@@ -1,6 +1,6 @@
 export interface CribResponseModel {
   id: number;
-  name: string;
+  languageid: number;
   cribDescriptions: CribDescriptionResponseModel[];
 }
 

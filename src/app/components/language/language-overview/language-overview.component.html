@@ -36,10 +36,13 @@
         </div>
     </div>
 
-    <div class="word-of-the-day" *ngIf="(languageStats$ | async)?.wordOfTheDay">
+    <div class="word-of-the-day" *ngIf="(languageStats$ | async)?.wordOfTheDay as wordOfTheDay">
         <h3>Слово дня</h3>
         <div class="word-of-the-day__content">
-            <span class="word-of-the-day__text">{{ (languageStats$ | async)?.wordOfTheDay }}</span>
+            <span class="word-of-the-day__text">{{ wordOfTheDay.name }}</span>
+            <span class="word-of-the-day__translation" *ngIf="wordOfTheDay.translatedName">
+                - {{ wordOfTheDay.translatedName }}
+            </span>
         </div>
     </div>
 

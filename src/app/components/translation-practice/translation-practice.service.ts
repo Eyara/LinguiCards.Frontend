@@ -33,6 +33,7 @@ export class TranslationPracticeService {
   }
 
   evaluateTranslation(level: string, originalText: string, translation: string): Observable<TranslationEvaluationResponse> {
-    return this.getWithParams<TranslationEvaluationResponse>(`${this.translationEvaluationPath}/evaluation`, { level, originalText, translation });
+    const params = this.buildParams({ level, originalText, translation });
+    return this.http.post<TranslationEvaluationResponse>(`${this.apiUrl}${this.translationEvaluationPath}/evaluation`, null, { params });
   }
 }
