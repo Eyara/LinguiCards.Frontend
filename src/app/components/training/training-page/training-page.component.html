@@ -23,8 +23,19 @@
                 {{element.answer}}
               </td>
             </ng-container>
-            <tr mat-header-row *matHeaderRowDef="['correctAnswer', 'userAnswer']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['correctAnswer', 'userAnswer'];"></tr>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Действия </th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button color="primary" (click)="challengeWord(element.wordId, element.trainingId)" 
+                        [disabled]="isLoading || isWordChallenged(element.wordId) || element.isCorrectAnswer" 
+                        aria-label="Challenge word">
+                  <mat-icon>{{ isWordChallenged(element.wordId) ? 'check_circle' : 'flag' }}</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['correctAnswer', 'userAnswer', 'actions']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['correctAnswer', 'userAnswer', 'actions'];" 
+                [ngClass]="{'challenged-row': isWordChallenged(row.wordId)}"></tr>
           </table>
         </div>
       </div>

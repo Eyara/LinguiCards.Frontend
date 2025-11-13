@@ -145,6 +145,10 @@
     margin-top: 20px;
     margin-bottom: 32px;
     -webkit-overflow-scrolling: touch;
+
+    @media (width <= 600px) {
+      overflow-x: visible;
+    }
   }
 
   .results-table {
@@ -154,6 +158,11 @@
     border-spacing: 0;
     word-wrap: break-word;
     overflow-wrap: break-word;
+
+    @media (width <= 600px) {
+      min-width: 100%;
+      table-layout: fixed;
+    }
 
     th {
       background-color: $primary-blue;
@@ -165,6 +174,11 @@
       font-size: 14px;
       word-wrap: break-word;
       overflow-wrap: break-word;
+
+      @media (width <= 600px) {
+        padding: 8px 4px;
+        font-size: 10px;
+      }
     }
 
     td {
@@ -173,6 +187,11 @@
       font-size: 14px;
       word-wrap: break-word;
       overflow-wrap: break-word;
+
+      @media (width <= 600px) {
+        padding: 8px 4px;
+        font-size: 11px;
+      }
     }
 
     tr:nth-child(even) {
@@ -181,6 +200,14 @@
 
     tr:hover {
       background-color: $primary-blue-light;
+    }
+
+    tr.challenged-row {
+      background-color: $background-green !important;
+      
+      &:hover {
+        background-color: #e8f5e9 !important;
+      }
     }
 
     .correct-answer {
@@ -238,14 +265,46 @@
 
 @media (width <= 600px) {
   .training-page__finished-training {
-    width: 90%;
-    padding: 0;
+    width: 100%;
+    padding: 0 8px;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    .results-table-wrapper {
+      margin-top: 16px;
+      margin-bottom: 24px;
+      width: 100%;
+      overflow-x: visible;
+    }
 
     .results-table {
-      font-size: 12px;
+      width: 100%;
+      min-width: 100%;
+      max-width: 100%;
+      table-layout: fixed;
 
-      th, td {
-        padding: 12px;
+      th {
+        width: 33.33%;
+        padding: 8px 4px;
+        font-size: 10px;
+      }
+
+      td {
+        padding: 8px 4px;
+        font-size: 11px;
+        width: 33.33%;
+      }
+
+      .mat-icon-button {
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+
+        .mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
       }
     }
   }

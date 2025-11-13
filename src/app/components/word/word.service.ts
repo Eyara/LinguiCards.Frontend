@@ -63,6 +63,15 @@ export class WordService {
     });
   }
 
+  challengeWord(wordId: number, trainingId: string): Observable<boolean> {
+    return this.http.patch<boolean>(`${this.apiUrl}/Word/challenge`, null, {
+      params: {
+        wordId: wordId.toString(),
+        trainingId: trainingId
+      }
+    });
+  }
+
   deleteWord(wordId: number): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/Word`,
       {

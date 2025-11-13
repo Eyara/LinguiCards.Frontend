@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewChild, ElementRef, ChangeDetect
 import { TrainingType, WordConnection, WordTrainingModel } from '../../../models/word.model';
 import { CardComponent } from "../../../shared/card/card.component";
 import { CommonModule } from '@angular/common';
-import { forkJoin, map, mergeMap, Observable, of, startWith, take, tap, withLatestFrom, delay, shareReplay, BehaviorSubject, switchMap } from 'rxjs';
+import { forkJoin, map, mergeMap, Observable, of, startWith, take, tap, withLatestFrom, delay, shareReplay, BehaviorSubject, switchMap, catchError } from 'rxjs';
 import { WordService } from '../../word/word.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -49,6 +49,7 @@ export class TrainingPageComponent implements AfterViewChecked {
   revealedLetters: string = '';
 
   isLoading = false;
+  challengedWordIds = new Set<number>();
 
   @ViewChild('translationInput') translationInput!: ElementRef<HTMLInputElement>;
   
@@ -262,6 +263,30 @@ export class TrainingPageComponent implements AfterViewChecked {
 
   goToDashboard() {
     this.router.navigate(['/language-overview', this.languageId]);
+  }
+
+  challengeWord(wordId: number, trainingId: string) {
+    if (this.challengedWordIds.has(wordId)) {
+      return;
+    }
+    
+    this.isLoading = true;
+    this.wordService.challengeWord(wordId, trainingId).pipe(
+      tap(() => {
+        this.challengedWordIds.add(wordId);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }),
+      catchError((error) => {
+        console.error('Error challenging word:', error);
+        this.isLoading = false;
+        return of(false);
+      })
+    ).subscribe();
+  }
+
+  isWordChallenged(wordId: number): boolean {
+    return this.challengedWordIds.has(wordId);
   }
 
   getHiddenLetters(word: WordTrainingModel | null): string {
