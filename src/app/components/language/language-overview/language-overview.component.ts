@@ -170,5 +170,10 @@ export class LanguageOverviewComponent implements OnInit, AfterViewInit {
       this.router.navigate(['/translation-practice', this.currentLanguage.id]);
     }
   }
+  navigateToGrammarTask() {
+    if (this.currentLanguage) {
+      this.router.navigate(['/grammar-task', this.currentLanguage.id]);
+    }
+  }
 }
 

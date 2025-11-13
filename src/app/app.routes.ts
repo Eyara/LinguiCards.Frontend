@@ -39,6 +39,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'grammar-task/:languageId',
+    loadComponent: () => import('./components/grammar-task/grammar-task.component').then(m => m.GrammarTaskComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'sign-up',
     loadComponent: () => import('./components/login/sign-up/sign-up.component').then(m => m.SignUpComponent)
   },

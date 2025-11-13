@@ -1,0 +1,255 @@
+@import '../../../colors';
+
+.grammar-task-container {
+  max-width: 600px;
+  margin: 24px auto;
+  padding: 0 16px;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background: $background-main;
+}
+
+.settings-card,
+.practice-card,
+.result-card {
+  margin-bottom: 24px;
+  border-radius: 16px;
+  box-shadow: $shadow-main;
+  border: 1px solid $border-light;
+  background: $background-card;
+}
+
+.mat-card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid $border-light;
+}
+
+.mat-card-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: $text-main;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: $border-main;
+}
+
+button[mat-raised-button] {
+  width: 100%;
+  font-weight: 400;
+  font-size: 0.95rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+  background: $primary-blue;
+  color: $background-card;
+  border: none;
+  transition: all 0.2s ease;
+  padding: 10px 16px;
+  text-transform: none;
+  letter-spacing: 0.3px;
+
+  &:hover {
+    background: $primary-blue-dark;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+  }
+
+  &:disabled {
+    background: $border-main;
+    color: $text-light;
+    box-shadow: none;
+  }
+}
+
+.text-section,
+.answer-section,
+.result-section {
+  margin: 20px;
+}
+
+.text-section h3,
+.result-section h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: $text-main;
+  margin-bottom: 10px;
+}
+
+.task-text {
+  background: $background-main;
+  padding: 18px;
+  border-radius: 12px;
+  margin: 8px 0;
+  font-size: 1rem;
+  color: $text-main;
+  border-left: 3px solid $primary-blue;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.03);
+}
+
+.answer-input {
+  width: 100%;
+  margin-bottom: 16px;
+  
+  textarea {
+    width: 100%;
+    font-size: 0.95rem;
+    padding: 12px;
+    background: $background-card;
+    border-radius: 8px;
+    border: 1px solid $border-main;
+    box-shadow: none;
+    transition: all 0.2s ease;
+    outline: none;
+    resize: none;
+    min-height: 100px;
+    color: $text-main;
+    font-family: inherit;
+    line-height: 1.5;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: $text-light;
+      opacity: 1;
+      font-size: 0.9rem;
+    }
+
+    &:focus {
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 1px rgb(74 144 226 / 0.1);
+      background: $background-card;
+    }
+
+    &:hover {
+      border-color: $text-placeholder;
+    }
+  }
+}
+
+.evaluation-section {
+  margin-bottom: 20px;
+
+  h3 {
+    color: $text-main;
+    margin-bottom: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .evaluation-text {
+    background: $background-main;
+    padding: 14px;
+    border-radius: 12px;
+    margin: 8px 0;
+    line-height: 1.5;
+    color: $text-main;
+    border-left: 3px solid $primary-blue;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.03);
+    white-space: pre-wrap;
+  }
+}
+
+.answer-input textarea {
+  font-size: 1.08rem;
+  padding: 16px 14px;
+  background: $primary-blue-light;
+  border-radius: 10px;
+  border: 1.5px solid $border-main;
+  box-shadow: 0 1px 3px rgb(33 150 243 / 0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  resize: none;
+  min-height: 120px;
+  color: $text-main;
+  font-family: inherit;
+
+  &::placeholder {
+    color: $text-light;
+    opacity: 1;
+    font-size: 1.05rem;
+  }
+
+  &:focus {
+    border-color: $primary-blue;
+    box-shadow: 0 0 0 2px rgb(33 150 243 / 0.10);
+    background: $primary-blue-light;
+  }
+}
+
+@media (width <= 600px) {
+  .grammar-task-container {
+    margin: 16px auto;
+    padding: 0 12px;
+  }
+  
+  .settings-form {
+    gap: 14px;
+    padding: 16px;
+  }
+  
+  .text-section,
+  .answer-section,
+  .result-section {
+    margin: 14px;
+  }
+  
+  .task-text,
+  .answer-input textarea {
+    font-size: 0.9rem;
+    padding: 10px;
+    min-height: 90px;
+  }
+  
+  .mat-card-title {
+    font-size: 1.1rem;
+  }
+
+  button[mat-raised-button] {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (width <= 400px) {
+  .grammar-task-container {
+    margin: 12px auto;
+    padding: 0 8px;
+  }
+
+  .settings-card,
+  .practice-card,
+  .result-card {
+    margin-bottom: 16px;
+    border-radius: 12px;
+  }
+
+  .text-section,
+  .answer-section,
+  .result-section {
+    margin: 12px;
+  }
+}
+
+.button-spinner {
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+}
+

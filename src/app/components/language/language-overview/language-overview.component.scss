@@ -48,6 +48,11 @@
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 1px;
+    padding: 0 16px;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.4;
 }
 
 .language-overview__block-highlighted {
