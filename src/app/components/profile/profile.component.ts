@@ -29,6 +29,7 @@ export class ProfileComponent {
   xp: number = 0;
   xpToNextLevel: number = 0;
   dailyXp: number = 0;
+  goalStreak: number = 0;
   userSettings$: Observable<UserSettings>;
   saveUserSettings$: Observable<void | null> = of(null);
   activeTrainingSize: number = 0;
@@ -43,6 +44,7 @@ export class ProfileComponent {
         this.xp = userInfo.xp;
         this.xpToNextLevel = userInfo.xpToNextLevel;
         this.dailyXp = userInfo.dailyXp;
+        this.goalStreak = userInfo.goalStreak;
       }),
       map(userInfo => userInfo.languageStats)
     );
@@ -69,5 +71,11 @@ export class ProfileComponent {
         return of(null);
       })
     );
+  }
+
+  getStreakLabel(days: number): string {
+    if (days === 1) return 'день подряд';
+    if (days >= 2 && days <= 4) return 'дня подряд';
+    return 'дней подряд';
   }
 }

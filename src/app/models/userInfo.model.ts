@@ -1,9 +1,20 @@
 export interface UserInfo {
     level: number;
     xp: number;
-    dailyXp: number;
     xpToNextLevel: number;
+    dailyXp: number;
+    goalStreak: number;
+    completedGoalDays: CompletedGoalDay[];
     languageStats: LanguageStat[];
+}
+
+export interface CompletedGoalDay {
+    year: number;
+    month: number;
+    day: number;
+    dayOfWeek: number;
+    dayOfYear: number;
+    dayNumber: number;
 }
 
 export interface LanguageStat {
