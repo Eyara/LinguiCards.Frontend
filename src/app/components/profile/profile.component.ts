@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { UserInfoService } from './profile.service';
 import { catchError, map, Observable, of, shareReplay, tap } from 'rxjs';
-import { CompletedGoalDay, LanguageStat } from '../../models/userInfo.model';
+import { CompletedGoalDayInput, LanguageStat } from '../../models/userInfo.model';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -34,7 +34,7 @@ export class ProfileComponent {
   xpToNextLevel: number = 0;
   dailyXp: number = 0;
   goalStreak: number = 0;
-  completedGoalDays: CompletedGoalDay[] = [];
+  completedGoalDays: CompletedGoalDayInput[] = [];
   userSettings$: Observable<UserSettings>;
   saveUserSettings$: Observable<void | null> = of(null);
   activeTrainingSize: number = 0;

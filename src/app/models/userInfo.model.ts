@@ -4,7 +4,7 @@ export interface UserInfo {
     xpToNextLevel: number;
     dailyXp: number;
     goalStreak: number;
-    completedGoalDays: CompletedGoalDay[];
+    completedGoalDays: CompletedGoalDayInput[];
     languageStats: LanguageStat[];
 }
 
@@ -16,6 +16,9 @@ export interface CompletedGoalDay {
     dayOfYear: number;
     dayNumber: number;
 }
+
+// API may return dates as strings in 'YYYY-MM-DD' format
+export type CompletedGoalDayInput = CompletedGoalDay | string;
 
 export interface LanguageStat {
     languageName: string;

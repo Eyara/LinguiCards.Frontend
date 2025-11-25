@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CompletedGoalDay } from '../../../models/userInfo.model';
+import { CompletedGoalDayInput } from '../../../models/userInfo.model';
 
 interface CalendarDay {
   date: number;
@@ -19,7 +19,9 @@ interface CalendarDay {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoalCalendarComponent implements OnChanges {
-  @Input() completedGoalDays: CompletedGoalDay[] = [];
+  @Input() completedGoalDays: CompletedGoalDayInput[] = [];
+
+  private readonly DAYS_TO_DISPLAY = 30;
 
   completedDaysSet: Set<string> = new Set();
   calendarDays: CalendarDay[] = [];
@@ -32,11 +34,27 @@ export class GoalCalendarComponent implements OnChanges {
   }
 
   private updateCompletedDaysSet(): void {
+    console.log('Completed goal days:', this.completedGoalDays);
     this.completedDaysSet = new Set();
     this.completedGoalDays.forEach(day => {
-      const dateKey = `${day.year}-${String(day.month).padStart(2, '0')}-${String(day.day).padStart(2, '0')}`;
-      this.completedDaysSet.add(dateKey);
+      let dateKey: string | null = null;
+      
+      // Handle string format: '2025-11-25'
+      if (typeof day === 'string') {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(day)) {
+          dateKey = day;
+        }
+      }
+      // Handle object format: { year: 2025, month: 11, day: 25 }
+      else if (day && typeof day === 'object' && day.year != null && day.month != null && day.day != null) {
+        dateKey = `${day.year}-${String(day.month).padStart(2, '0')}-${String(day.day).padStart(2, '0')}`;
+      }
+      
+      if (dateKey) {
+        this.completedDaysSet.add(dateKey);
+      }
     });
+    console.log('Completed days set:', this.completedDaysSet);
   }
 
   private updateCalendarDays(): void {
@@ -44,7 +62,7 @@ export class GoalCalendarComponent implements OnChanges {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    for (let i = 29; i >= 0; i--) {
+    for (let i = this.DAYS_TO_DISPLAY - 1; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
       

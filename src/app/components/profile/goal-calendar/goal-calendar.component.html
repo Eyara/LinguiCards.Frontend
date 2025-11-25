@@ -20,10 +20,6 @@
       >
         <div class="day-content">
           <span class="day-number">{{ day.date }}</span>
-          <div class="day-check-wrapper" *ngIf="day.isCompleted">
-            <span class="day-check">✓</span>
-            <div class="check-ring"></div>
-          </div>
           <div class="day-glow" *ngIf="day.isCompleted"></div>
         </div>
       </div>
@@ -31,9 +27,7 @@
   </div>
   <div class="calendar-legend">
     <div class="legend-item">
-      <div class="legend-box completed">
-        <span class="legend-check">✓</span>
-      </div>
+      <div class="legend-box completed"></div>
       <span>Выполнено</span>
     </div>
     <div class="legend-item">
