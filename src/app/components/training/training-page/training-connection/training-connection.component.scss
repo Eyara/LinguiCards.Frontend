@@ -34,8 +34,12 @@
   font-size: 1.1rem;
   text-align: center;
   background: white;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   
-  &:hover:not(.matched) {
+  &:hover:not(.matched):not(.incorrect-match) {
     background-color: #fafafa;
     transform: translateY(-2px);
     box-shadow: 0 3px 6px rgb(0 0 0 / 0.08);
@@ -45,18 +49,21 @@
     background-color: #f0f7ff;
     border-color: #60a5fa;
     box-shadow: 0 0 0 2px rgb(96 165 250 / 0.2);
+    cursor: pointer;
   }
 
   &.matched {
     background-color: #f0fdf4;
     border-color: #86efac;
     animation: matchedAnimation 0.4s ease-out;
+    cursor: default;
   }
 
   &.incorrect-match {
     background-color: #fef2f2;
     border-color: #fca5a5;
     animation: matchedAnimation 0.4s ease-out;
+    cursor: default;
   }
 }
 
