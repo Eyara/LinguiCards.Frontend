@@ -1,15 +1,47 @@
-<ng-container *ngIf="cribs$ | async as cribs">
-  <div class="grammar-cribs" *ngIf="cribs.length > 0; else noCribs">
-    <div class="crib-card" *ngFor="let crib of cribs">
-      <div class="crib-content" *ngFor="let innerCrib of crib.cribDescriptions">
-        <h3 class="crib-header">{{ innerCrib.header }}</h3>
-        <markdown class="crib-description" [data]="innerCrib.description"></markdown>
+<div class="cribs-section">
+  <h2 class="section-title">Грамматика</h2>
+  <ng-container *ngIf="cribs$ | async as cribs">
+    <div class="grammar-cribs" *ngIf="cribs.length > 0; else noCribs">
+      <div class="crib-card" *ngFor="let crib of cribs">
+        <div class="crib-content" *ngFor="let innerCrib of crib.cribDescriptions">
+          <h3 class="crib-header">{{ innerCrib.header }}</h3>
+          <markdown class="crib-description" [data]="innerCrib.description"></markdown>
+        </div>
       </div>
     </div>
-  </div>
-  <ng-template #noCribs>
-    <div class="no-cribs-message">
-      <p>В данный момент нет доступных материалов по грамматике для этого языка</p>
+    <ng-template #noCribs>
+      <div class="no-cribs-message">
+        <p>В данный момент нет доступных материалов по грамматике для этого языка</p>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
+
+<div class="irregular-verbs-section">
+  <h2 class="section-title">Неправильные глаголы</h2>
+  <ng-container *ngIf="irregularVerbs$ | async as irregularVerbs">
+    <div class="irregular-verbs-container" *ngIf="irregularVerbs.length > 0; else noIrregularVerbs">
+      <table class="irregular-verbs-table">
+        <thead>
+          <tr>
+            <th>Базовая форма</th>
+            <th>Past Simple</th>
+            <th>Past Participle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let verb of irregularVerbs">
+            <td>{{ verb.baseForm }}</td>
+            <td>{{ verb.pastSimple }}</td>
+            <td>{{ verb.pastParticiple }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </ng-template>
-</ng-container>
+    <ng-template #noIrregularVerbs>
+      <div class="no-irregular-verbs-message">
+        <p>Нет доступных неправильных глаголов для этого языка</p>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>

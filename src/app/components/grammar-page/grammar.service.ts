@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import { CribResponseModel } from '../../models/crib.model';
+import { CribResponseModel, IrregularVerbModel } from '../../models/crib.model';
 import { GrammarTaskType } from '../../models/grammar-task.model';
 
 @Injectable({
@@ -26,9 +26,11 @@ export class GrammarService {
   }
 
   getAllCribs(languageId: number): Observable<CribResponseModel[]> {
-    return this.http.get<CribResponseModel[]>(`${this.apiUrl}${this.cribPath}/all`, {
-      params: { languageId: languageId.toString() }
-    });
+    return this.http.get<CribResponseModel[]>(`${this.apiUrl}${this.cribPath}/${languageId}/cribs`);
+  }
+
+  getIrregularVerbs(languageId: number): Observable<IrregularVerbModel[]> {
+    return this.http.get<IrregularVerbModel[]>(`${this.apiUrl}${this.cribPath}/${languageId}/irregular-verbs`);
   }
 
   getGrammarTaskTypes(): Observable<GrammarTaskType[]> {

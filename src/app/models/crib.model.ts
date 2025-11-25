@@ -11,3 +11,11 @@ export interface CribDescriptionResponseModel {
   order: number;
   type: number;
 }
+
+export interface IrregularVerbModel {
+  id: number;
+  baseForm: string;
+  pastSimple: string;
+  pastParticiple: string;
+  languageId: number;
+}
