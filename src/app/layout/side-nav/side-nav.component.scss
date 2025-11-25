@@ -14,6 +14,25 @@ mat-sidenav {
   width: 250px;
 }
 
+::ng-deep {
+  mat-nav-list {
+    a.mat-list-item {
+      border-radius: 0 !important;
+      
+      &:hover,
+      &.active {
+        border-radius: 0 !important;
+      }
+      
+      // Target the ripple container
+      .mat-list-item-ripple,
+      .mat-ripple-element {
+        border-radius: 0 !important;
+      }
+    }
+  }
+}
+
 .content-padding {
   padding: 20px 60px;
 

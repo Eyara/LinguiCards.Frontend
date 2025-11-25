@@ -11,6 +11,33 @@ html, body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-synthesis: none;
+}
+
+// Improve bold text rendering globally
+h1, h2, h3, h4, h5, h6,
+[class*="header"],
+[class*="title"],
+[class*="heading"],
+strong,
+b {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+// Improve Material card titles
+.mat-card-title,
+.mat-mdc-card-title {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em;
 }
 
 .cdk-overlay-pane {

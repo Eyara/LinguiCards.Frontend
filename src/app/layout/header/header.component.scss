@@ -12,12 +12,16 @@ mat-toolbar {
     position: relative;
     margin-left: 16px;
     z-index: 1;
-    font-weight: 700;
+    font-weight: 600;
     flex-shrink: 1;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.02em;
 
     @media (width <= 480px) {
       font-size: 16px;
@@ -55,7 +59,11 @@ mat-toolbar {
 
 .app-title {
   margin-left: 16px;
-  font-weight: 700;
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.02em;
 
   @media (width <= 480px) {
     font-size: 16px;
