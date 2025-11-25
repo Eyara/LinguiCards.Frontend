@@ -1,0 +1,45 @@
+<div class="calendar-section">
+  <div class="calendar-header">
+    <h3 class="calendar-title">📅 Календарь целей</h3>
+    <div class="calendar-stats" *ngIf="completedGoalDays.length > 0">
+      <span class="stats-text">{{ completedGoalDays.length }} из 30 дней</span>
+    </div>
+  </div>
+  <div class="calendar-wrapper">
+    <div class="calendar-weekdays">
+      <div class="weekday" *ngFor="let day of ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']">{{ day }}</div>
+    </div>
+    <div class="calendar-grid">
+      <div
+        *ngFor="let day of calendarDays; let i = index"
+        class="calendar-day"
+        [class.completed]="day.isCompleted"
+        [class.today]="day.isToday"
+        [style.animation-delay]="(i * 0.02) + 's'"
+        [title]="getDayTooltip(day)"
+      >
+        <div class="day-content">
+          <span class="day-number">{{ day.date }}</span>
+          <div class="day-check-wrapper" *ngIf="day.isCompleted">
+            <span class="day-check">✓</span>
+            <div class="check-ring"></div>
+          </div>
+          <div class="day-glow" *ngIf="day.isCompleted"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="calendar-legend">
+    <div class="legend-item">
+      <div class="legend-box completed">
+        <span class="legend-check">✓</span>
+      </div>
+      <span>Выполнено</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-box today"></div>
+      <span>Сегодня</span>
+    </div>
+  </div>
+</div>
+

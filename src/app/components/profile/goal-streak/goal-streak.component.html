@@ -1,0 +1,8 @@
+<div class="streak-display" *ngIf="goalStreak > 0">
+  <div class="streak-icon">🔥</div>
+  <div class="streak-content">
+    <div class="streak-number">{{ goalStreak }}</div>
+    <div class="streak-label">{{ getStreakLabel(goalStreak) }}</div>
+  </div>
+</div>
+

@@ -23,13 +23,7 @@
   <div class="daily-goal-card">
     <h2 class="daily-goal-title">Ежедневная цель XP</h2>
     
-    <div class="streak-display" *ngIf="goalStreak > 0">
-      <div class="streak-icon">🔥</div>
-      <div class="streak-content">
-        <div class="streak-number">{{ goalStreak }}</div>
-        <div class="streak-label">{{ getStreakLabel(goalStreak) }}</div>
-      </div>
-    </div>
+    <app-goal-streak [goalStreak]="goalStreak"></app-goal-streak>
     
     <div class="daily-progress-container" *ngIf="dailyGoalXp > 0">
       <mat-progress-bar
@@ -48,6 +42,8 @@
         🎉 Цель достигнута!
       </p>
     </div>
+
+    <app-goal-calendar [completedGoalDays]="completedGoalDays"></app-goal-calendar>
     
     <div class="daily-goal-form">
       <mat-form-field appearance="outline">

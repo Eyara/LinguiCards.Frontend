@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { UserInfoService } from './profile.service';
 import { catchError, map, Observable, of, shareReplay, tap } from 'rxjs';
-import { LanguageStat } from '../../models/userInfo.model';
+import { CompletedGoalDay, LanguageStat } from '../../models/userInfo.model';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { UserSettings } from '../../models/user-settings.model';
+import { GoalStreakComponent } from './goal-streak/goal-streak.component';
+import { GoalCalendarComponent } from './goal-calendar/goal-calendar.component';
 
 @Component({
   selector: 'app-profile',
@@ -17,7 +19,9 @@ import { UserSettings } from '../../models/user-settings.model';
     MatProgressBarModule, 
     MatInputModule,
     MatButtonModule,
-    FormsModule
+    FormsModule,
+    GoalStreakComponent,
+    GoalCalendarComponent
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
@@ -30,13 +34,17 @@ export class ProfileComponent {
   xpToNextLevel: number = 0;
   dailyXp: number = 0;
   goalStreak: number = 0;
+  completedGoalDays: CompletedGoalDay[] = [];
   userSettings$: Observable<UserSettings>;
   saveUserSettings$: Observable<void | null> = of(null);
   activeTrainingSize: number = 0;
   passiveTrainingSize: number = 0;
   dailyGoalXp: number = 0;
 
-  constructor(private userInfoService: UserInfoService) { 
+  constructor(
+    private userInfoService: UserInfoService,
+    private cdr: ChangeDetectorRef
+  ) { 
     this.languages$ = this.userInfoService.getUserInfo().pipe(
       shareReplay(1),
       tap(userInfo => {
@@ -45,6 +53,8 @@ export class ProfileComponent {
         this.xpToNextLevel = userInfo.xpToNextLevel;
         this.dailyXp = userInfo.dailyXp;
         this.goalStreak = userInfo.goalStreak;
+        this.completedGoalDays = userInfo.completedGoalDays || [];
+        this.cdr.markForCheck();
       }),
       map(userInfo => userInfo.languageStats)
     );
@@ -73,9 +83,4 @@ export class ProfileComponent {
     );
   }
 
-  getStreakLabel(days: number): string {
-    if (days === 1) return 'день подряд';
-    if (days >= 2 && days <= 4) return 'дня подряд';
-    return 'дней подряд';
-  }
 }
