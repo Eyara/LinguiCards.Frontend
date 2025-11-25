@@ -4,7 +4,7 @@
   </button>
   <span class="app-title">Lingui Cards</span>
   <div class="language-selector" *ngIf="showLanguageSelector$ | async">
-    <mat-select [(value)]="selectedLanguage.id" (selectionChange)="changeLanguage($event)">
+    <mat-select [(value)]="selectedLanguage.id" (selectionChange)="changeLanguage($event)" panelClass="language-select-panel">
       <mat-select-trigger>
         <div class="language-option">
           <img [src]="selectedLanguage.url" alt="{{ selectedLanguage.name }}" class="language-flag" width="20" height="20">
