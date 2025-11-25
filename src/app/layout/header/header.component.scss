@@ -9,6 +9,7 @@ mat-toolbar {
     position: relative;
     margin-left: 16px;
     z-index: 1;
+    font-weight: 700;
 
     @media (width <= 480px) {
       font-size: 16px;
@@ -44,6 +45,7 @@ mat-toolbar {
 
 .app-title {
   margin-left: 16px;
+  font-weight: 700;
 
   @media (width <= 480px) {
     font-size: 16px;
