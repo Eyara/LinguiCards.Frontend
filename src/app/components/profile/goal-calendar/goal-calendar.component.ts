@@ -8,6 +8,7 @@ interface CalendarDay {
   year: number;
   isCompleted: boolean;
   isToday: boolean;
+  isEmpty?: boolean;
 }
 
 @Component({
@@ -39,13 +40,11 @@ export class GoalCalendarComponent implements OnChanges {
     this.completedGoalDays.forEach(day => {
       let dateKey: string | null = null;
       
-      // Handle string format: '2025-11-25'
       if (typeof day === 'string') {
         if (/^\d{4}-\d{2}-\d{2}$/.test(day)) {
           dateKey = day;
         }
       }
-      // Handle object format: { year: 2025, month: 11, day: 25 }
       else if (day && typeof day === 'object' && day.year != null && day.month != null && day.day != null) {
         dateKey = `${day.year}-${String(day.month).padStart(2, '0')}-${String(day.day).padStart(2, '0')}`;
       }
@@ -59,16 +58,33 @@ export class GoalCalendarComponent implements OnChanges {
 
   private updateCalendarDays(): void {
     const days: CalendarDay[] = [];
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = new Date();
+    const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
+    
+    const firstDay = new Date(today);
+    firstDay.setUTCDate(firstDay.getUTCDate() - (this.DAYS_TO_DISPLAY - 1));
+    
+    let firstDayOfWeek = firstDay.getUTCDay();
+    firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+    
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      days.push({
+        date: 0,
+        month: 0,
+        year: 0,
+        isCompleted: false,
+        isToday: false,
+        isEmpty: true
+      });
+    }
     
     for (let i = this.DAYS_TO_DISPLAY - 1; i >= 0; i--) {
       const date = new Date(today);
-      date.setDate(date.getDate() - i);
+      date.setUTCDate(date.getUTCDate() - i);
       
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
+      const year = date.getUTCFullYear();
+      const month = date.getUTCMonth() + 1;
+      const day = date.getUTCDate();
       
       const isCompleted = this.isDayCompleted(year, month, day);
       
@@ -77,7 +93,8 @@ export class GoalCalendarComponent implements OnChanges {
         month: month,
         year: year,
         isCompleted,
-        isToday: i === 0
+        isToday: i === 0,
+        isEmpty: false
       });
     }
     
@@ -94,6 +111,9 @@ export class GoalCalendarComponent implements OnChanges {
   }
 
   getDayTooltip(day: CalendarDay): string {
+    if (day.isEmpty) {
+      return '';
+    }
     const dateStr = `${day.date}.${day.month}.${day.year}`;
     if (day.isToday && day.isCompleted) {
       return `Сегодня - Цель выполнена! (${dateStr})`;

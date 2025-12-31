@@ -15,10 +15,11 @@
         class="calendar-day"
         [class.completed]="day.isCompleted"
         [class.today]="day.isToday"
+        [class.empty]="day.isEmpty"
         [style.animation-delay]="(i * 0.02) + 's'"
         [title]="getDayTooltip(day)"
       >
-        <div class="day-content">
+        <div class="day-content" *ngIf="!day.isEmpty">
           <span class="day-number">{{ day.date }}</span>
           <div class="day-glow" *ngIf="day.isCompleted"></div>
         </div>

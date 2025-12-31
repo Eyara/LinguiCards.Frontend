@@ -151,6 +151,21 @@
       box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2), 0 0 0 3px rgba(76, 175, 80, 0.2), 0 2px 8px rgba(76, 175, 80, 0.2);
     }
   }
+
+  &.empty {
+    cursor: default;
+    pointer-events: none;
+    opacity: 0;
+    animation: none;
+
+    &::before {
+      display: none;
+    }
+
+    &:hover {
+      transform: none;
+    }
+  }
 }
 
 @keyframes fadeInUp {
