@@ -7,8 +7,9 @@
       <div class="settings-form">
         <mat-form-field appearance="outline">
           <mat-label>Размер текста</mat-label>
-          <input matInput type="number" [(ngModel)]="length" min="10" max="250" class="no-spinners">
+          <input matInput type="number" [(ngModel)]="length" min="10" max="250" class="no-spinners" required>
           <mat-hint>Размер текста (в словах, от 10 до 250)</mat-hint>
+          <mat-error *ngIf="!isLengthValid">Размер текста должен быть от 10 до 250 слов</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -26,7 +27,7 @@
           <mat-hint>Введите тему для текста</mat-hint>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="getText()" [disabled]="!level || (isLoadingText$ | async)">
+        <button mat-raised-button color="primary" (click)="getText()" [disabled]="!level || !isLengthValid || (isLoadingText$ | async)">
           <mat-spinner diameter="20" *ngIf="isLoadingText$ | async" class="button-spinner"></mat-spinner>
           <span *ngIf="!(isLoadingText$ | async)">Получить текст</span>
         </button>

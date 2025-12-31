@@ -33,12 +33,16 @@ import { DictionarExtendedyModel } from '../../models/language.model';
   styleUrl: './translation-practice.component.scss'
 })
 export class TranslationPracticeComponent {
-  length = 1;
+  length = 10;
   level = '';
   topic = '';
   userTranslation = '';
   languageId: number | null = null;
   languages: DictionarExtendedyModel[] = [];
+
+  get isLengthValid(): boolean {
+    return this.length >= 10 && this.length <= 250;
+  }
 
   private getTextTrigger$ = new BehaviorSubject<void>(undefined);
   private evaluateTrigger$ = new BehaviorSubject<void>(undefined);
@@ -113,6 +117,9 @@ export class TranslationPracticeComponent {
   }
 
   getText() {
+    if (!this.isLengthValid || !this.level || !this.languageId) {
+      return;
+    }
     this.getTextTrigger$.next();
     this.userTranslation = '';
     this.evaluateTrigger$.next();
