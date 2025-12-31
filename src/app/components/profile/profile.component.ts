@@ -33,6 +33,8 @@ export class ProfileComponent {
   xp: number = 0;
   xpToNextLevel: number = 0;
   dailyXp: number = 0;
+  byTranslation: number = 0;
+  byGrammar: number = 0;
   goalStreak: number = 0;
   completedGoalDays: CompletedGoalDayInput[] = [];
   userSettings$: Observable<UserSettings>;
@@ -40,6 +42,8 @@ export class ProfileComponent {
   activeTrainingSize: number = 0;
   passiveTrainingSize: number = 0;
   dailyGoalXp: number = 0;
+  dailyGoalByTranslation: number = 0;
+  dailyGoalByGrammar: number = 0;
 
   constructor(
     private userInfoService: UserInfoService,
@@ -52,6 +56,8 @@ export class ProfileComponent {
         this.xp = userInfo.xp;
         this.xpToNextLevel = userInfo.xpToNextLevel;
         this.dailyXp = userInfo.dailyXp;
+        this.byTranslation = userInfo.byTranslation ?? 0;
+        this.byGrammar = userInfo.byGrammar ?? 0;
         this.goalStreak = userInfo.goalStreak;
         this.completedGoalDays = userInfo.completedGoalDays || [];
         this.cdr.markForCheck();
@@ -65,6 +71,8 @@ export class ProfileComponent {
         this.activeTrainingSize = settings.activeTrainingSize;
         this.passiveTrainingSize = settings.passiveTrainingSize;
         this.dailyGoalXp = settings.dailyGoalXp;
+        this.dailyGoalByTranslation = settings.dailyGoalByTranslation ?? 0;
+        this.dailyGoalByGrammar = settings.dailyGoalByGrammar ?? 0;
       })
     );
   }
@@ -73,7 +81,9 @@ export class ProfileComponent {
     this.saveUserSettings$ = this.userInfoService.createOrUpdateUserSettings(
       this.activeTrainingSize,
       this.passiveTrainingSize,
-      this.dailyGoalXp
+      this.dailyGoalXp,
+      this.dailyGoalByTranslation,
+      this.dailyGoalByGrammar
     ).pipe(
       tap(() => console.log('Settings saved successfully')),
       catchError((error: unknown) => {

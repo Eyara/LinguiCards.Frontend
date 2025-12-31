@@ -43,12 +43,56 @@
       </p>
     </div>
 
+    <div class="daily-progress-container" *ngIf="dailyGoalByTranslation > 0">
+      <mat-progress-bar
+        class="daily-progress"
+        [value]="(byTranslation / dailyGoalByTranslation) * 100"
+        color="accent"
+      ></mat-progress-bar>
+      <div class="daily-progress-labels">
+        <span class="daily-xp-current">{{ byTranslation }} переводов</span>
+        <span class="daily-xp-goal">{{ dailyGoalByTranslation }} переводов</span>
+      </div>
+      <p class="daily-xp-remaining" *ngIf="byTranslation < dailyGoalByTranslation">
+        {{ dailyGoalByTranslation - byTranslation }} переводов до цели
+      </p>
+      <p class="daily-xp-completed" *ngIf="byTranslation >= dailyGoalByTranslation">
+        🎉 Цель достигнута!
+      </p>
+    </div>
+
+    <div class="daily-progress-container" *ngIf="dailyGoalByGrammar > 0">
+      <mat-progress-bar
+        class="daily-progress"
+        [value]="(byGrammar / dailyGoalByGrammar) * 100"
+        color="accent"
+      ></mat-progress-bar>
+      <div class="daily-progress-labels">
+        <span class="daily-xp-current">{{ byGrammar }} грамматик</span>
+        <span class="daily-xp-goal">{{ dailyGoalByGrammar }} грамматик</span>
+      </div>
+      <p class="daily-xp-remaining" *ngIf="byGrammar < dailyGoalByGrammar">
+        {{ dailyGoalByGrammar - byGrammar }} грамматик до цели
+      </p>
+      <p class="daily-xp-completed" *ngIf="byGrammar >= dailyGoalByGrammar">
+        🎉 Цель достигнута!
+      </p>
+    </div>
+
     <app-goal-calendar [completedGoalDays]="completedGoalDays"></app-goal-calendar>
     
     <div class="daily-goal-form">
       <mat-form-field appearance="outline">
         <mat-label>XP в день</mat-label>
         <input matInput type="number" [(ngModel)]="dailyGoalXp" min="0">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Цель по переводам в день</mat-label>
+        <input matInput type="number" [(ngModel)]="dailyGoalByTranslation" min="0">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Цель по грамматике в день</mat-label>
+        <input matInput type="number" [(ngModel)]="dailyGoalByGrammar" min="0">
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="saveSettings()">Сохранить</button>
     </div>

@@ -20,11 +20,13 @@ export class UserInfoService {
         return this.http.get<UserSettings>(`${this.apiUrl}/UserSetting`);
     }
 
-    createOrUpdateUserSettings(activeTrainingSize: number, passiveTrainingSize: number, dailyGoalXp: number): Observable<void> {
+    createOrUpdateUserSettings(activeTrainingSize: number, passiveTrainingSize: number, dailyGoalXp: number, dailyGoalByTranslation: number, dailyGoalByGrammar: number): Observable<void> {
         const params = { 
             activeTrainingSize, 
             passiveTrainingSize,
-            dailyGoalXp
+            dailyGoalXp,
+            dailyGoalByTranslation,
+            dailyGoalByGrammar
         };
         return this.http.post<void>(`${this.apiUrl}/UserSetting`, null, { params });
     }

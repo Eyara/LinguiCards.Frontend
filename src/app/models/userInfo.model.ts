@@ -3,6 +3,8 @@ export interface UserInfo {
     xp: number;
     xpToNextLevel: number;
     dailyXp: number;
+    byTranslation: number;
+    byGrammar: number;
     goalStreak: number;
     completedGoalDays: CompletedGoalDayInput[];
     languageStats: LanguageStat[];

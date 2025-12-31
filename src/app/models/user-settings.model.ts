@@ -3,5 +3,7 @@ export interface UserSettings {
     activeTrainingSize: number;
     passiveTrainingSize: number;
     dailyGoalXp: number;
+    dailyGoalByTranslation: number;
+    dailyGoalByGrammar: number;
     userId: number;
 }
