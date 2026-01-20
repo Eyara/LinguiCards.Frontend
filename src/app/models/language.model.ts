@@ -13,6 +13,11 @@ export interface LanguageResponseModel {
 
 export interface LanguageModel extends LanguageResponseModel {
   editMode: boolean;
+  stats?: {
+    totalWords: number;
+    streak: number;
+    learnedWords: number;
+  };
 }
 
 export interface DictionarExtendedyModel {

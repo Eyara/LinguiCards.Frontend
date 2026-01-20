@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CardComponent } from '../../../shared/card/card.component';
 import { ButtonComponent } from "../../../shared/button/button.component";
-import { map, Observable, of, shareReplay, tap, switchMap } from 'rxjs';
+import { map, Observable, of, shareReplay, tap, switchMap, forkJoin, catchError } from 'rxjs';
 import { DictionarExtendedyModel, LanguageCreateModel, LanguageModel } from '../../../models/language.model';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -54,7 +54,26 @@ export class LanguagePageComponent {
     return this.languageService.getAllLanguages()
       .pipe(
         shareReplay(1),
-        map(languages => languages.map(language => ({ ...language, editMode: false })))
+        switchMap(languages => {
+          if (languages.length === 0) {
+            return of([]);
+          }
+          const languagesWithStats$ = languages.map(lang => 
+            this.languageService.getLanguageStatistics(lang.id).pipe(
+              map(stats => ({
+                ...lang,
+                editMode: false,
+                stats: {
+                  totalWords: stats.totalWords || 0,
+                  streak: stats.totalTrainingDays || 0,
+                  learnedWords: stats.learnedWords || 0
+                }
+              })),
+              catchError(() => of({ ...lang, editMode: false }))
+            )
+          );
+          return forkJoin(languagesWithStats$);
+        })
       );
   }
 

@@ -2,7 +2,6 @@
 
 $card-bg: $background-card;
 $card-radius: 12px;
-$card-shadow: $shadow-main;
 $green: #4CAF50;
 $green-dark: #2E7D32;
 $orange: #FF9800;
@@ -19,15 +18,26 @@ $blue-light: $primary-blue-light;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  
+  @media (width <= 768px) {
+    padding: 16px;
+  }
 }
 
 %card {
   background-color: $card-bg;
   border-radius: $card-radius;
-  box-shadow: $card-shadow;
+  border: 1px solid $border-main;
+  box-shadow: $shadow-card;
   padding: 20px;
   width: 100%;
   max-width: 400px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-card-hover;
+  }
 }
 
 %title {
@@ -35,6 +45,7 @@ $blue-light: $primary-blue-light;
   font-weight: 600;
   color: $text-main;
   margin: 0;
+  letter-spacing: 0.5px;
 }
 
 .level-section, .settings-section, .daily-goal-section {
@@ -73,6 +84,13 @@ $blue-light: $primary-blue-light;
 
 .xp-container, .daily-progress-container {
   margin-bottom: 16px;
+}
+
+.progress-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: $text-main;
+  margin: 0 0 12px 0;
 }
 
 .xp-progress, .daily-progress {
@@ -289,7 +307,7 @@ $blue-light: $primary-blue-light;
     z-index: 1;
   }
   &:hover {
-    transform: translateY(-2px) scale(1.08);
+    transform: translateY(-2px) scale(1.05);
     z-index: 10;
     &::before {
       border-color: rgba(0, 0, 0, 0.15);

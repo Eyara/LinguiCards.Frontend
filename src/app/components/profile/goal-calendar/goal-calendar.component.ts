@@ -26,6 +26,7 @@ export class GoalCalendarComponent implements OnChanges {
 
   completedDaysSet: Set<string> = new Set();
   calendarDays: CalendarDay[] = [];
+  completedDaysInRange: number = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['completedGoalDays']) {
@@ -78,6 +79,8 @@ export class GoalCalendarComponent implements OnChanges {
       });
     }
     
+    let completedCount = 0;
+    
     for (let i = this.DAYS_TO_DISPLAY - 1; i >= 0; i--) {
       const date = new Date(today);
       date.setUTCDate(date.getUTCDate() - i);
@@ -87,6 +90,9 @@ export class GoalCalendarComponent implements OnChanges {
       const day = date.getUTCDate();
       
       const isCompleted = this.isDayCompleted(year, month, day);
+      if (isCompleted) {
+        completedCount++;
+      }
       
       days.push({
         date: day,
@@ -99,6 +105,7 @@ export class GoalCalendarComponent implements OnChanges {
     }
     
     this.calendarDays = days;
+    this.completedDaysInRange = completedCount;
   }
 
   private isDayCompleted(year: number, month: number, day: number): boolean {

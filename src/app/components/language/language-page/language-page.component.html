@@ -1,12 +1,40 @@
-<div class="language-card-container">
-  <ng-container *ngFor="let languageCard of (languageCards$ | async)">
-    <card [id]="languageCard.id" [name]="languageCard.name" [imgSrc]="languageCard.url" [editMode]="languageCard.editMode"
-          [isShowActions]="true" [dictionaries]="languageDictionary$ | async"
-          (saveEmit)="saveLanguage($event)" (closeEmit)="closeLanguage($event)"
-          (click)="navigateToOverview(languageCard)" customClassName="minimalistic-card__medium">
-    </card>
-  </ng-container>
-  <app-button *ngIf="(languageDictionary$ | async)?.length !== 0" icon="add" (click)="addLanguage()"></app-button>
+<div class="language-page">
+  <div class="language-page__header">
+    <h1>Ваши языки</h1>
+  </div>
+  
+  <div class="language-page__grid">
+    <div class="language-card" *ngFor="let languageCard of (languageCards$ | async)"
+         [class.language-card--edit]="languageCard.editMode"
+         (click)="!languageCard.editMode && navigateToOverview(languageCard)">
+      <button class="delete-btn" *ngIf="!languageCard.editMode" (click)="$event.stopPropagation(); closeLanguage(languageCard.id)">×</button>
+      <div class="language-card__flag">
+        <img [src]="languageCard.url" [alt]="languageCard.name">
+      </div>
+      <h3 class="language-card__name">{{ languageCard.name }}</h3>
+      <div class="language-card__stats" *ngIf="languageCard.stats && !languageCard.editMode">
+        <div class="stat">
+          <span class="stat__value">{{ languageCard.stats.totalWords }}</span>
+          <span class="stat__label">Слов</span>
+        </div>
+        <div class="stat">
+          <span class="stat__value">{{ languageCard.stats.streak }}</span>
+          <span class="stat__label stat__label--days">Дней</span>
+        </div>
+      </div>
+      <div class="language-card__actions" *ngIf="languageCard.editMode">
+        <button class="action-btn action-btn--save" (click)="saveLanguage({name: languageCard.name, languageDictionaryId: languageCard.languageDictionaryId})">Сохранить</button>
+        <button class="action-btn action-btn--cancel" (click)="closeLanguage(languageCard.id)">Отмена</button>
+      </div>
+    </div>
+    
+    <div class="language-card language-card--add" 
+         *ngIf="(languageDictionary$ | async)?.length !== 0"
+         (click)="addLanguage()">
+      <div class="add-icon">+</div>
+      <span>Добавить язык</span>
+    </div>
+  </div>
 </div>
 
 <ng-container *ngIf="(languageCreateObservable$ | async) || (languageCloseObservable$ | async)">

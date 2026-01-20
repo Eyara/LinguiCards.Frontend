@@ -1,127 +1,145 @@
-<div class="language-overview">
-    <div class="language-overview__block language-overview__block-highlighted" (click)="navigateToTraining()">
-        <div class="language-overview__block-header">
-            <span class="language-overview__block-header-title">Тренировка</span>
-        </div>
-    </div>
-    <div class="language-overview__block language-overview__block-highlighted" (click)="navigateToTranslationPractice()">
-        <div class="language-overview__block-header">
-            <span class="language-overview__block-header-title">Практика перевода</span>
-        </div>
-    </div>
-    <div class="language-overview__block language-overview__block-highlighted" (click)="navigateToGrammarTask()">
-        <div class="language-overview__block-header">
-            <span class="language-overview__block-header-title">Грамматические задания</span>
-        </div>
-    </div>
-    <div class="language-overview__block" (click)="navigateToGrammar()">
-        <div class="language-overview__block-header">
-            <span class="language-overview__block-header-title">Грамматика</span>
-        </div>
-    </div>
-    <div class="language-overview__block" (click)="navigateToWordPage()">
-        <div class="language-overview__block-header">
-            <span class="language-overview__block-header-title">Словарь</span>
-        </div>
-    </div>
-</div>
-<div class="language-overview__statistics">
-    <div class="stats-summary" *ngIf="languageStats$ | async as stats">
-        <div class="stat-item">
-            <div class="stat-value">{{ stats.totalWords }}</div>
-            <div class="stat-label">Добавлено слов</div>
-        </div>
-        <div class="stat-item" *ngIf="stats.learnedWords">
-            <div class="stat-value">{{ stats.learnedWords }}</div>
-            <div class="stat-label">Выучено слов</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">{{ stats.totalTrainingDays }}</div>
-            <div class="stat-label">Дней тренировки</div>
-        </div>
-    </div>
-
-    <div class="word-of-the-day" *ngIf="(languageStats$ | async)?.wordOfTheDay as wordOfTheDay">
-        <h3>Слово дня</h3>
-        <div class="word-of-the-day__content">
-            <span class="word-of-the-day__text">{{ wordOfTheDay.name }}</span>
-            <span class="word-of-the-day__translation" *ngIf="wordOfTheDay.translatedName">
-                - {{ wordOfTheDay.translatedName }}
-            </span>
-        </div>
-    </div>
-
-    <div class="word-performance" *ngIf="languageStats$ | async as stats">
-        <div class="word-list best-words" *ngIf="stats.bestActiveWordsByAccuracy.length">
-            <h3>Лучшие слова</h3>
-            <div class="word-columns">
-                <div>
-                    <h4>Активный вокабуляр</h4>
-                    <ul>
-                        <li *ngFor="let word of stats.bestActiveWordsByAccuracy">
-                            {{word}}
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h4>Пассивный вокабуляр</h4>
-                    <ul>
-                        <li *ngFor="let word of stats.bestPassiveWordsByAccuracy">
-                            {{word}}
-                        </li>
-                    </ul>
-                </div>
+<div class="overview-container">
+    <aside class="overview-sidebar">
+        <div class="language-overview__block language-overview__block--training" (click)="navigateToTraining()">
+            <div class="language-overview__block-header">
+                <span class="language-overview__block-header-title">Тренировка</span>
             </div>
         </div>
-        <div class="word-list worst-words" *ngIf="stats.worstActiveWordsByAccuracy.length">
-            <h3>Слова для улучшения</h3>
-            <div class="word-columns">
-                <div>
-                    <h4>Активный вокабуляр</h4>
-                    <ul>
-                        <li *ngFor="let word of stats.worstActiveWordsByAccuracy">
-                            {{ word }}
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h4>Пассивный вокабуляр</h4>
-                    <ul>
-                        <li *ngFor="let word of stats.worstPassiveWordsByAccuracy">
-                            {{ word }}
-                        </li>
-                    </ul>
-                </div>
+        <div class="language-overview__block language-overview__block--translation" (click)="navigateToTranslationPractice()">
+            <div class="language-overview__block-header">
+                <span class="language-overview__block-header-title">Практика перевода</span>
             </div>
         </div>
-    </div>
+        <div class="language-overview__block language-overview__block--grammar-task" (click)="navigateToGrammarTask()">
+            <div class="language-overview__block-header">
+                <span class="language-overview__block-header-title">Грамматические задания</span>
+            </div>
+        </div>
+        <div class="language-overview__block language-overview__block--grammar" (click)="navigateToGrammar()">
+            <div class="language-overview__block-header">
+                <span class="language-overview__block-header-title">Грамматика</span>
+            </div>
+        </div>
+        <div class="language-overview__block language-overview__block--dictionary" (click)="navigateToWordPage()">
+            <div class="language-overview__block-header">
+                <span class="language-overview__block-header-title">Словарь</span>
+            </div>
+        </div>
+    </aside>
 
-    <div class="charts-container">
-        <div class="chart-wrapper-inner" *ngIf="(learnedWordsData$ | async) as learnedWordsData">
-            <div class="chart-wrapper bar-chart" *ngIf="learnedWordsData.length">
+    <main class="overview-content">
+        <div class="stats-summary" *ngIf="languageStats$ | async as stats">
+            <div class="stat-item">
+                <div class="stat-value">{{ stats.totalWords }}</div>
+                <div class="stat-label">Добавлено слов</div>
+            </div>
+            <div class="stat-item" *ngIf="stats.learnedWords">
+                <div class="stat-value">{{ stats.learnedWords }}</div>
+                <div class="stat-label">Выучено слов</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{ stats.totalTrainingDays }}</div>
+                <div class="stat-label">Дней тренировки</div>
+            </div>
+        </div>
+
+        <div class="word-of-the-day" *ngIf="(languageStats$ | async)?.wordOfTheDay as wordOfTheDay">
+            <h3>Слово дня</h3>
+            <div class="word-of-the-day__content">
+                <span class="word-of-the-day__text">{{ wordOfTheDay.name }}</span>
+                <span class="word-of-the-day__translation" *ngIf="wordOfTheDay.translatedName">
+                    - {{ wordOfTheDay.translatedName }}
+                </span>
+            </div>
+        </div>
+
+        <div class="stat-cards-grid" *ngIf="languageStats$ | async as stats">
+            <div class="stat-card stat-card--proficiency">
                 <h3>Уровень владения</h3>
-                <ngx-charts-bar-vertical [view]="[chartWidth, chartHeight]" [results]="learnedWordsData"
-                    [scheme]="colorScheme" [animations]="true" [showDataLabel]="true">
-                </ngx-charts-bar-vertical>
+                <div class="stat-card__metrics">
+                    <div class="metric">
+                        <span class="metric__label">Активный</span>
+                        <span class="metric__value">{{ (stats.activeLearnedPercent * 100) | number:'1.0-0' }}%</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric__label">Пассивный</span>
+                        <span class="metric__value">{{ (stats.passiveLearnedPercent * 100) | number:'1.0-0' }}%</span>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="chart-wrapper-inner" *ngIf="(accuracyData$ | async) as accuracyData">
-            <div class="chart-wrapper bar-chart" *ngIf="accuracyData.length">
+            <div class="stat-card stat-card--accuracy">
                 <h3>Средняя точность</h3>
-                <ngx-charts-bar-vertical [view]="[chartWidth, chartHeight]" [results]="accuracyData"
-                    [scheme]="colorScheme" [animations]="true" [showDataLabel]="true">
-                </ngx-charts-bar-vertical>
+                <div class="stat-card__metrics">
+                    <div class="metric">
+                        <span class="metric__label">Активный</span>
+                        <span class="metric__value">{{ (stats.activeAverageAccuracy * 100) | number:'1.0-0' }}%</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric__label">Пассивный</span>
+                        <span class="metric__value">{{ (stats.passiveAverageAccuracy * 100) | number:'1.0-0' }}%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-card--learned">
+                <h3>Средний процент выученных слов</h3>
+                <div class="stat-card__metrics">
+                    <div class="metric">
+                        <span class="metric__label">Активный</span>
+                        <span class="metric__value">{{ stats.activeAverageLearnedPercent | number:'1.0-0' }}%</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric__label">Пассивный</span>
+                        <span class="metric__value">{{ stats.passiveAverageLearnedPercent | number:'1.0-0' }}%</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="chart-wrapper-inner" *ngIf="(averageLearnedPercentData$ | async) as averageLearnedPercentData">
-            <div class="chart-wrapper bar-chart" *ngIf="averageLearnedPercentData.length">
-                <h3>Средний процент выученных слов</h3>
-                <ngx-charts-bar-vertical [view]="[chartWidth, chartHeight]" [results]="averageLearnedPercentData"
-                    [scheme]="colorScheme" [animations]="true" [showDataLabel]="true">
-                </ngx-charts-bar-vertical>
+        <div class="word-performance" *ngIf="languageStats$ | async as stats">
+            <div class="word-list best-words" *ngIf="stats.bestActiveWordsByAccuracy.length">
+                <h3>Лучшие слова</h3>
+                <div class="word-columns">
+                    <div>
+                        <h4>Активный вокабуляр</h4>
+                        <ul>
+                            <li *ngFor="let word of stats.bestActiveWordsByAccuracy">
+                                {{word}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Пассивный вокабуляр</h4>
+                        <ul>
+                            <li *ngFor="let word of stats.bestPassiveWordsByAccuracy">
+                                {{word}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="word-list worst-words" *ngIf="stats.worstActiveWordsByAccuracy.length">
+                <h3>Слова для улучшения</h3>
+                <div class="word-columns">
+                    <div>
+                        <h4>Активный вокабуляр</h4>
+                        <ul>
+                            <li *ngFor="let word of stats.worstActiveWordsByAccuracy">
+                                {{ word }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Пассивный вокабуляр</h4>
+                        <ul>
+                            <li *ngFor="let word of stats.worstPassiveWordsByAccuracy">
+                                {{ word }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 </div>

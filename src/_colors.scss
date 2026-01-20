@@ -3,19 +3,51 @@
 $primary-blue: #4a90e2;
 $primary-blue-dark: #357abd;
 $primary-blue-light: #f5f9ff;
+$primary-blue-soft: #7ba7d6;
 $accent-green: #81c784;
+$accent-green-dark: #43a047;
+$accent-green-strong: #4CAF50;
+$accent-green-darker: #2e7d32;
 $accent-orange: #ffb74d;
 $accent-red: #e57373;
+$accent-red-dark: #e53935;
 $background-main: #fafafa;
 $background-card: #fff;
 $background-light: #f5f5f5;
+$background-hover: #f8f9fa;
 $background-green: #f5fff5;
+$background-green-tint: #f8fffe;
+$background-green-light: #f1f8f4;
 $background-orange: #fff9f5;
 $background-red: #fff8f8;
-$text-main: #424242;
+$text-main: #333;
+$text-secondary: #424242;
+$text-medium: #555;
+$text-gray: #666;
+$text-blue-gray: #5a6c7d;
 $text-light: #9e9e9e;
 $text-placeholder: #bdbdbd;
 $border-main: #e0e0e0;
 $border-light: #f0f0f0;
+$border-green-light: #c8e6c9;
 $shadow-main: 0 2px 4px rgb(0 0 0 / 0.05), 0 1px 2px rgb(0 0 0 / 0.04);
-$shadow-card: 0 2px 8px rgb(0 0 0 / 0.04); 
+$shadow-card: 0 2px 8px rgb(0 0 0 / 0.08);
+$shadow-card-light: 0 2px 8px rgb(0 0 0 / 0.04);
+$shadow-card-hover: 0 4px 12px rgb(0 0 0 / 0.12);
+$shadow-card-hover-light: 0 4px 12px rgb(0 0 0 / 0.1);
+
+// Navigation card backgrounds
+$card-bg-training: #a8e6cf;
+$card-bg-training-dark: #88d4ab;
+$card-bg-translation: #89cff0;
+$card-bg-translation-dark: #6fb3d2;
+$card-bg-grammar-task: #c5a3ff;
+$card-bg-grammar-task-dark: #a881d4;
+$card-bg-grammar: #ffd89b;
+$card-bg-grammar-dark: #ffb86c;
+$card-bg-dictionary: #80deea;
+$card-bg-dictionary-dark: #4dd0e1;
+
+// Card text colors
+$card-text-on-light: #2d3436;
+$card-text-on-dark: #ffffff; 
