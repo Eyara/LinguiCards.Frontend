@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewChild, AfterViewInit } 
 import { EditMode, WordCreateModel, WordModel, WordViewModel } from '../../../models/word.model';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { map, Observable, of, tap, shareReplay, switchMap } from 'rxjs';
 import { WordService } from '../word.service';
@@ -12,20 +11,23 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'word-page',
   standalone: true,
   imports: [
-    CommonModule, 
-    MatTableModule, 
-    MatIconModule, 
-    RouterModule, 
-    FormsModule, 
-    MatFormFieldModule, 
-    MatInputModule, 
+    CommonModule,
+    MatIconModule,
+    RouterModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatPaginatorModule,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonModule,
+    MatProgressBarModule
   ],
   templateUrl: './word-page.component.html',
   styleUrl: './word-page.component.scss',
@@ -44,7 +46,7 @@ export class WordPageComponent implements OnInit, AfterViewInit {
   translationFilter: string = '';
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private wordService: WordService,
     private dialog: MatDialog
   ) {}
@@ -58,7 +60,7 @@ export class WordPageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize);
+    this.loadWords();
   }
 
   isEditMode(word: WordViewModel): boolean {
@@ -89,7 +91,6 @@ export class WordPageComponent implements OnInit, AfterViewInit {
   }
 
   finishEditing(model: WordViewModel) {
-    console.log(model);
     if (model.editMode === EditMode.Create) {
       this.createWord(model);
     } else if (model.editMode === EditMode.Update) {
@@ -105,16 +106,14 @@ export class WordPageComponent implements OnInit, AfterViewInit {
 
     this.wordCommandObservable$ = this.wordService.addWordToLanguage(this.languageId, createModel)
       .pipe(
-        tap(() =>
-          this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize))
-      )
+        tap(() => this.loadWords())
+      );
   }
 
   updateWord(model: WordModel) {
     this.wordCommandObservable$ = this.wordService.updateWord(model.id, model.name, model.translatedName)
       .pipe(
-        tap(() =>
-          this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize))
+        tap(() => this.loadWords())
       );
   }
 
@@ -125,7 +124,7 @@ export class WordPageComponent implements OnInit, AfterViewInit {
       switchMap(result => {
         if (result) {
           return this.wordService.deleteWord(word.id).pipe(
-            tap(() => this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize))
+            tap(() => this.loadWords())
           );
         }
         return of(false);
@@ -135,7 +134,7 @@ export class WordPageComponent implements OnInit, AfterViewInit {
 
   handlePageEvent(e: PageEvent) {
     this.pageIndex = e.pageIndex;
-    this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize);
+    this.loadWords();
   }
 
   clearNameFilter() {
@@ -149,10 +148,21 @@ export class WordPageComponent implements OnInit, AfterViewInit {
   }
 
   applyFilters() {
+    this.pageIndex = 0;
+    if (this.paginator) {
+      this.paginator.firstPage();
+    }
     this.loadWords();
   }
 
+  resetFilters() {
+    this.nameFilter = '';
+    this.translationFilter = '';
+    this.applyFilters();
+  }
+
   loadWords() {
-    this.words$ = this.getWords(this.pageIndex, this.paginator.pageSize, this.nameFilter, this.translationFilter);
+    const pageSize = this.paginator?.pageSize ?? 5;
+    this.words$ = this.getWords(this.pageIndex, pageSize, this.nameFilter, this.translationFilter);
   }
 }
