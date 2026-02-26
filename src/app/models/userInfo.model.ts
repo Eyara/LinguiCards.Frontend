@@ -17,6 +17,9 @@ export interface CompletedGoalDay {
     dayOfWeek: number;
     dayOfYear: number;
     dayNumber: number;
+    xp?: number;
+    byTranslation?: number;
+    byGrammar?: number;
 }
 
 // API may return dates as strings in 'YYYY-MM-DD' format

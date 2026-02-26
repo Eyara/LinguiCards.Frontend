@@ -44,3 +44,12 @@ b {
   max-height: calc(100vh - 20px) !important;
   max-width: calc(100vw - 20px) !important;
 }
+
+.day-detail-dialog-panel .mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 16px;
+}
+
+.day-detail-dialog-panel .mat-mdc-dialog-surface {
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+}

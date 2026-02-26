@@ -18,6 +18,7 @@
         [class.empty]="day.isEmpty"
         [style.animation-delay]="(i * 0.02) + 's'"
         [title]="getDayTooltip(day)"
+        (click)="onDayClick(day)"
       >
         <div class="day-content" *ngIf="!day.isEmpty">
           <span class="day-number">{{ day.date }}</span>
