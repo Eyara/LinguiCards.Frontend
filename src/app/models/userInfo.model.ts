@@ -6,24 +6,18 @@ export interface UserInfo {
     byTranslation: number;
     byGrammar: number;
     goalStreak: number;
-    completedGoalDays: CompletedGoalDayInput[];
+    goalDays: GoalDay[];
     languageStats: LanguageStat[];
 }
 
-export interface CompletedGoalDay {
-    year: number;
-    month: number;
-    day: number;
-    dayOfWeek: number;
-    dayOfYear: number;
-    dayNumber: number;
-    xp?: number;
-    byTranslation?: number;
-    byGrammar?: number;
+export interface GoalDay {
+    date: string;
+    xp: number;
+    targetXp: number;
+    byTranslation: number;
+    byGrammar: number;
+    isCompleted: boolean;
 }
-
-// API may return dates as strings in 'YYYY-MM-DD' format
-export type CompletedGoalDayInput = CompletedGoalDay | string;
 
 export interface LanguageStat {
     languageName: string;

@@ -1,0 +1,45 @@
+<div class="day-dialog" [class.completed]="data.isCompleted">
+  <button class="close-btn" (click)="close()" aria-label="Закрыть">
+    <span>&times;</span>
+  </button>
+
+  <div class="day-date">
+    <span class="day-date-num">{{ data.date }}</span>
+    <span class="day-date-month">{{ getMonthName() }} {{ data.year }}</span>
+  </div>
+
+  <div class="status-pill" [class.achieved]="data.isCompleted">
+    {{ data.isCompleted ? 'Цель выполнена' : 'Цель не выполнена' }}
+  </div>
+
+  <ng-container *ngIf="hasXpData(); else noData">
+    <div class="xp-hero">
+      <span class="xp-hero-value">{{ data.xp ?? 0 }}</span>
+      <span class="xp-hero-unit">XP</span>
+    </div>
+
+    <div class="xp-details">
+      <div class="xp-detail-row" *ngIf="data.byTranslation != null">
+        <div class="xp-detail-icon translate-icon">A</div>
+        <div class="xp-detail-info">
+          <span class="xp-detail-label">Переводы</span>
+          <span class="xp-detail-value">{{ data.byTranslation }} XP</span>
+        </div>
+      </div>
+      <div class="xp-detail-row" *ngIf="data.byGrammar != null">
+        <div class="xp-detail-icon grammar-icon">G</div>
+        <div class="xp-detail-info">
+          <span class="xp-detail-label">Грамматика</span>
+          <span class="xp-detail-value">{{ data.byGrammar }} XP</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noData>
+    <div class="no-data">
+      <div class="no-data-icon">--</div>
+      <span>Нет данных об XP</span>
+    </div>
+  </ng-template>
+</div>

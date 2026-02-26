@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CompletedGoalDayInput } from '../../../models/userInfo.model';
+import { GoalDay } from '../../../models/userInfo.model';
 import { DayDetailDialogComponent } from './day-detail-dialog/day-detail-dialog.component';
 
 export interface CalendarDay {
@@ -12,14 +12,17 @@ export interface CalendarDay {
   isToday: boolean;
   isEmpty?: boolean;
   xp?: number;
+  targetXp?: number;
   byTranslation?: number;
   byGrammar?: number;
 }
 
 interface DayXpData {
   xp?: number;
+  targetXp?: number;
   byTranslation?: number;
   byGrammar?: number;
+  isCompleted: boolean;
 }
 
 @Component({
@@ -31,45 +34,35 @@ interface DayXpData {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoalCalendarComponent implements OnChanges {
-  @Input() completedGoalDays: CompletedGoalDayInput[] = [];
+  @Input() goalDays: GoalDay[] = [];
 
   private readonly DAYS_TO_DISPLAY = 30;
 
-  private completedDaysMap: Map<string, DayXpData> = new Map();
+  private goalDaysMap: Map<string, DayXpData> = new Map();
   calendarDays: CalendarDay[] = [];
   completedDaysInRange: number = 0;
 
   constructor(private dialog: MatDialog) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['completedGoalDays']) {
-      this.updateCompletedDaysMap();
+    if (changes['goalDays']) {
+      this.updateGoalDaysMap();
       this.updateCalendarDays();
     }
   }
 
-  private updateCompletedDaysMap(): void {
-    this.completedDaysMap = new Map();
-    this.completedGoalDays.forEach(day => {
-      let dateKey: string | null = null;
-      let xpData: DayXpData = {};
-
-      if (typeof day === 'string') {
-        if (/^\d{4}-\d{2}-\d{2}$/.test(day)) {
-          dateKey = day;
-        }
-      }
-      else if (day && typeof day === 'object' && day.year != null && day.month != null && day.day != null) {
-        dateKey = `${day.year}-${String(day.month).padStart(2, '0')}-${String(day.day).padStart(2, '0')}`;
-        xpData = {
+  private updateGoalDaysMap(): void {
+    this.goalDaysMap = new Map();
+    this.goalDays.forEach(day => {
+      if (day.date) {
+        const dateKey = day.date.slice(0, 10);
+        this.goalDaysMap.set(dateKey, {
           xp: day.xp,
+          targetXp: day.targetXp,
           byTranslation: day.byTranslation,
           byGrammar: day.byGrammar,
-        };
-      }
-
-      if (dateKey) {
-        this.completedDaysMap.set(dateKey, xpData);
+          isCompleted: day.isCompleted,
+        });
       }
     });
   }
@@ -107,8 +100,8 @@ export class GoalCalendarComponent implements OnChanges {
       const day = date.getUTCDate();
 
       const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-      const dayData = this.completedDaysMap.get(dateKey);
-      const isCompleted = !!dayData;
+      const dayData = this.goalDaysMap.get(dateKey);
+      const isCompleted = dayData?.isCompleted ?? false;
 
       if (isCompleted) {
         completedCount++;
@@ -122,6 +115,7 @@ export class GoalCalendarComponent implements OnChanges {
         isToday: i === 0,
         isEmpty: false,
         xp: dayData?.xp,
+        targetXp: dayData?.targetXp,
         byTranslation: dayData?.byTranslation,
         byGrammar: dayData?.byGrammar,
       });
@@ -158,4 +152,3 @@ export class GoalCalendarComponent implements OnChanges {
     return `Цель не выполнена (${dateStr})`;
   }
 }
-

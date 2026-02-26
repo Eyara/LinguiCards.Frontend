@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { UserInfoService } from './profile.service';
 import { catchError, map, Observable, of, shareReplay, tap } from 'rxjs';
-import { CompletedGoalDayInput, LanguageStat } from '../../models/userInfo.model';
+import { GoalDay, LanguageStat } from '../../models/userInfo.model';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -36,7 +36,7 @@ export class ProfileComponent {
   byTranslation: number = 0;
   byGrammar: number = 0;
   goalStreak: number = 0;
-  completedGoalDays: CompletedGoalDayInput[] = [];
+  goalDays: GoalDay[] = [];
   userSettings$: Observable<UserSettings>;
   saveUserSettings$: Observable<void | null> = of(null);
   activeTrainingSize: number = 0;
@@ -59,7 +59,7 @@ export class ProfileComponent {
         this.byTranslation = userInfo.byTranslation ?? 0;
         this.byGrammar = userInfo.byGrammar ?? 0;
         this.goalStreak = userInfo.goalStreak;
-        this.completedGoalDays = userInfo.completedGoalDays || [];
+        this.goalDays = userInfo.goalDays || [];
         this.cdr.markForCheck();
       }),
       map(userInfo => userInfo.languageStats)
