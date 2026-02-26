@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { WordConnection } from '../../../../models/word.model';
 
 @Component({
@@ -7,7 +8,7 @@ import { WordConnection } from '../../../../models/word.model';
   templateUrl: './training-connection.component.html',
   styleUrls: ['./training-connection.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
 })
 export class TrainingConnectionComponent {
   @Input() connectionWords: string[] = [];
@@ -19,6 +20,10 @@ export class TrainingConnectionComponent {
   selectedWordConnection: WordConnection | null = null;
   selectedTranslationConnection: string | null = null;
   matches: { [key: string]: string } = {};
+
+  get matchedCount(): number {
+    return this.expectedMatches.filter(m => this.isWordMatched(m.name) && this.isCorrectWordMatch(m.name)).length;
+  }
 
   selectWord(value: string, type: 'word' | 'translation'): void {
     if (type === 'word') {

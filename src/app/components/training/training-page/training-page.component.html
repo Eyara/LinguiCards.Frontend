@@ -1,85 +1,157 @@
 <div class="training-page">
   <ng-container *ngIf="isTrainingFinished; then finishedTraining; else activeTraining">
   </ng-container>
+
   <ng-template #finishedTraining>
-    <div class="training-page__finished-training">
+    <header class="training-page__header training-page__header--results">
+      <div class="training-page__headline">
+        <h1>Результаты</h1>
+        <p class="training-page__subtitle">Тренировка завершена</p>
+      </div>
+    </header>
+
+    <div class="training-page__finished">
       <div *ngIf="trainingResult$ | async as trainingResult">
-        <div class="action-buttons">
-          <button mat-flat-button color="primary" class="action-button" (click)="startNewTraining()" [disabled]="isLoading">Начать новую
-            тренировку</button>
-          <button mat-flat-button color="primary" class="action-button" (click)="goToDashboard()">Вернуться к
-            дашборду</button>
+        <div class="score-summary">
+          <div class="score-summary__item score-summary__item--correct">
+            <mat-icon>check_circle</mat-icon>
+            <span class="score-summary__count">{{ getCorrectCount(trainingResult) }}</span>
+            <span class="score-summary__label">Верно</span>
+          </div>
+          <div class="score-summary__divider"></div>
+          <div class="score-summary__item score-summary__item--incorrect">
+            <mat-icon>cancel</mat-icon>
+            <span class="score-summary__count">{{ trainingResult.length - getCorrectCount(trainingResult) }}</span>
+            <span class="score-summary__label">Ошибки</span>
+          </div>
+          <div class="score-summary__divider"></div>
+          <div class="score-summary__item score-summary__item--total">
+            <mat-icon>format_list_numbered</mat-icon>
+            <span class="score-summary__count">{{ trainingResult.length }}</span>
+            <span class="score-summary__label">Всего</span>
+          </div>
         </div>
-        <div class="results-table-wrapper">
-          <table mat-table [dataSource]="trainingResult" class="mat-elevation-z8 results-table">
-            <ng-container matColumnDef="correctAnswer">
-              <th mat-header-cell *matHeaderCellDef> Правильный ответ </th>
-              <td mat-cell *matCellDef="let element"> {{element.correctAnswer}} </td>
-            </ng-container>
-            <ng-container matColumnDef="userAnswer">
-              <th mat-header-cell *matHeaderCellDef> Ваш ответ </th>
-              <td mat-cell *matCellDef="let element"
-                [ngClass]="{'correct-answer': element.isCorrectAnswer, 'incorrect-answer': !element.isCorrectAnswer}">
-                {{element.answer}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef> Действия </th>
-              <td mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" (click)="challengeWord(element.wordId, element.trainingId)" 
-                        [disabled]="isLoading || isWordChallenged(element.wordId) || element.isCorrectAnswer" 
-                        aria-label="Challenge word">
-                  <mat-icon>{{ isWordChallenged(element.wordId) ? 'check_circle' : 'flag' }}</mat-icon>
-                </button>
-              </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="['correctAnswer', 'userAnswer', 'actions']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['correctAnswer', 'userAnswer', 'actions'];" 
-                [ngClass]="{'challenged-row': isWordChallenged(row.wordId)}"></tr>
-          </table>
+
+        <div class="training-page__actions">
+          <button class="action-btn action-btn--training" (click)="startNewTraining()" [disabled]="isLoading">
+            <mat-icon>refresh</mat-icon>
+            Новая тренировка
+          </button>
+          <button class="action-btn action-btn--secondary" (click)="goToDashboard()">
+            <mat-icon>dashboard</mat-icon>
+            К дашборду
+          </button>
+        </div>
+
+        <div class="results-card">
+          <div class="results-table-wrapper">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Правильный ответ</th>
+                  <th>Ваш ответ</th>
+                  <th>Действия</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of trainingResult"
+                    [class.challenged-row]="isWordChallenged(element.wordId)">
+                  <td class="result-icon-cell">
+                    <mat-icon [class.icon--correct]="element.isCorrectAnswer"
+                              [class.icon--incorrect]="!element.isCorrectAnswer">
+                      {{ element.isCorrectAnswer ? 'check_circle' : 'highlight_off' }}
+                    </mat-icon>
+                  </td>
+                  <td>{{ element.correctAnswer }}</td>
+                  <td [ngClass]="{'correct-answer': element.isCorrectAnswer, 'incorrect-answer': !element.isCorrectAnswer}">
+                    {{ element.answer }}
+                  </td>
+                  <td>
+                    <button class="challenge-btn"
+                            (click)="challengeWord(element.wordId, element.trainingId)"
+                            [disabled]="isLoading || isWordChallenged(element.wordId) || element.isCorrectAnswer"
+                            aria-label="Challenge word">
+                      <mat-icon>{{ isWordChallenged(element.wordId) ? 'check_circle' : 'flag' }}</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </ng-template>
+
   <ng-template #activeTraining>
-    <div class="training-page__current-word" *ngIf="getTrainingRenderType((currentWord$ | async)!) !== 2">
-      <card [name]="getCardName((currentWord$ | async)!)" customClassName="minimalistic-card__medium"></card>
-    </div>
-    <ng-container *ngIf="currentWord$ | async as currentWord">
-      <div *ngIf="getTrainingRenderType(currentWord) === 0;" class="training-page__options">
-        <div *ngFor="let option of options" class="training-page__option">
-          <card [name]="option" (click)="selectOption(option)"
-            [customClassName]="'minimalistic-card__small ' + (getBackgroundColor$(option) | async)">
-          </card>
+    <header class="training-page__header">
+      <div class="training-page__headline">
+        <h1>Тренировка</h1>
+        <p class="training-page__subtitle">Слово {{ currentIndex + 1 }} из {{ totalWords }}</p>
+      </div>
+      <div class="training-page__progress">
+        <div class="progress-bar">
+          <div class="progress-bar__fill" [style.width.%]="progressPercent"></div>
         </div>
       </div>
-      <div *ngIf="getTrainingRenderType(currentWord) === 1;" class="training-page__input-block">
-        <div class="hint-container">
-          <span class="revealed-letters">{{ revealedLetters }}</span>
-          <span class="hidden-letters">{{ getHiddenLetters(currentWord) }}</span>
+    </header>
+
+    <div class="training-page__word-card" *ngIf="getTrainingRenderType((currentWord$ | async)!) !== 2"
+         [class.training-page__word-card--options]="getTrainingRenderType((currentWord$ | async)!) === 0"
+         [class.training-page__word-card--input]="getTrainingRenderType((currentWord$ | async)!) === 1">
+      <div class="word-card__type-badge" *ngIf="getTrainingRenderType((currentWord$ | async)!) === 0">
+        <mat-icon>touch_app</mat-icon> Выберите перевод
+      </div>
+      <div class="word-card__type-badge word-card__type-badge--writing" *ngIf="getTrainingRenderType((currentWord$ | async)!) === 1">
+        <mat-icon>edit</mat-icon> Напишите перевод
+      </div>
+      <span class="word-card__word">{{ getCardName((currentWord$ | async)!) }}</span>
+    </div>
+
+    <ng-container *ngIf="currentWord$ | async as currentWord">
+      <div *ngIf="getTrainingRenderType(currentWord) === 0" class="training-page__options">
+        <button *ngFor="let option of options"
+                class="option-card"
+                (click)="selectOption(option)"
+                [ngClass]="(getBackgroundColor$(option) | async)">
+          {{ option }}
+        </button>
+      </div>
+
+      <div *ngIf="getTrainingRenderType(currentWord) === 1" class="training-page__input-card">
+        <div class="hint-display">
+          <span class="hint-display__revealed">{{ revealedLetters }}</span>
+          <span class="hint-display__hidden">{{ getHiddenLetters(currentWord) }}</span>
         </div>
-        <button mat-button (click)="getHint()" [disabled]="isHintDisabled(currentWord) || isLoading">
+        <button class="action-btn action-btn--hint" (click)="getHint()" [disabled]="isHintDisabled(currentWord) || isLoading">
           <mat-icon>lightbulb</mat-icon>
           Подсказка
         </button>
-        <div class="training-page__input-block">
-          <mat-form-field appearance="outline">
-            <input #translationInput matInput [(ngModel)]="writtenTranslation" (keyup.enter)="continueTraining()" [disabled]="isLoading">
-            <button matSuffix mat-icon-button aria-label="Clear" (click)="continueTraining()" [disabled]="isLoading">
+        <div class="input-field">
+          <mat-form-field appearance="outline" class="input-field__form">
+            <input #translationInput matInput [(ngModel)]="writtenTranslation" (keyup.enter)="continueTraining()" [disabled]="isLoading"
+                   placeholder="Введите перевод">
+            <button matSuffix mat-icon-button aria-label="Отправить" (click)="continueTraining()" [disabled]="isLoading">
               <mat-icon>send</mat-icon>
             </button>
           </mat-form-field>
         </div>
       </div>
-      <div *ngIf="getTrainingRenderType(currentWord) === 2;" class="training-page__connection-block">
+
+      <div *ngIf="getTrainingRenderType(currentWord) === 2" class="training-page__connection-block">
         <training-connection [connectionWords]="(connectionWords$ | async) ?? []"
           [connectionTranslations]="(connectionTranslations$ | async) ?? []"
           [expectedMatches]="(expectedMatches$ | async) ?? []" (matchesComplete)="continueTraining()"
           (updateLearnLevel)="handleWordConnectionMatch($event.word, $event.translation)"></training-connection>
       </div>
     </ng-container>
-    <div class="action-buttons">
-      <button mat-flat-button color="primary" class="action-button" (click)="finishTraining()" [disabled]="isLoading">Закончить</button>
+
+    <div class="training-page__actions training-page__actions--bottom">
+      <button class="action-btn action-btn--finish" (click)="finishTraining()" [disabled]="isLoading">
+        <mat-icon>stop</mat-icon>
+        Закончить
+      </button>
     </div>
   </ng-template>
 </div>

@@ -1,22 +1,41 @@
-<div class="match-container">
-    <div class="word-column">
-        <div *ngFor="let word of connectionWords" 
-            (click)="!isWordMatched(word) && selectWord(word, 'word')"
-            [class.selected]="selectedWordConnection?.name === word"
-            [class.matched]="isWordMatched(word) && isCorrectWordMatch(word)"
-            [class.incorrect-match]="isWordMatched(word) && !isCorrectWordMatch(word)"
-            class="training-page__word-item">
-            {{ word }}
-        </div>
+<div class="connection">
+  <div class="connection__header">
+    <span class="connection__instruction">Соедините слова с переводами</span>
+    <span class="connection__counter">{{ matchedCount }} из {{ expectedMatches.length }}</span>
+  </div>
+
+  <div class="connection__progress">
+    <div class="connection__progress-fill"
+         [style.width.%]="expectedMatches.length ? (matchedCount / expectedMatches.length) * 100 : 0"></div>
+  </div>
+
+  <div class="connection__columns">
+    <div class="connection__col">
+      <span class="connection__col-label">Слово</span>
+      <div *ngFor="let word of connectionWords"
+           (click)="!isWordMatched(word) && selectWord(word, 'word')"
+           [class.selected]="selectedWordConnection?.name === word"
+           [class.matched]="isWordMatched(word) && isCorrectWordMatch(word)"
+           [class.incorrect-match]="isWordMatched(word) && !isCorrectWordMatch(word)"
+           [class.disabled]="isWordMatched(word) && isCorrectWordMatch(word)"
+           class="connection__item">
+        <span class="connection__item-text">{{ word }}</span>
+        <mat-icon *ngIf="isWordMatched(word) && isCorrectWordMatch(word)" class="connection__check">check_circle</mat-icon>
+      </div>
     </div>
-    <div class="translation-column">
-        <div *ngFor="let translation of connectionTranslations"
-            (click)="!isTranslationMatched(translation) && selectWord(translation, 'translation')"
-            [class.selected]="selectedTranslationConnection === translation"
-            [class.matched]="isTranslationMatched(translation) && isCorrectTranslationMatch(translation)"
-            [class.incorrect-match]="isTranslationMatched(translation) && !isCorrectTranslationMatch(translation)"
-            class="training-page__translation-item">
-            {{ translation }}
-        </div>
+
+    <div class="connection__col">
+      <span class="connection__col-label">Перевод</span>
+      <div *ngFor="let translation of connectionTranslations"
+           (click)="!isTranslationMatched(translation) && selectWord(translation, 'translation')"
+           [class.selected]="selectedTranslationConnection === translation"
+           [class.matched]="isTranslationMatched(translation) && isCorrectTranslationMatch(translation)"
+           [class.incorrect-match]="isTranslationMatched(translation) && !isCorrectTranslationMatch(translation)"
+           [class.disabled]="isTranslationMatched(translation) && isCorrectTranslationMatch(translation)"
+           class="connection__item">
+        <span class="connection__item-text">{{ translation }}</span>
+        <mat-icon *ngIf="isTranslationMatched(translation) && isCorrectTranslationMatch(translation)" class="connection__check">check_circle</mat-icon>
+      </div>
     </div>
+  </div>
 </div>

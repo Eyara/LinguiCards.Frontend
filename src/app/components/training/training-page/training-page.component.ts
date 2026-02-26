@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild, ElementRef, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { TrainingType, WordConnection, WordTrainingModel } from '../../../models/word.model';
-import { CardComponent } from "../../../shared/card/card.component";
 import { CommonModule } from '@angular/common';
 import { forkJoin, map, mergeMap, Observable, of, startWith, take, tap, withLatestFrom, delay, shareReplay, BehaviorSubject, switchMap, catchError } from 'rxjs';
 import { WordService } from '../../word/word.service';
@@ -12,13 +11,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { TrainingModel, TrainingRenderType } from '../../../models/training.model';
 import { TrainingService } from '../training.service';
-import { MatTableModule } from '@angular/material/table';
 import { TrainingConnectionComponent } from './training-connection/training-connection.component';
 
 @Component({
   selector: 'training-page',
   standalone: true,
-  imports: [CommonModule, CardComponent, MatFormFieldModule, MatTableModule, MatInputModule, MatButtonModule, MatIconModule, FormsModule,
+  imports: [CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, FormsModule,
     TrainingConnectionComponent],
   templateUrl: './training-page.component.html',
   styleUrls: ['./training-page.component.scss'],
@@ -48,6 +46,8 @@ export class TrainingPageComponent implements AfterViewChecked {
   currentHintIndex: number = 0;
   revealedLetters: string = '';
 
+  totalWords: number = 0;
+
   isLoading = false;
   challengedWordIds = new Set<number>();
 
@@ -64,6 +64,7 @@ export class TrainingPageComponent implements AfterViewChecked {
   ) {
     this.languageId = this.route.snapshot.params['languageId'];
     this.trainingWords$ = this.getWords().pipe(
+      tap(words => this.totalWords = words.length),
       shareReplay(1)
     );
     this.currentWord$ = this.trainingWords$.pipe(
@@ -71,6 +72,10 @@ export class TrainingPageComponent implements AfterViewChecked {
       map(words => words[0]),
       tap(word => this.options = word.options)
     );
+  }
+
+  get progressPercent(): number {
+    return this.totalWords > 0 ? ((this.currentIndex + 1) / this.totalWords) * 100 : 0;
   }
 
   getWords(): Observable<WordTrainingModel[]> {
@@ -233,7 +238,7 @@ export class TrainingPageComponent implements AfterViewChecked {
           if (selectedOption === option) {
             const isCorrect = (currentWord.type === TrainingType.FromLearnLanguage && currentWord.translatedName === selectedOption) ||
               (currentWord.type !== TrainingType.FromLearnLanguage && currentWord.name === selectedOption);
-            return isCorrect ? 'background-green' : 'background-red';
+            return isCorrect ? 'option-card--correct' : 'option-card--incorrect';
           }
         }
         return '';
@@ -250,8 +255,8 @@ export class TrainingPageComponent implements AfterViewChecked {
     this.revealedLetters = '';
 
     this.trainingWords$ = this.getWords().pipe(
-      shareReplay(1),
-      tap(() => this.isLoading = false)
+      tap(words => { this.totalWords = words.length; this.isLoading = false; }),
+      shareReplay(1)
     );
 
     this.currentWord$ = this.trainingWords$.pipe(
@@ -287,6 +292,10 @@ export class TrainingPageComponent implements AfterViewChecked {
 
   isWordChallenged(wordId: number): boolean {
     return this.challengedWordIds.has(wordId);
+  }
+
+  getCorrectCount(results: TrainingModel[]): number {
+    return results.filter(r => r.isCorrectAnswer).length;
   }
 
   getHiddenLetters(word: WordTrainingModel | null): string {
