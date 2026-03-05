@@ -8,29 +8,34 @@
         <mat-form-field appearance="outline">
           <mat-label>Логин</mat-label>
           <input matInput formControlName="username" required>
-          <mat-error *ngIf="signUpForm.get('username')?.hasError('required')">Логин обязателен</mat-error>
+          @if (signUpForm.get('username')?.hasError('required')) {
+            <mat-error>Логин обязателен</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Пароль</mat-label>
           <input matInput formControlName="password" required type="password">
-          <mat-error *ngIf="signUpForm.get('password')?.hasError('required')">Пароль обязателен</mat-error>
-          <mat-error *ngIf="signUpForm.get('password')?.hasError('minlength')">Пароль должен быть не короче 6
-            символов
-          </mat-error>
+          @if (signUpForm.get('password')?.hasError('required')) {
+            <mat-error>Пароль обязателен</mat-error>
+          }
+          @if (signUpForm.get('password')?.hasError('minlength')) {
+            <mat-error>Пароль должен быть не короче 6 символов</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Подтвердите пароль</mat-label>
           <input matInput formControlName="confirmPassword" required type="password">
-          <mat-error *ngIf="signUpForm.get('confirmPassword')?.hasError('required')">Необходимо ввести пароль
-            еще раз
-          </mat-error>
-          <mat-error *ngIf="signUpForm.hasError('passwordMismatch')">Пароли не совпадают</mat-error>
+          @if (signUpForm.get('confirmPassword')?.hasError('required')) {
+            <mat-error>Необходимо ввести пароль еще раз</mat-error>
+          }
+          @if (signUpForm.hasError('passwordMismatch')) {
+            <mat-error>Пароли не совпадают</mat-error>
+          }
         </mat-form-field>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="signUpForm.invalid">Зарегистрироваться
-        </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="signUpForm.invalid">Зарегистрироваться</button>
       </form>
     </mat-card-content>
     <mat-card-actions>
@@ -38,6 +43,5 @@
     </mat-card-actions>
   </mat-card>
 
-  <ng-container *ngIf="signUpResult$ | async as result">
-  </ng-container>
+  @if (signUpResult$ | async; as result) { }
 </div>

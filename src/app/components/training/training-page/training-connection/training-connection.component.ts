@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { WordConnection } from '../../../../models/word.model';
 
@@ -9,6 +9,7 @@ import { WordConnection } from '../../../../models/word.model';
   styleUrls: ['./training-connection.component.scss'],
   standalone: true,
   imports: [CommonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrainingConnectionComponent {
   @Input() connectionWords: string[] = [];

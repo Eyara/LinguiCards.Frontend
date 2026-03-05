@@ -1,23 +1,28 @@
 <mat-card class="minimalistic-card" [ngClass]="customClassName" (click)="clickEvent($event)">
-  <div *ngIf="editMode || isShowActions" class="item-actions">
-    <mat-icon class="close-icon" (click)="emitClose($event)">close</mat-icon>
-  </div>
+  @if (editMode || isShowActions) {
+    <div class="item-actions">
+      <mat-icon class="close-icon" (click)="emitClose($event)">close</mat-icon>
+    </div>
+  }
   <mat-card-content class="content-container">
-    <ng-container *ngIf="!editMode; else editTemplate">
+    @if (!editMode) {
       <span class="item-name">{{name}}</span>
-      <img *ngIf="imgSrc" [src]="imgSrc" class="item-icon" width="30">
-    </ng-container>
-    <ng-template #editTemplate>
+      @if (imgSrc) {
+        <img [src]="imgSrc" class="item-icon" width="30">
+      }
+    } @else {
       <div class="edit-content">
         <mat-select [(ngModel)]="selectedItem" placeholder="Выберите">
-          <mat-option *ngFor="let item of dictionaries" [value]="item">
-            {{item.name}}
-          </mat-option>
+          @for (item of dictionaries; track item.id) {
+            <mat-option [value]="item">
+              {{item.name}}
+            </mat-option>
+          }
         </mat-select>
         <button mat-fab color="primary" class="save-button" (click)="saveItem()" [disabled]="!selectedItem.id">
           Сохранить
         </button>
       </div>
-    </ng-template>
+    }
   </mat-card-content>
 </mat-card>

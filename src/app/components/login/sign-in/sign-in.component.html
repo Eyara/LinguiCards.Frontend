@@ -8,13 +8,17 @@
         <mat-form-field appearance="outline">
           <mat-label>Логин</mat-label>
           <input matInput formControlName="username" required>
-          <mat-error *ngIf="signInForm.get('username')?.hasError('required')">Логин обязателен</mat-error>
+          @if (signInForm.get('username')?.hasError('required')) {
+            <mat-error>Логин обязателен</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Пароль</mat-label>
           <input matInput formControlName="password" required type="password">
-          <mat-error *ngIf="signInForm.get('password')?.hasError('required')">Пароль обязателен</mat-error>
+          @if (signInForm.get('password')?.hasError('required')) {
+            <mat-error>Пароль обязателен</mat-error>
+          }
         </mat-form-field>
 
         <button mat-raised-button color="primary" type="submit" [disabled]="!signInForm.valid">Войти</button>
@@ -26,5 +30,4 @@
   </mat-card>
 </div>
 
-<ng-container *ngIf="signInResult$ | async">
-</ng-container>
+@if (signInResult$ | async) { }

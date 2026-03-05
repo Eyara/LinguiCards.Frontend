@@ -1,14 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TrainingType, WordCreateModel, WordModel, WordTrainingModel } from '../../models/word.model';
 import { Paginated } from '../../models/paginated.model';
+import { API_BASE_URL } from '../../shared/api.token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WordService {
-  private apiUrl = '/api';
+  private apiUrl = inject(API_BASE_URL);
 
   constructor(private http: HttpClient) {
   }

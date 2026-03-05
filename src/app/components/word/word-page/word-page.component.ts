@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, AfterViewInit, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditMode, WordCreateModel, WordModel, WordViewModel } from '../../../models/word.model';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
@@ -34,6 +35,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WordPageComponent implements OnInit, AfterViewInit {
+  private destroyRef = inject(DestroyRef);
+
   languageId!: number;
   totalCount: number = 0;
   pageIndex: number = 0;
@@ -55,7 +58,8 @@ export class WordPageComponent implements OnInit, AfterViewInit {
     this.route.paramMap.pipe(
       tap(params => {
         this.languageId = +params.get('languageId')!;
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe();
   }
 

@@ -22,103 +22,101 @@
         <mat-label>Поиск по слову</mat-label>
         <mat-icon matPrefix>search</mat-icon>
         <input matInput [(ngModel)]="nameFilter" (ngModelChange)="applyFilters()">
-        <button *ngIf="nameFilter" matSuffix mat-icon-button (click)="clearNameFilter()">
-          <mat-icon>close</mat-icon>
-        </button>
+        @if (nameFilter) {
+          <button matSuffix mat-icon-button (click)="clearNameFilter()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="search-field">
         <mat-label>Поиск по переводу</mat-label>
         <mat-icon matPrefix>translate</mat-icon>
         <input matInput [(ngModel)]="translationFilter" (ngModelChange)="applyFilters()">
-        <button *ngIf="translationFilter" matSuffix mat-icon-button (click)="clearTranslationFilter()">
-          <mat-icon>close</mat-icon>
-        </button>
+        @if (translationFilter) {
+          <button matSuffix mat-icon-button (click)="clearTranslationFilter()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
       </mat-form-field>
 
-      <button
-        *ngIf="nameFilter || translationFilter"
-        class="filters-panel__reset"
-        type="button"
-        (click)="resetFilters()">
-        <mat-icon>filter_alt_off</mat-icon>
-        Сбросить
-      </button>
+      @if (nameFilter || translationFilter) {
+        <button class="filters-panel__reset" type="button" (click)="resetFilters()">
+          <mat-icon>filter_alt_off</mat-icon>
+          Сбросить
+        </button>
+      }
     </div>
   </section>
 
   <section class="word-content">
-    <ng-container *ngIf="words$ | async as words; else loadingTpl">
-      <div class="word-list" *ngIf="words.length; else emptyTpl">
-        <article
-          class="word-card"
-          *ngFor="let word of words"
-          [class.word-card--editing]="isEditMode(word)">
-
-          <ng-container *ngIf="!isEditMode(word); else editCardTpl">
-            <div class="word-card__top">
-              <div class="word-card__text">
-                <span class="word-card__name">{{ word.name }}</span>
-                <span class="word-card__translation">{{ word.translatedName }}</span>
-              </div>
-              <div class="word-card__actions">
-                <button mat-icon-button class="card-action-btn" (click)="editWord(word)" aria-label="Редактировать">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button class="card-action-btn card-action-btn--delete" (click)="deleteWord(word)" aria-label="Удалить">
-                  <mat-icon>delete_outline</mat-icon>
-                </button>
-              </div>
-            </div>
-
-            <div class="word-card__rings">
-              <div class="ring-gauge">
-                <div class="ring-gauge__chart">
-                  <svg class="ring-gauge__svg" viewBox="0 0 36 36">
-                    <circle class="ring-gauge__bg" cx="18" cy="18" r="15.9155" />
-                    <circle class="ring-gauge__fill ring-gauge__fill--active" cx="18" cy="18" r="15.9155"
-                      [attr.stroke-dasharray]="word.activeLearnedPercent + ' ' + (100 - word.activeLearnedPercent)" />
-                  </svg>
-                  <span class="ring-gauge__value">{{ word.activeLearnedPercent }}%</span>
+    @if (words$ | async; as words) {
+      @if (words.length) {
+        <div class="word-list">
+          @for (word of words; track word.id) {
+            <article class="word-card" [class.word-card--editing]="isEditMode(word)">
+              @if (!isEditMode(word)) {
+                <div class="word-card__top">
+                  <div class="word-card__text">
+                    <span class="word-card__name">{{ word.name }}</span>
+                    <span class="word-card__translation">{{ word.translatedName }}</span>
+                  </div>
+                  <div class="word-card__actions">
+                    <button mat-icon-button class="card-action-btn" (click)="editWord(word)" aria-label="Редактировать">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button class="card-action-btn card-action-btn--delete" (click)="deleteWord(word)" aria-label="Удалить">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </div>
                 </div>
-                <span class="ring-gauge__label">Активный</span>
-              </div>
-              <div class="ring-gauge">
-                <div class="ring-gauge__chart">
-                  <svg class="ring-gauge__svg" viewBox="0 0 36 36">
-                    <circle class="ring-gauge__bg" cx="18" cy="18" r="15.9155" />
-                    <circle class="ring-gauge__fill ring-gauge__fill--passive" cx="18" cy="18" r="15.9155"
-                      [attr.stroke-dasharray]="word.passiveLearnedPercent + ' ' + (100 - word.passiveLearnedPercent)" />
-                  </svg>
-                  <span class="ring-gauge__value">{{ word.passiveLearnedPercent }}%</span>
+
+                <div class="word-card__rings">
+                  <div class="ring-gauge">
+                    <div class="ring-gauge__chart">
+                      <svg class="ring-gauge__svg" viewBox="0 0 36 36">
+                        <circle class="ring-gauge__bg" cx="18" cy="18" r="15.9155" />
+                        <circle class="ring-gauge__fill ring-gauge__fill--active" cx="18" cy="18" r="15.9155"
+                          [attr.stroke-dasharray]="word.activeLearnedPercent + ' ' + (100 - word.activeLearnedPercent)" />
+                      </svg>
+                      <span class="ring-gauge__value">{{ word.activeLearnedPercent }}%</span>
+                    </div>
+                    <span class="ring-gauge__label">Активный</span>
+                  </div>
+                  <div class="ring-gauge">
+                    <div class="ring-gauge__chart">
+                      <svg class="ring-gauge__svg" viewBox="0 0 36 36">
+                        <circle class="ring-gauge__bg" cx="18" cy="18" r="15.9155" />
+                        <circle class="ring-gauge__fill ring-gauge__fill--passive" cx="18" cy="18" r="15.9155"
+                          [attr.stroke-dasharray]="word.passiveLearnedPercent + ' ' + (100 - word.passiveLearnedPercent)" />
+                      </svg>
+                      <span class="ring-gauge__value">{{ word.passiveLearnedPercent }}%</span>
+                    </div>
+                    <span class="ring-gauge__label">Пассивный</span>
+                  </div>
                 </div>
-                <span class="ring-gauge__label">Пассивный</span>
-              </div>
-            </div>
-          </ng-container>
-
-          <ng-template #editCardTpl>
-            <div class="word-card__edit-fields">
-              <mat-form-field class="word-edit-form" appearance="outline">
-                <mat-label>Слово</mat-label>
-                <input matInput [(ngModel)]="word.name" (keyup.enter)="finishEditing(word)">
-              </mat-form-field>
-              <mat-form-field class="word-edit-form" appearance="outline">
-                <mat-label>Перевод</mat-label>
-                <input matInput [(ngModel)]="word.translatedName" (keyup.enter)="finishEditing(word)">
-              </mat-form-field>
-            </div>
-            <div class="word-card__edit-actions">
-              <button class="save-btn" (click)="finishEditing(word)">
-                <mat-icon>check</mat-icon>
-                Сохранить
-              </button>
-            </div>
-          </ng-template>
-        </article>
-      </div>
-
-      <ng-template #emptyTpl>
+              } @else {
+                <div class="word-card__edit-fields">
+                  <mat-form-field class="word-edit-form" appearance="outline">
+                    <mat-label>Слово</mat-label>
+                    <input matInput [(ngModel)]="word.name" (keyup.enter)="finishEditing(word)">
+                  </mat-form-field>
+                  <mat-form-field class="word-edit-form" appearance="outline">
+                    <mat-label>Перевод</mat-label>
+                    <input matInput [(ngModel)]="word.translatedName" (keyup.enter)="finishEditing(word)">
+                  </mat-form-field>
+                </div>
+                <div class="word-card__edit-actions">
+                  <button class="save-btn" (click)="finishEditing(word)">
+                    <mat-icon>check</mat-icon>
+                    Сохранить
+                  </button>
+                </div>
+              }
+            </article>
+          }
+        </div>
+      } @else {
         <div class="empty-state">
           <mat-icon class="empty-state__icon">menu_book</mat-icon>
           <h3>Слова не найдены</h3>
@@ -128,15 +126,13 @@
             Добавить слово
           </button>
         </div>
-      </ng-template>
-    </ng-container>
-
-    <ng-template #loadingTpl>
+      }
+    } @else {
       <div class="loading-state">
         <mat-progress-bar mode="indeterminate" class="loading-state__bar"></mat-progress-bar>
         <p>Загрузка слов...</p>
       </div>
-    </ng-template>
+    }
   </section>
 
   <footer class="word-page__footer">
@@ -147,5 +143,4 @@
   </footer>
 </div>
 
-<ng-container *ngIf="wordCommandObservable$ | async">
-</ng-container>
+@if (wordCommandObservable$ | async) { }

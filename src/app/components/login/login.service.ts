@@ -1,7 +1,9 @@
-import {Injectable} from '@angular/core';
+import {Injectable, signal, computed, inject} from '@angular/core';
+import {toObservable} from '@angular/core/rxjs-interop';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
+import {API_BASE_URL} from '../../shared/api.token';
 
 interface User {
   username: string;
@@ -12,9 +14,10 @@ interface User {
   providedIn: 'root'
 })
 export class LoginService {
-  private apiUrl = '/api';
-  private authStatusSubject = new BehaviorSubject<boolean>(this.hasToken());
-  public authStatus$ = this.authStatusSubject.asObservable();
+  private apiUrl = inject(API_BASE_URL);
+  private authStatus = signal<boolean>(this.hasToken());
+  public isLoggedIn = computed(() => this.authStatus());
+  public authStatus$ = toObservable(this.authStatus);
 
   constructor(private http: HttpClient) {
   }
@@ -41,7 +44,7 @@ export class LoginService {
 
   logout(): void {
     localStorage.removeItem('token');
-    this.authStatusSubject.next(false);
+    this.authStatus.set(false);
   }
 
   isAuthenticated(): Observable<boolean> {
@@ -50,7 +53,7 @@ export class LoginService {
 
   private setToken(token: string): void {
     localStorage.setItem('token', token);
-    this.authStatusSubject.next(true);
+    this.authStatus.set(true);
   }
 
   private hasToken(): boolean {

@@ -1,14 +1,15 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { CribResponseModel, IrregularVerbModel } from '../../models/crib.model';
 import { GrammarTaskType } from '../../models/grammar-task.model';
+import { API_BASE_URL } from '../../shared/api.token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GrammarService {
-  private apiUrl = '/api';
+  private apiUrl = inject(API_BASE_URL);
   private cribPath = '/Crib';
   private grammarTaskPath = '/GrammarTask';
 

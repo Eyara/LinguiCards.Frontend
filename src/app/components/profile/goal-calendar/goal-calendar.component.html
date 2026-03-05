@@ -1,30 +1,39 @@
 <div class="calendar-section">
   <div class="calendar-header">
     <h3 class="calendar-title">📅 Календарь целей</h3>
-    <div class="calendar-stats" *ngIf="goalDays.length > 0">
-      <span class="stats-text">{{ completedDaysInRange }} из 30 дней</span>
-    </div>
+    @if (goalDays.length > 0) {
+      <div class="calendar-stats">
+        <span class="stats-text">{{ completedDaysInRange }} из 30 дней</span>
+      </div>
+    }
   </div>
   <div class="calendar-wrapper">
     <div class="calendar-weekdays">
-      <div class="weekday" *ngFor="let day of ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']">{{ day }}</div>
+      @for (day of ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']; track $index) {
+        <div class="weekday">{{ day }}</div>
+      }
     </div>
     <div class="calendar-grid">
-      <div
-        *ngFor="let day of calendarDays; let i = index"
-        class="calendar-day"
-        [class.completed]="day.isCompleted"
-        [class.today]="day.isToday"
-        [class.empty]="day.isEmpty"
-        [style.animation-delay]="(i * 0.02) + 's'"
-        [title]="getDayTooltip(day)"
-        (click)="onDayClick(day)"
-      >
-        <div class="day-content" *ngIf="!day.isEmpty">
-          <span class="day-number">{{ day.date }}</span>
-          <div class="day-glow" *ngIf="day.isCompleted"></div>
+      @for (day of calendarDays; track $index; let i = $index) {
+        <div
+          class="calendar-day"
+          [class.completed]="day.isCompleted"
+          [class.today]="day.isToday"
+          [class.empty]="day.isEmpty"
+          [style.animation-delay]="(i * 0.02) + 's'"
+          [title]="getDayTooltip(day)"
+          (click)="onDayClick(day)"
+        >
+          @if (!day.isEmpty) {
+            <div class="day-content">
+              <span class="day-number">{{ day.date }}</span>
+              @if (day.isCompleted) {
+                <div class="day-glow"></div>
+              }
+            </div>
+          }
         </div>
-      </div>
+      }
     </div>
   </div>
   <div class="calendar-legend">
@@ -38,4 +47,3 @@
     </div>
   </div>
 </div>
-

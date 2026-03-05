@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TrainingModel } from '../../models/training.model';
+import { API_BASE_URL } from '../../shared/api.token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrainingService {
-  private apiUrl = '/api';
+  private apiUrl = inject(API_BASE_URL);
 
   constructor(private http: HttpClient) {}
 

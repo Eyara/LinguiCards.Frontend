@@ -1,27 +1,102 @@
-# LinguiCardsFrontend
+# LinguiCards Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.1.
+A language learning web application built with Angular 18 and Angular Material. LinguiCards helps users learn vocabulary, practice translations, and improve grammar through interactive training exercises.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **Vocabulary Management** -- Add, edit, and delete words per language with pagination and filtering
+- **Training Modes** -- Options-based, written input, and word-connection exercises
+- **Translation Practice** -- AI-evaluated translation exercises at configurable language levels
+- **Grammar Tasks** -- Grammar exercises with automatic evaluation
+- **Progress Tracking** -- XP system with levels, daily goals, streaks, and a goal calendar
+- **Multi-language Support** -- Learn multiple languages, switch between them in the header
 
-## Code scaffolding
+## Tech Stack
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- **Framework:** Angular 18 (standalone components, new control flow)
+- **UI:** Angular Material, SCSS
+- **State:** RxJS + Angular Signals
+- **Build:** Angular CLI, Docker (OpenResty)
+- **Testing:** Karma + Jasmine
+- **Linting:** ESLint, Stylelint, Prettier
 
-## Build
+## Getting Started
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Prerequisites
 
-## Running unit tests
+- Node.js 18+ and npm
+- Backend API running on `http://localhost:5263`
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Installation
 
-## Running end-to-end tests
+```bash
+npm install
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### Development
 
-## Further help
+```bash
+npm start
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Navigate to `http://localhost:4200`. The dev server proxies `/api` requests to `http://localhost:5263`.
+
+### Build
+
+```bash
+npm run prod
+```
+
+Build output goes to `dist/`.
+
+### Docker
+
+```bash
+docker build -t linguicards-frontend .
+docker run -p 80:80 linguicards-frontend
+```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start dev server |
+| `npm run build` | Build for development |
+| `npm run prod` | Build for production |
+| `npm test` | Run unit tests (Karma) |
+| `npm run lint` | Lint TypeScript files |
+| `npm run format` | Format code with Prettier |
+| `npm run format:check` | Check formatting |
+| `npm run stylelint` | Lint SCSS files |
+| `npm run stylelint:fix` | Auto-fix SCSS lint issues |
+
+## Project Structure
+
+```
+src/app/
+  components/
+    profile/          # Profile, goal calendar, goal streak
+    language/         # Language page, overview, selected-language service
+    word/             # Word page and service
+    training/         # Training page, connection, utilities
+    translation-practice/
+    grammar-page/
+    grammar-task/
+    login/            # Sign-in, sign-up
+  layout/
+    header/           # Header with language selector
+    side-nav/         # Side navigation
+  shared/             # Reusable components, pipes, tokens, constants
+  models/             # TypeScript interfaces and enums
+  interceptors/       # Auth and error HTTP interceptors
+  guards/             # Auth guard
+  environments/       # Environment configuration
+```
+
+## Environment Configuration
+
+Environment files are in `src/environments/`:
+- `environment.ts` -- Development defaults
+- `environment.prod.ts` -- Production overrides (swapped at build time)
+
+The API base URL is configured via the `API_BASE_URL` injection token.

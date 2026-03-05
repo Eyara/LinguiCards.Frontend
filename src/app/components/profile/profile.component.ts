@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { UserSettings } from '../../models/user-settings.model';
 import { GoalStreakComponent } from './goal-streak/goal-streak.component';
 import { GoalCalendarComponent } from './goal-calendar/goal-calendar.component';
+import { RoundPipe } from '../../shared/round.pipe';
 
 @Component({
   selector: 'app-profile',
@@ -21,7 +22,8 @@ import { GoalCalendarComponent } from './goal-calendar/goal-calendar.component';
     MatButtonModule,
     FormsModule,
     GoalStreakComponent,
-    GoalCalendarComponent
+    GoalCalendarComponent,
+    RoundPipe
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
@@ -91,10 +93,6 @@ export class ProfileComponent {
         return of(null);
       })
     );
-  }
-
-  roundToTwoDecimals(value: number): number {
-    return Math.round(value * 100) / 100;
   }
 
 }

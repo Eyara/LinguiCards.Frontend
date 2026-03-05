@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import { GrammarService } from '../grammar-page/grammar.service';
 import { GrammarTaskType } from '../../models/grammar-task.model';
 import { BehaviorSubject, Observable, of, switchMap, map, startWith, shareReplay } from 'rxjs';
+import { LANGUAGE_LEVELS } from '../../shared/language-levels';
 
 @Component({
   selector: 'app-grammar-task',
@@ -28,9 +30,12 @@ import { BehaviorSubject, Observable, of, switchMap, map, startWith, shareReplay
     MatProgressSpinnerModule
   ],
   templateUrl: './grammar-task.component.html',
-  styleUrl: './grammar-task.component.scss'
+  styleUrl: './grammar-task.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GrammarTaskComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
+
   level = '';
   topic = '';
   selectedTypeName = '';
@@ -47,14 +52,7 @@ export class GrammarTaskComponent implements OnInit {
   isLoadingTask$ = new BehaviorSubject<boolean>(false);
   isLoadingEval$ = new BehaviorSubject<boolean>(false);
 
-  languageLevels = [
-    { value: 'A1', label: 'Начальный (A1)' },
-    { value: 'A2', label: 'Элементарный (A2)' },
-    { value: 'B1', label: 'Средний (B1)' },
-    { value: 'B2', label: 'Выше среднего (B2)' },
-    { value: 'C1', label: 'Продвинутый (C1)' },
-    { value: 'C2', label: 'В совершенстве (C2)' }
-  ];
+  languageLevels = LANGUAGE_LEVELS;
 
   constructor(
     private grammarService: GrammarService,
@@ -110,7 +108,9 @@ export class GrammarTaskComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.grammarService.getGrammarTaskTypes().subscribe((types: GrammarTaskType[]) => {
+    this.grammarService.getGrammarTaskTypes().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe((types: GrammarTaskType[]) => {
       this.taskTypes = types;
     });
   }

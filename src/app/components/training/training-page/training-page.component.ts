@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, ViewChild, ElementRef, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, ElementRef, ChangeDetectorRef, AfterViewChecked, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TrainingType, WordConnection, WordTrainingModel } from '../../../models/word.model';
 import { CommonModule } from '@angular/common';
 import { forkJoin, map, mergeMap, Observable, of, startWith, take, tap, withLatestFrom, delay, shareReplay, BehaviorSubject, switchMap, catchError } from 'rxjs';
@@ -12,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { TrainingModel, TrainingRenderType } from '../../../models/training.model';
 import { TrainingService } from '../training.service';
 import { TrainingConnectionComponent } from './training-connection/training-connection.component';
+import { getTrainingRenderType, needShowOptions, getCardName, getTargetWord, checkAnswer, getOptionCssClass } from '../training-utils';
 
 @Component({
   selector: 'training-page',
@@ -23,47 +25,47 @@ import { TrainingConnectionComponent } from './training-connection/training-conn
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrainingPageComponent implements AfterViewChecked {
+  private destroyRef = inject(DestroyRef);
+
   selectedOption$: Observable<string> = of('');
   trainingWords$: Observable<WordTrainingModel[]>;
   options: string[] = [];
   currentWord$: Observable<WordTrainingModel>;
   trainingResult$: Observable<TrainingModel[]> = of();
-
   continueTraining$: Observable<[WordTrainingModel[], WordTrainingModel, boolean]> = of();
 
   languageId: number;
-  isTrainingFinished: boolean = false;
-  writtenTranslation: string = '';
-  currentIndex: number = 0;
+  isTrainingFinished = false;
+  writtenTranslation = '';
+  currentIndex = 0;
 
   connectionWords$ = new BehaviorSubject<string[]>([]);
   connectionTranslations$ = new BehaviorSubject<string[]>([]);
   expectedMatches$ = new BehaviorSubject<WordConnection[]>([]);
   handleLearnLevelUpdate$ = new Observable<boolean>();
 
-  matches: { [key: string]: string } = {};
-
-  currentHintIndex: number = 0;
-  revealedLetters: string = '';
-
-  totalWords: number = 0;
-
+  currentHintIndex = 0;
+  revealedLetters = '';
+  totalWords = 0;
   isLoading = false;
   challengedWordIds = new Set<number>();
 
   @ViewChild('translationInput') translationInput!: ElementRef<HTMLInputElement>;
-  
   private shouldFocusInput = false;
 
+  readonly getTrainingRenderType = getTrainingRenderType;
+  readonly getCardName = getCardName;
+  readonly getTargetWord = getTargetWord;
+
   constructor(
-    private route: ActivatedRoute, 
-    private wordService: WordService, 
-    private trainingService: TrainingService, 
+    private route: ActivatedRoute,
+    private wordService: WordService,
+    private trainingService: TrainingService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
     this.languageId = this.route.snapshot.params['languageId'];
-    this.trainingWords$ = this.getWords().pipe(
+    this.trainingWords$ = this.wordService.getUnlearnedWords(this.languageId).pipe(
       tap(words => this.totalWords = words.length),
       shareReplay(1)
     );
@@ -78,24 +80,6 @@ export class TrainingPageComponent implements AfterViewChecked {
     return this.totalWords > 0 ? ((this.currentIndex + 1) / this.totalWords) * 100 : 0;
   }
 
-  getWords(): Observable<WordTrainingModel[]> {
-    return this.wordService.getUnlearnedWords(this.languageId);
-  }
-
-  getTrainingRenderType(word: WordTrainingModel): TrainingRenderType {
-    if (word?.type === TrainingType.WordConnect) {
-      return TrainingRenderType.Connection;
-    }
-    else if (this.needShowOptions(word)) {
-      return TrainingRenderType.Options;
-    }
-    return TrainingRenderType.Input;
-  }
-
-  getTrainingResult(trainingId: string): Observable<TrainingModel[]> {
-    return this.trainingService.getTrainingById(trainingId);
-  }
-
   selectOption(option: string) {
     this.selectedOption$ = of(option);
     this.continueTraining();
@@ -106,57 +90,58 @@ export class TrainingPageComponent implements AfterViewChecked {
     this.continueTraining$ = this.trainingWords$.pipe(
       take(1),
       withLatestFrom(this.currentWord$),
-      mergeMap(([words, currentWord]) => {
-        return forkJoin([
-          of(words),
-          of(currentWord),
-          this.selectedOption$
-        ]);
-      }),
-      mergeMap(([words, currentWord, selectedOption]) => {
-        return forkJoin([
-          of(words),
-          of(currentWord),
-          currentWord.type !== TrainingType.WordConnect 
-            ? this.callUpdateLearnLevel(currentWord, selectedOption)
-            : of(false)
-        ]);
-      }),
+      mergeMap(([words, currentWord]) => forkJoin([
+        of(words),
+        of(currentWord),
+        this.selectedOption$
+      ])),
+      mergeMap(([words, currentWord, selectedOption]) => forkJoin([
+        of(words),
+        of(currentWord),
+        currentWord.type !== TrainingType.WordConnect
+          ? this.callUpdateLearnLevel(currentWord, selectedOption)
+          : of(false)
+      ])),
       delay(300),
       tap(([words]) => {
         if (this.currentIndex === words.length - 1) {
           this.isTrainingFinished = true;
-          this.trainingResult$ = this.getTrainingResult(words[0].trainingId);
+          this.trainingResult$ = this.trainingService.getTrainingById(words[0].trainingId);
         } else {
-          this.currentIndex++;
-          this.selectedOption$ = of('');
-          this.currentWord$ = of(words[this.currentIndex]);
-          this.options = words[this.currentIndex].options;
-          this.writtenTranslation = '';
-          this.currentHintIndex = 0;
-          this.revealedLetters = '';
-          if (this.getTrainingRenderType(words[this.currentIndex]) === TrainingRenderType.Connection) {
-            this.connectionWords$.next(words[this.currentIndex].connectionTargets);
-            this.connectionTranslations$.next(words[this.currentIndex].options);
-            this.expectedMatches$.next(words[this.currentIndex].connectionMatches);
-          } else if (this.getTrainingRenderType(words[this.currentIndex]) === TrainingRenderType.Input) {
-            // Mark that we should focus the input after view update
-            this.shouldFocusInput = true;
-            this.cdr.detectChanges();
-          }
+          this.advanceToNextWord(words);
         }
         this.isLoading = false;
       })
     );
   }
 
-  callUpdateLearnLevel(currentWord: WordTrainingModel, selectedOption: string): Observable<boolean> {
+  private advanceToNextWord(words: WordTrainingModel[]) {
+    this.currentIndex++;
+    this.selectedOption$ = of('');
+    this.currentWord$ = of(words[this.currentIndex]);
+    this.options = words[this.currentIndex].options;
+    this.writtenTranslation = '';
+    this.currentHintIndex = 0;
+    this.revealedLetters = '';
+
+    const renderType = getTrainingRenderType(words[this.currentIndex]);
+    if (renderType === TrainingRenderType.Connection) {
+      this.connectionWords$.next(words[this.currentIndex].connectionTargets);
+      this.connectionTranslations$.next(words[this.currentIndex].options);
+      this.expectedMatches$.next(words[this.currentIndex].connectionMatches);
+    } else if (renderType === TrainingRenderType.Input) {
+      this.shouldFocusInput = true;
+      this.cdr.detectChanges();
+    }
+  }
+
+  private callUpdateLearnLevel(currentWord: WordTrainingModel, selectedOption: string): Observable<boolean> {
     return this.wordService.updateLearnLevel(
       currentWord.id,
-      this.getResult(currentWord, selectedOption),
+      checkAnswer(currentWord, selectedOption, this.writtenTranslation),
       currentWord.type,
       currentWord.trainingId,
-      this.needShowOptions(currentWord) ? selectedOption : this.writtenTranslation,
+      needShowOptions(currentWord) ? selectedOption : this.writtenTranslation,
       this.currentHintIndex
     );
   }
@@ -168,10 +153,7 @@ export class TrainingPageComponent implements AfterViewChecked {
       TrainingType.WordConnect,
       word.trainingId,
       translation
-    ).pipe(
-      tap(() => {}),
-      shareReplay(1)
-    );
+    ).pipe(shareReplay(1));
   }
 
   finishTraining() {
@@ -180,69 +162,16 @@ export class TrainingPageComponent implements AfterViewChecked {
     this.trainingResult$ = this.trainingWords$.pipe(
       take(1),
       map(words => words[0].trainingId),
-      switchMap(trainingId => this.getTrainingResult(trainingId)),
+      switchMap(trainingId => this.trainingService.getTrainingById(trainingId)),
       tap(() => this.isLoading = false)
     );
-  }
-
-  getCardName(word: WordTrainingModel | null): string {
-    if (!word) {
-      return '';
-    }
-    return word.type === TrainingType.FromLearnLanguage || word.type === TrainingType.WritingFromLearnLanguage
-      ? word.name
-      : word.translatedName;
-  }
-
-  getTargetWord(word: WordTrainingModel | null): string {
-    if (!word) {
-      return '';
-    }
-    return word.type === TrainingType.FromLearnLanguage || word.type === TrainingType.WritingFromLearnLanguage
-      ? word.translatedName
-      : word.name;
-  }
-
-  needShowOptions(word: WordTrainingModel | null): boolean {
-    return word?.type === TrainingType.FromLearnLanguage || word?.type === TrainingType.FromNativeLanguage;
-  }
-
-  getResult(word: WordTrainingModel | null, selectedOption: string): boolean {
-    if (!word) {
-      return false;
-    }
-    let result = false;
-
-    if (word.type === TrainingType.FromLearnLanguage) {
-      result = word.translatedName === selectedOption;
-    }
-    else if (word.type === TrainingType.FromNativeLanguage) {
-      result = word.name === selectedOption;
-    }
-    else if (word.type === TrainingType.WritingFromLearnLanguage) {
-      result = word.translatedName.toLowerCase().trim() === this.writtenTranslation.toLowerCase().trim();
-    }
-    else if (word.type === TrainingType.WritingFromNativeLanguage) {
-      result = word.name.toLowerCase().trim() === this.writtenTranslation.toLowerCase().trim();
-    }
-
-    return result;
   }
 
   getBackgroundColor$(option: string): Observable<string> {
     return this.selectedOption$.pipe(
       startWith(''),
       withLatestFrom(this.currentWord$),
-      map(([selectedOption, currentWord]) => {
-        if (currentWord && currentWord.translatedName) {
-          if (selectedOption === option) {
-            const isCorrect = (currentWord.type === TrainingType.FromLearnLanguage && currentWord.translatedName === selectedOption) ||
-              (currentWord.type !== TrainingType.FromLearnLanguage && currentWord.name === selectedOption);
-            return isCorrect ? 'option-card--correct' : 'option-card--incorrect';
-          }
-        }
-        return '';
-      })
+      map(([selectedOption, currentWord]) => getOptionCssClass(option, selectedOption, currentWord))
     );
   }
 
@@ -254,7 +183,7 @@ export class TrainingPageComponent implements AfterViewChecked {
     this.currentHintIndex = 0;
     this.revealedLetters = '';
 
-    this.trainingWords$ = this.getWords().pipe(
+    this.trainingWords$ = this.wordService.getUnlearnedWords(this.languageId).pipe(
       tap(words => { this.totalWords = words.length; this.isLoading = false; }),
       shareReplay(1)
     );
@@ -271,10 +200,8 @@ export class TrainingPageComponent implements AfterViewChecked {
   }
 
   challengeWord(wordId: number, trainingId: string) {
-    if (this.challengedWordIds.has(wordId)) {
-      return;
-    }
-    
+    if (this.challengedWordIds.has(wordId)) return;
+
     this.isLoading = true;
     this.wordService.challengeWord(wordId, trainingId).pipe(
       tap(() => {
@@ -286,7 +213,8 @@ export class TrainingPageComponent implements AfterViewChecked {
         console.error('Error challenging word:', error);
         this.isLoading = false;
         return of(false);
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe();
   }
 
@@ -300,24 +228,23 @@ export class TrainingPageComponent implements AfterViewChecked {
 
   getHiddenLetters(word: WordTrainingModel | null): string {
     if (!word) return '';
-    const targetWord = this.getTargetWord(word);
-    return '_'.repeat(targetWord.length - this.currentHintIndex);
+    return '_'.repeat(getTargetWord(word).length - this.currentHintIndex);
   }
 
   isHintDisabled(word: WordTrainingModel | null): boolean {
     if (!word) return true;
-    const targetWord = this.getTargetWord(word);
-    return this.currentHintIndex >= targetWord.length;
+    return this.currentHintIndex >= getTargetWord(word).length;
   }
 
   getHint() {
     this.currentWord$.pipe(
-      take(1)
+      take(1),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(word => {
       if (word) {
-        const targetWord = this.getTargetWord(word);
-        if (this.currentHintIndex < targetWord.length) {
-          this.revealedLetters = targetWord.substring(0, this.currentHintIndex + 1);
+        const target = getTargetWord(word);
+        if (this.currentHintIndex < target.length) {
+          this.revealedLetters = target.substring(0, this.currentHintIndex + 1);
           this.currentHintIndex++;
         }
       }
@@ -326,7 +253,6 @@ export class TrainingPageComponent implements AfterViewChecked {
 
   ngAfterViewChecked() {
     if (this.shouldFocusInput && this.translationInput?.nativeElement) {
-      // Use requestAnimationFrame to ensure the view is fully rendered
       requestAnimationFrame(() => {
         if (this.translationInput?.nativeElement) {
           this.translationInput.nativeElement.focus();

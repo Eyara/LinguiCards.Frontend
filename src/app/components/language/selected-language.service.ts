@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, signal, computed } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
 import { LanguageModel } from '../../models/language.model';
 
 @Injectable({
@@ -14,31 +15,30 @@ export class SelectedLanguageService {
     languageDictionaryId: 0,
     userId: 0
   };
-  private selectedLanguageSubject: BehaviorSubject<LanguageModel> = new BehaviorSubject<LanguageModel>(this.defaultLanguage);
-  public selectedLanguage$: Observable<LanguageModel> = this.selectedLanguageSubject.asObservable();
 
-  constructor() {
-    const storedLanguage = localStorage.getItem('selectedLanguage');
-    if (storedLanguage) {
-      this.selectedLanguageSubject.next(JSON.parse(storedLanguage));
-    }
-  }
+  private selectedLanguageSignal = signal<LanguageModel>(this.loadFromStorage());
+  public currentLanguage = computed(() => this.selectedLanguageSignal());
+  public selectedLanguage$: Observable<LanguageModel> = toObservable(this.selectedLanguageSignal);
 
   setLanguage(language: LanguageModel): void {
     localStorage.setItem('selectedLanguage', JSON.stringify(language));
-    this.selectedLanguageSubject.next(language);
+    this.selectedLanguageSignal.set(language);
   }
 
   getSelectedLanguage(): LanguageModel {
-    return this.selectedLanguageSubject.value;
-  }
-
-  getSelectedLanguageSubject$(): BehaviorSubject<LanguageModel> {
-    return this.selectedLanguageSubject;
+    return this.selectedLanguageSignal();
   }
 
   clear(): void {
     localStorage.removeItem('selectedLanguage');
-    this.selectedLanguageSubject.next(this.defaultLanguage);
+    this.selectedLanguageSignal.set(this.defaultLanguage);
+  }
+
+  private loadFromStorage(): LanguageModel {
+    const storedLanguage = localStorage.getItem('selectedLanguage');
+    if (storedLanguage) {
+      return JSON.parse(storedLanguage);
+    }
+    return this.defaultLanguage;
   }
 }

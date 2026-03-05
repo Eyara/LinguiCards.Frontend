@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
 import { LanguageService } from '../language/language.service';
 import { DictionarExtendedyModel } from '../../models/language.model';
+import { LANGUAGE_LEVELS } from '../../shared/language-levels';
 
 @Component({
   selector: 'app-translation-practice',
@@ -30,7 +32,8 @@ import { DictionarExtendedyModel } from '../../models/language.model';
     MatProgressSpinnerModule
   ],
   templateUrl: './translation-practice.component.html',
-  styleUrl: './translation-practice.component.scss'
+  styleUrl: './translation-practice.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TranslationPracticeComponent {
   length = 10;
@@ -53,14 +56,7 @@ export class TranslationPracticeComponent {
   isLoadingText$ = new BehaviorSubject<boolean>(false);
   isLoadingEval$ = new BehaviorSubject<boolean>(false);
 
-  languageLevels = [
-    { value: 'A1', label: 'Начальный (A1)' },
-    { value: 'A2', label: 'Элементарный (A2)' },
-    { value: 'B1', label: 'Средний (B1)' },
-    { value: 'B2', label: 'Выше среднего (B2)' },
-    { value: 'C1', label: 'Продвинутый (C1)' },
-    { value: 'C2', label: 'В совершенстве (C2)' }
-  ];
+  languageLevels = LANGUAGE_LEVELS;
 
   constructor(
     private translationService: TranslationPracticeService,
@@ -71,7 +67,9 @@ export class TranslationPracticeComponent {
     if (paramId) {
       this.languageId = +paramId;
     }
-    this.languageService.getAvailableLanguages().subscribe((langs: DictionarExtendedyModel[]) => {
+    this.languageService.getAvailableLanguages().pipe(
+      takeUntilDestroyed()
+    ).subscribe((langs: DictionarExtendedyModel[]) => {
       this.languages = langs;
     });
     

@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TranslationEvaluationResponse } from '../../models/translation-evaluation.model';
+import { API_BASE_URL } from '../../shared/api.token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TranslationPracticeService {
-  private apiUrl = '/api';
+  private apiUrl = inject(API_BASE_URL);
   private translationEvaluationPath = '/TranslationEvaluation';
 
   constructor(private http: HttpClient) {}

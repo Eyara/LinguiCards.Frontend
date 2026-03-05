@@ -28,118 +28,130 @@
     </aside>
 
     <main class="overview-content">
-        <div class="stats-summary" *ngIf="languageStats$ | async as stats">
-            <div class="stat-item">
-                <div class="stat-value">{{ stats.totalWords }}</div>
-                <div class="stat-label">Добавлено слов</div>
-            </div>
-            <div class="stat-item" *ngIf="stats.learnedWords">
-                <div class="stat-value">{{ stats.learnedWords }}</div>
-                <div class="stat-label">Выучено слов</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value">{{ stats.totalTrainingDays }}</div>
-                <div class="stat-label">Дней тренировки</div>
-            </div>
-        </div>
-
-        <div class="word-of-the-day" *ngIf="(languageStats$ | async)?.wordOfTheDay as wordOfTheDay">
-            <h3>Слово дня</h3>
-            <div class="word-of-the-day__content">
-                <span class="word-of-the-day__text">{{ wordOfTheDay.name }}</span>
-                <span class="word-of-the-day__translation" *ngIf="wordOfTheDay.translatedName">
-                    - {{ wordOfTheDay.translatedName }}
-                </span>
-            </div>
-        </div>
-
-        <div class="stat-cards-grid" *ngIf="languageStats$ | async as stats">
-            <div class="stat-card stat-card--proficiency">
-                <h3>Уровень владения</h3>
-                <div class="stat-card__metrics">
-                    <div class="metric">
-                        <span class="metric__label">Активный</span>
-                        <span class="metric__value">{{ (stats.activeLearnedPercent * 100) | number:'1.0-0' }}%</span>
+        @if (languageStats$ | async; as stats) {
+            <div class="stats-summary">
+                <div class="stat-item">
+                    <div class="stat-value">{{ stats.totalWords }}</div>
+                    <div class="stat-label">Добавлено слов</div>
+                </div>
+                @if (stats.learnedWords) {
+                    <div class="stat-item">
+                        <div class="stat-value">{{ stats.learnedWords }}</div>
+                        <div class="stat-label">Выучено слов</div>
                     </div>
-                    <div class="metric">
-                        <span class="metric__label">Пассивный</span>
-                        <span class="metric__value">{{ (stats.passiveLearnedPercent * 100) | number:'1.0-0' }}%</span>
+                }
+                <div class="stat-item">
+                    <div class="stat-value">{{ stats.totalTrainingDays }}</div>
+                    <div class="stat-label">Дней тренировки</div>
+                </div>
+            </div>
+        }
+
+        @if ((languageStats$ | async)?.wordOfTheDay; as wordOfTheDay) {
+            <div class="word-of-the-day">
+                <h3>Слово дня</h3>
+                <div class="word-of-the-day__content">
+                    <span class="word-of-the-day__text">{{ wordOfTheDay.name }}</span>
+                    @if (wordOfTheDay.translatedName) {
+                        <span class="word-of-the-day__translation">- {{ wordOfTheDay.translatedName }}</span>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (languageStats$ | async; as stats) {
+            <div class="stat-cards-grid">
+                <div class="stat-card stat-card--proficiency">
+                    <h3>Уровень владения</h3>
+                    <div class="stat-card__metrics">
+                        <div class="metric">
+                            <span class="metric__label">Активный</span>
+                            <span class="metric__value">{{ (stats.activeLearnedPercent * 100) | number:'1.0-0' }}%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Пассивный</span>
+                            <span class="metric__value">{{ (stats.passiveLearnedPercent * 100) | number:'1.0-0' }}%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-card--accuracy">
+                    <h3>Средняя точность</h3>
+                    <div class="stat-card__metrics">
+                        <div class="metric">
+                            <span class="metric__label">Активный</span>
+                            <span class="metric__value">{{ (stats.activeAverageAccuracy * 100) | number:'1.0-0' }}%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Пассивный</span>
+                            <span class="metric__value">{{ (stats.passiveAverageAccuracy * 100) | number:'1.0-0' }}%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-card--learned">
+                    <h3>Средний процент выученных слов</h3>
+                    <div class="stat-card__metrics">
+                        <div class="metric">
+                            <span class="metric__label">Активный</span>
+                            <span class="metric__value">{{ stats.activeAverageLearnedPercent | number:'1.0-0' }}%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric__label">Пассивный</span>
+                            <span class="metric__value">{{ stats.passiveAverageLearnedPercent | number:'1.0-0' }}%</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="stat-card stat-card--accuracy">
-                <h3>Средняя точность</h3>
-                <div class="stat-card__metrics">
-                    <div class="metric">
-                        <span class="metric__label">Активный</span>
-                        <span class="metric__value">{{ (stats.activeAverageAccuracy * 100) | number:'1.0-0' }}%</span>
+            <div class="word-performance">
+                @if (stats.bestActiveWordsByAccuracy.length) {
+                    <div class="word-list best-words">
+                        <h3>Лучшие слова</h3>
+                        <div class="word-columns">
+                            <div>
+                                <h4>Активный вокабуляр</h4>
+                                <ul>
+                                    @for (word of stats.bestActiveWordsByAccuracy; track $index) {
+                                        <li>{{word}}</li>
+                                    }
+                                </ul>
+                            </div>
+                            <div>
+                                <h4>Пассивный вокабуляр</h4>
+                                <ul>
+                                    @for (word of stats.bestPassiveWordsByAccuracy; track $index) {
+                                        <li>{{word}}</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="metric">
-                        <span class="metric__label">Пассивный</span>
-                        <span class="metric__value">{{ (stats.passiveAverageAccuracy * 100) | number:'1.0-0' }}%</span>
+                }
+                @if (stats.worstActiveWordsByAccuracy.length) {
+                    <div class="word-list worst-words">
+                        <h3>Слова для улучшения</h3>
+                        <div class="word-columns">
+                            <div>
+                                <h4>Активный вокабуляр</h4>
+                                <ul>
+                                    @for (word of stats.worstActiveWordsByAccuracy; track $index) {
+                                        <li>{{ word }}</li>
+                                    }
+                                </ul>
+                            </div>
+                            <div>
+                                <h4>Пассивный вокабуляр</h4>
+                                <ul>
+                                    @for (word of stats.worstPassiveWordsByAccuracy; track $index) {
+                                        <li>{{ word }}</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
-
-            <div class="stat-card stat-card--learned">
-                <h3>Средний процент выученных слов</h3>
-                <div class="stat-card__metrics">
-                    <div class="metric">
-                        <span class="metric__label">Активный</span>
-                        <span class="metric__value">{{ stats.activeAverageLearnedPercent | number:'1.0-0' }}%</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric__label">Пассивный</span>
-                        <span class="metric__value">{{ stats.passiveAverageLearnedPercent | number:'1.0-0' }}%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="word-performance" *ngIf="languageStats$ | async as stats">
-            <div class="word-list best-words" *ngIf="stats.bestActiveWordsByAccuracy.length">
-                <h3>Лучшие слова</h3>
-                <div class="word-columns">
-                    <div>
-                        <h4>Активный вокабуляр</h4>
-                        <ul>
-                            <li *ngFor="let word of stats.bestActiveWordsByAccuracy">
-                                {{word}}
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4>Пассивный вокабуляр</h4>
-                        <ul>
-                            <li *ngFor="let word of stats.bestPassiveWordsByAccuracy">
-                                {{word}}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="word-list worst-words" *ngIf="stats.worstActiveWordsByAccuracy.length">
-                <h3>Слова для улучшения</h3>
-                <div class="word-columns">
-                    <div>
-                        <h4>Активный вокабуляр</h4>
-                        <ul>
-                            <li *ngFor="let word of stats.worstActiveWordsByAccuracy">
-                                {{ word }}
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4>Пассивный вокабуляр</h4>
-                        <ul>
-                            <li *ngFor="let word of stats.worstPassiveWordsByAccuracy">
-                                {{ word }}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        }
     </main>
 </div>

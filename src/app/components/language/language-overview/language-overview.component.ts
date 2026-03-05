@@ -26,7 +26,7 @@ export class LanguageOverviewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.languageStats$ = this.selectedLanguageService.getSelectedLanguageSubject$()
+    this.languageStats$ = this.selectedLanguageService.selectedLanguage$
       .pipe(
         tap(language => {
           if (language && language.id) {

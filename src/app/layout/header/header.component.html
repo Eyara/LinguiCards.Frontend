@@ -1,23 +1,28 @@
 <mat-toolbar color="primary">
-  <button *ngIf="isAuthenticated$ | async" mat-icon-button class="menu-icon" (click)="toggleSidenav()">
-    <mat-icon>menu</mat-icon>
-  </button>
+  @if (isAuthenticated$ | async) {
+    <button mat-icon-button class="menu-icon" (click)="toggleSidenav()" aria-label="Открыть меню">
+      <mat-icon>menu</mat-icon>
+    </button>
+  }
   <span class="app-title">Lingui Cards</span>
-  <div class="language-selector" *ngIf="showLanguageSelector$ | async">
-    <mat-select [(value)]="selectedLanguage.id" (selectionChange)="changeLanguage($event)" panelClass="language-select-panel">
-      <mat-select-trigger>
-        <div class="language-option">
-          <img [src]="selectedLanguage.url" alt="{{ selectedLanguage.name }}" class="language-flag" width="20" height="20">
-        </div>
-      </mat-select-trigger>
-      <mat-option *ngFor="let language of languages$ | async" [value]="language.id">
-        <div class="language-option">
-          <img [src]="language.url" alt="{{ language.name }}" class="language-flag" width="20" height="20">
-        </div>
-      </mat-option>
-    </mat-select>
-  </div>
+  @if (showLanguageSelector$ | async) {
+    <div class="language-selector">
+      <mat-select [(value)]="selectedLanguage.id" (selectionChange)="changeLanguage($event)" panelClass="language-select-panel">
+        <mat-select-trigger>
+          <div class="language-option">
+            <img [src]="selectedLanguage.url" alt="{{ selectedLanguage.name }}" class="language-flag" width="20" height="20">
+          </div>
+        </mat-select-trigger>
+        @for (language of languages$ | async; track language.id) {
+          <mat-option [value]="language.id">
+            <div class="language-option">
+              <img [src]="language.url" alt="{{ language.name }}" class="language-flag" width="20" height="20">
+            </div>
+          </mat-option>
+        }
+      </mat-select>
+    </div>
+  }
 </mat-toolbar>
 
-<ng-container *ngIf="selectedLanguage$ | async as selectedLanguage">
-</ng-container>
+@if (selectedLanguage$ | async; as selectedLanguage) { }

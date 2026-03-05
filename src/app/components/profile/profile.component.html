@@ -7,15 +7,15 @@
     <div class="xp-container">
       <mat-progress-bar
         class="xp-progress"
-        [value]="roundToTwoDecimals((xp / xpToNextLevel) * 100)"
+        [value]="xpToNextLevel ? (xp / xpToNextLevel) * 100 : 0"
         color="primary"
       ></mat-progress-bar>
       <div class="xp-labels">
-        <span class="xp-current">{{ xp }} XP</span>
-        <span class="xp-total">{{ xpToNextLevel }} XP</span>
+        <span class="xp-current">{{ xp | round }} XP</span>
+        <span class="xp-total">{{ xpToNextLevel | round }} XP</span>
       </div>
     </div>
-    <p class="xp-remaining">{{ xpToNextLevel - xp }} XP до следующего уровня</p>
+    <p class="xp-remaining">{{ xpToNextLevel - xp | round }} XP до следующего уровня</p>
   </div>  
 </div>
 
@@ -25,62 +25,65 @@
     
     <app-goal-streak [goalStreak]="goalStreak"></app-goal-streak>
     
-    <div class="daily-progress-container" *ngIf="dailyGoalXp > 0">
-      <h3 class="progress-section-title">Дневная цель XP</h3>
-      <mat-progress-bar
-        class="daily-progress"
-        [value]="(dailyXp / dailyGoalXp) * 100"
-        color="accent"
-      ></mat-progress-bar>
-      <div class="daily-progress-labels">
-        <span class="daily-xp-current">{{ dailyXp }} XP</span>
-        <span class="daily-xp-goal">{{ dailyGoalXp }} XP</span>
+    @if (dailyGoalXp > 0) {
+      <div class="daily-progress-container">
+        <h3 class="progress-section-title">Дневная цель XP</h3>
+        <mat-progress-bar
+          class="daily-progress"
+          [value]="(dailyXp / dailyGoalXp) * 100"
+          color="accent"
+        ></mat-progress-bar>
+        <div class="daily-progress-labels">
+          <span class="daily-xp-current">{{ dailyXp | round }} XP</span>
+          <span class="daily-xp-goal">{{ dailyGoalXp | round }} XP</span>
+        </div>
+        @if (dailyXp < dailyGoalXp) {
+          <p class="daily-xp-remaining">{{ dailyGoalXp - dailyXp | round }} XP до цели</p>
+        } @else {
+          <p class="daily-xp-completed">🎉 Цель достигнута!</p>
+        }
       </div>
-      <p class="daily-xp-remaining" *ngIf="dailyXp < dailyGoalXp">
-        {{ dailyGoalXp - dailyXp }} XP до цели
-      </p>
-      <p class="daily-xp-completed" *ngIf="dailyXp >= dailyGoalXp">
-        🎉 Цель достигнута!
-      </p>
-    </div>
+    }
 
-    <div class="daily-progress-container" *ngIf="dailyGoalByTranslation > 0">
-      <h3 class="progress-section-title">Цель по переводам</h3>
-      <mat-progress-bar
-        class="daily-progress"
-        [value]="(byTranslation / dailyGoalByTranslation) * 100"
-        color="accent"
-      ></mat-progress-bar>
-      <div class="daily-progress-labels">
-        <span class="daily-xp-current">{{ byTranslation }} XP</span>
-        <span class="daily-xp-goal">{{ dailyGoalByTranslation }} XP</span>
+    @if (dailyGoalByTranslation > 0) {
+      <div class="daily-progress-container">
+        <h3 class="progress-section-title">Цель по переводам</h3>
+        <mat-progress-bar
+          class="daily-progress"
+          [value]="(byTranslation / dailyGoalByTranslation) * 100"
+          color="accent"
+        ></mat-progress-bar>
+        <div class="daily-progress-labels">
+          <span class="daily-xp-current">{{ byTranslation | round }} XP</span>
+          <span class="daily-xp-goal">{{ dailyGoalByTranslation | round }} XP</span>
+        </div>
+        @if (byTranslation < dailyGoalByTranslation) {
+          <p class="daily-xp-remaining">{{ dailyGoalByTranslation - byTranslation | round }} XP до цели</p>
+        } @else {
+          <p class="daily-xp-completed">🎉 Цель достигнута!</p>
+        }
       </div>
-      <p class="daily-xp-remaining" *ngIf="byTranslation < dailyGoalByTranslation">
-        {{ dailyGoalByTranslation - byTranslation }} XP до цели
-      </p>
-      <p class="daily-xp-completed" *ngIf="byTranslation >= dailyGoalByTranslation">
-        🎉 Цель достигнута!
-      </p>
-    </div>
+    }
 
-    <div class="daily-progress-container" *ngIf="dailyGoalByGrammar > 0">
-      <h3 class="progress-section-title">Цель по грамматике</h3>
-      <mat-progress-bar
-        class="daily-progress"
-        [value]="(byGrammar / dailyGoalByGrammar) * 100"
-        color="accent"
-      ></mat-progress-bar>
-      <div class="daily-progress-labels">
-        <span class="daily-xp-current">{{ byGrammar }} XP</span>
-        <span class="daily-xp-goal">{{ dailyGoalByGrammar }} XP</span>
+    @if (dailyGoalByGrammar > 0) {
+      <div class="daily-progress-container">
+        <h3 class="progress-section-title">Цель по грамматике</h3>
+        <mat-progress-bar
+          class="daily-progress"
+          [value]="(byGrammar / dailyGoalByGrammar) * 100"
+          color="accent"
+        ></mat-progress-bar>
+        <div class="daily-progress-labels">
+          <span class="daily-xp-current">{{ byGrammar | round }} XP</span>
+          <span class="daily-xp-goal">{{ dailyGoalByGrammar | round }} XP</span>
+        </div>
+        @if (byGrammar < dailyGoalByGrammar) {
+          <p class="daily-xp-remaining">{{ dailyGoalByGrammar - byGrammar | round }} XP до цели</p>
+        } @else {
+          <p class="daily-xp-completed">🎉 Цель достигнута!</p>
+        }
       </div>
-      <p class="daily-xp-remaining" *ngIf="byGrammar < dailyGoalByGrammar">
-        {{ dailyGoalByGrammar - byGrammar }} XP до цели
-      </p>
-      <p class="daily-xp-completed" *ngIf="byGrammar >= dailyGoalByGrammar">
-        🎉 Цель достигнута!
-      </p>
-    </div>
+    }
 
     <app-goal-calendar [goalDays]="goalDays"></app-goal-calendar>
     
@@ -128,6 +131,6 @@
   </div>
 </div>
 
-<ng-container *ngIf="languages$ | async as languages"></ng-container>
-<ng-container *ngIf="userSettings$ | async as userSettings"></ng-container>
-<ng-container *ngIf="saveUserSettings$ | async as saveUserSettings"></ng-container>
+@if (languages$ | async; as languages) { }
+@if (userSettings$ | async; as userSettings) { }
+@if (saveUserSettings$ | async; as saveUserSettings) { }

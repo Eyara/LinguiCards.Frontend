@@ -9,15 +9,19 @@
           <mat-label>Размер текста</mat-label>
           <input matInput type="number" [(ngModel)]="length" min="10" max="250" class="no-spinners" required>
           <mat-hint>Размер текста (в словах, от 10 до 250)</mat-hint>
-          <mat-error *ngIf="!isLengthValid">Размер текста должен быть от 10 до 250 слов</mat-error>
+          @if (!isLengthValid) {
+            <mat-error>Размер текста должен быть от 10 до 250 слов</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Уровень языка</mat-label>
           <mat-select [(ngModel)]="level">
-            <mat-option *ngFor="let level of languageLevels" [value]="level.value">
-              {{level.label}}
-            </mat-option>
+            @for (level of languageLevels; track level.value) {
+              <mat-option [value]="level.value">
+                {{level.label}}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
 
@@ -28,14 +32,17 @@
         </mat-form-field>
 
         <button mat-raised-button color="primary" (click)="getText()" [disabled]="!level || !isLengthValid || (isLoadingText$ | async)">
-          <mat-spinner diameter="20" *ngIf="isLoadingText$ | async" class="button-spinner"></mat-spinner>
-          <span *ngIf="!(isLoadingText$ | async)">Получить текст</span>
+          @if (isLoadingText$ | async) {
+            <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+          } @else {
+            <span>Получить текст</span>
+          }
         </button>
       </div>
     </mat-card-content>
   </mat-card>
 
-  <ng-container *ngIf="(evaluationResult$ | async) as evaluationResult; else practiceBlock">
+  @if (evaluationResult$ | async; as evaluationResult) {
     <mat-card class="result-card">
       <mat-card-header>
         <mat-card-title>Результаты оценки</mat-card-title>
@@ -49,57 +56,74 @@
             <h3>Ваш перевод:</h3>
             <p>{{userTranslation}}</p>
           </div>
-          <div class="correct-translation-section" *ngIf="evaluationResult.correctTranslation">
-            <h3>Правильный перевод:</h3>
-            <p>{{evaluationResult.correctTranslation}}</p>
-          </div>
+          @if (evaluationResult.correctTranslation) {
+            <div class="correct-translation-section">
+              <h3>Правильный перевод:</h3>
+              <p>{{evaluationResult.correctTranslation}}</p>
+            </div>
+          }
 
-          <div class="issues-section" *ngIf="evaluationResult.minorIssues.length > 0">
-            <h3>Незначительные замечания:</h3>
-            <ul>
-              <li *ngFor="let issue of evaluationResult.minorIssues">{{issue}}</li>
-            </ul>
-          </div>
+          @if (evaluationResult.minorIssues.length > 0) {
+            <div class="issues-section">
+              <h3>Незначительные замечания:</h3>
+              <ul>
+                @for (issue of evaluationResult.minorIssues; track $index) {
+                  <li>{{issue}}</li>
+                }
+              </ul>
+            </div>
+          }
 
-          <div class="errors-section" *ngIf="evaluationResult.errors.length > 0">
-            <h3>Ошибки:</h3>
-            <ul>
-              <li *ngFor="let error of evaluationResult.errors">{{error}}</li>
-            </ul>
-          </div>
+          @if (evaluationResult.errors.length > 0) {
+            <div class="errors-section">
+              <h3>Ошибки:</h3>
+              <ul>
+                @for (error of evaluationResult.errors; track $index) {
+                  <li>{{error}}</li>
+                }
+              </ul>
+            </div>
+          }
 
-          <div class="critical-errors-section" *ngIf="evaluationResult.criticalErrors.length > 0">
-            <h3>Критические ошибки:</h3>
-            <ul>
-              <li *ngFor="let error of evaluationResult.criticalErrors">{{error}}</li>
-            </ul>
-          </div>
+          @if (evaluationResult.criticalErrors.length > 0) {
+            <div class="critical-errors-section">
+              <h3>Критические ошибки:</h3>
+              <ul>
+                @for (error of evaluationResult.criticalErrors; track $index) {
+                  <li>{{error}}</li>
+                }
+              </ul>
+            </div>
+          }
         </div>
       </mat-card-content>
     </mat-card>
-  </ng-container>
-
-  <ng-template #practiceBlock>
-    <mat-card class="practice-card" *ngIf="(originalText$ | async) as originalText">
-      <mat-card-header>
-        <mat-card-title>Практика перевода</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="text-section">
-          <h3>Исходный текст:</h3>
-          <p class="original-text">{{ originalText }}</p>
-        </div>
-        <div class="translation-section">
-          <mat-form-field appearance="outline" class="translation-input">
-            <textarea matInput [(ngModel)]="userTranslation" rows="6" placeholder="Введите ваш перевод здесь..."></textarea>
-          </mat-form-field>
-          <button mat-raised-button color="primary" (click)="evaluateTranslation()" 
-                  [disabled]="!userTranslation.trim() || (isLoadingEval$ | async)">
-            <mat-spinner diameter="20" *ngIf="isLoadingEval$ | async" class="button-spinner"></mat-spinner>
-            <span *ngIf="!(isLoadingEval$ | async)">Оценить перевод</span>
-          </button>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </ng-template>
+  } @else {
+    @if (originalText$ | async; as originalText) {
+      <mat-card class="practice-card">
+        <mat-card-header>
+          <mat-card-title>Практика перевода</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="text-section">
+            <h3>Исходный текст:</h3>
+            <p class="original-text">{{ originalText }}</p>
+          </div>
+          <div class="translation-section">
+            <mat-form-field appearance="outline" class="translation-input">
+              <textarea matInput [(ngModel)]="userTranslation" rows="6" placeholder="Введите ваш перевод здесь..."></textarea>
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="evaluateTranslation()" 
+                    [disabled]="!userTranslation.trim() || (isLoadingEval$ | async)">
+              @if (isLoadingEval$ | async) {
+                <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+              } @else {
+                <span>Оценить перевод</span>
+              }
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  }
 </div>

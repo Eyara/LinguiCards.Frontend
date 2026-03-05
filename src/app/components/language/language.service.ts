@@ -1,13 +1,14 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {DictionarExtendedyModel, LanguageCreateModel, LanguageResponseModel, LanguageStatisticsModel} from '../../models/language.model';
+import {API_BASE_URL} from '../../shared/api.token';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LanguageService {
-  private apiUrl = '/api/Language';
+  private apiUrl = inject(API_BASE_URL) + '/Language';
 
   constructor(private http: HttpClient) {
   }

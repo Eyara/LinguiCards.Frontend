@@ -1,14 +1,16 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CalendarDay } from '../goal-calendar.component';
+import { RoundPipe } from '../../../../shared/round.pipe';
 
 @Component({
   selector: 'app-day-detail-dialog',
   standalone: true,
-  imports: [CommonModule, MatDialogModule],
+  imports: [CommonModule, MatDialogModule, RoundPipe],
   templateUrl: './day-detail-dialog.component.html',
-  styleUrl: './day-detail-dialog.component.scss'
+  styleUrl: './day-detail-dialog.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DayDetailDialogComponent {
   private readonly monthNames = [
