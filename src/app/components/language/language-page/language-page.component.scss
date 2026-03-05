@@ -227,6 +227,14 @@
     }
   }
   
+  &__select {
+    width: 100%;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+
   &__actions {
     display: flex;
     gap: 12px;
@@ -247,8 +255,13 @@
         background-color: $accent-green;
         color: $card-text-on-dark;
         
-        &:hover {
+        &:hover:not(:disabled) {
           background-color: $accent-green-dark;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
         }
       }
       

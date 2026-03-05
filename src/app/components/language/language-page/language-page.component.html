@@ -10,26 +10,40 @@
            (click)="!languageCard.editMode && navigateToOverview(languageCard)">
         @if (!languageCard.editMode) {
           <button class="delete-btn" (click)="$event.stopPropagation(); closeLanguage(languageCard.id)" aria-label="Удалить язык">×</button>
-        }
-        <div class="language-card__flag">
-          <img [src]="languageCard.url" [alt]="languageCard.name">
-        </div>
-        <h3 class="language-card__name">{{ languageCard.name }}</h3>
-        @if (languageCard.stats && !languageCard.editMode) {
-          <div class="language-card__stats">
-            <div class="stat">
-              <span class="stat__value">{{ languageCard.stats.totalWords }}</span>
-              <span class="stat__label">Слов</span>
-            </div>
-            <div class="stat">
-              <span class="stat__value">{{ languageCard.stats.streak }}</span>
-              <span class="stat__label stat__label--days">Дней</span>
-            </div>
+          <div class="language-card__flag">
+            <img [src]="languageCard.url" [alt]="languageCard.name">
           </div>
-        }
-        @if (languageCard.editMode) {
+          <h3 class="language-card__name">{{ languageCard.name }}</h3>
+          @if (languageCard.stats) {
+            <div class="language-card__stats">
+              <div class="stat">
+                <span class="stat__value">{{ languageCard.stats.totalWords }}</span>
+                <span class="stat__label">Слов</span>
+              </div>
+              <div class="stat">
+                <span class="stat__value">{{ languageCard.stats.streak }}</span>
+                <span class="stat__label stat__label--days">Дней</span>
+              </div>
+            </div>
+          }
+        } @else {
+          @if (selectedDictionary) {
+            <div class="language-card__flag">
+              <img [src]="selectedDictionary.url" [alt]="selectedDictionary.name">
+            </div>
+            <h3 class="language-card__name">{{ selectedDictionary.name }}</h3>
+          }
+          <div class="language-card__select">
+            <mat-form-field>
+              <mat-select [(ngModel)]="selectedDictionary" placeholder="Выберите язык">
+                @for (dict of languageDictionary$ | async; track dict.id) {
+                  <mat-option [value]="dict">{{ dict.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
           <div class="language-card__actions">
-            <button class="action-btn action-btn--save" (click)="saveLanguage({name: languageCard.name, languageDictionaryId: languageCard.languageDictionaryId})">Сохранить</button>
+            <button class="action-btn action-btn--save" [disabled]="!selectedDictionary" (click)="saveLanguage()">Сохранить</button>
             <button class="action-btn action-btn--cancel" (click)="closeLanguage(languageCard.id)">Отмена</button>
           </div>
         }
@@ -45,4 +59,5 @@
   </div>
 </div>
 
-@if ((languageCreateObservable$ | async) || (languageCloseObservable$ | async)) { }
+@if (languageCreateObservable$ | async) { }
+@if (languageCloseObservable$ | async) { }

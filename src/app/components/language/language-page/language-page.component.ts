@@ -1,6 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CardComponent } from '../../../shared/card/card.component';
-import { ButtonComponent } from "../../../shared/button/button.component";
 import { map, Observable, of, shareReplay, tap, switchMap, forkJoin, catchError } from 'rxjs';
 import { DictionarExtendedyModel, LanguageCreateModel, LanguageModel } from '../../../models/language.model';
 import { CommonModule } from '@angular/common';
@@ -9,11 +7,14 @@ import { LanguageService } from '../language.service';
 import { SelectedLanguageService } from '../selected-language.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import { FormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'language-page',
   standalone: true,
-  imports: [CommonModule, CardComponent, ButtonComponent, RouterModule, MatDialogModule],
+  imports: [CommonModule, RouterModule, MatDialogModule, FormsModule, MatFormField, MatSelect, MatOption],
   templateUrl: './language-page.component.html',
   styleUrl: './language-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,6 +24,7 @@ export class LanguagePageComponent {
   languageDictionary$: Observable<DictionarExtendedyModel[]>;
   languageCreateObservable$: Observable<boolean> | undefined;
   languageCloseObservable$: Observable<boolean> | undefined;
+  selectedDictionary: DictionarExtendedyModel | null = null;
 
   constructor(private router: Router, private languageService: LanguageService, private selectedLanguageService: SelectedLanguageService, private dialog: MatDialog) {
     this.languageCards$ = this.getLanguageCards();
@@ -40,10 +42,16 @@ export class LanguagePageComponent {
       );
   }
 
-  saveLanguage(model: LanguageCreateModel) {
+  saveLanguage() {
+    if (!this.selectedDictionary) return;
+    const model: LanguageCreateModel = {
+      name: this.selectedDictionary.name,
+      languageDictionaryId: this.selectedDictionary.id
+    };
     this.languageCreateObservable$ = this.languageService.createLanguage(model)
       .pipe(
         tap(() => {
+          this.selectedDictionary = null;
           this.languageCards$ = this.getLanguageCards()
           this.languageDictionary$ = this.getAvailableLanguages();
         })
@@ -115,6 +123,7 @@ export class LanguagePageComponent {
             }
           }),
           tap(updatedCards => {
+            this.selectedDictionary = null;
             this.languageCards$ = of(updatedCards);
             this.languageDictionary$ = this.getAvailableLanguages();
           }),
