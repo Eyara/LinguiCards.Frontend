@@ -31,13 +31,13 @@ import { CommonModule } from '@angular/common';
       margin: 0;
       font-size: 18px;
       font-weight: 500;
-      color: rgba(0, 0, 0, 0.87);
+      color: var(--text-main);
       line-height: 1.2;
     }
 
     mat-dialog-content {
       margin: 12px 0;
-      color: rgba(0, 0, 0, 0.6);
+      color: var(--text-gray);
       font-size: 14px;
       line-height: 1.4;
     }

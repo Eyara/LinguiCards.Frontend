@@ -56,12 +56,13 @@
 }
 
 .close-icon {
-  color: rgba(158, 158, 158, 0.5);
+  color: $text-light;
+  opacity: 0.5;
   cursor: pointer;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
 
   &:hover {
-    color: rgba(158, 158, 158, 0.7);
+    opacity: 0.7;
     transform: scale(1.1);
   }
 
@@ -95,13 +96,13 @@
 }
 
 .background-green {
-  background-color: #4CAF50;
-  color: $background-card;
+  background-color: $accent-green-strong;
+  color: #fff;
 }
 
 .background-red {
-  background-color: #FF4136;
-  color: $background-card;
+  background-color: $accent-red-dark;
+  color: #fff;
 }
 
 .current-word {

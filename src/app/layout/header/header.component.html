@@ -5,6 +5,9 @@
     </button>
   }
   <span class="app-title">Lingui Cards</span>
+  <button mat-icon-button class="theme-toggle" (click)="themeService.toggle()" aria-label="Toggle dark mode">
+    <mat-icon>{{ themeService.isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
   @if (showLanguageSelector$ | async) {
     <div class="language-selector">
       <mat-select [(value)]="selectedLanguage.id" (selectionChange)="changeLanguage($event)" panelClass="language-select-panel">

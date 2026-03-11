@@ -1,12 +1,6 @@
 @import '../../../colors';
 
-$card-bg: $background-card;
 $card-radius: 12px;
-$green: #4CAF50;
-$green-dark: #2E7D32;
-$orange: #FF9800;
-$blue: $primary-blue;
-$blue-light: $primary-blue-light;
 
 .profile-container {
   padding: 16px;
@@ -25,7 +19,7 @@ $blue-light: $primary-blue-light;
 }
 
 %card {
-  background-color: $card-bg;
+  background-color: $background-card;
   border-radius: $card-radius;
   border: 1px solid $border-main;
   box-shadow: $shadow-card;
@@ -69,7 +63,7 @@ $blue-light: $primary-blue-light;
 
 .level-badge {
   background-color: $accent-green;
-  color: $card-bg;
+  color: #fff;
   font-size: 18px;
   font-weight: 700;
   width: 40px;
@@ -141,10 +135,10 @@ $blue-light: $primary-blue-light;
     background-color: $background-green;
   }
   .daily-progress .mat-progress-bar-fill::after {
-    background-color: $blue;
+    background-color: $primary-blue;
   }
   .daily-progress .mat-progress-bar-buffer {
-    background-color: $blue-light;
+    background-color: $primary-blue-light;
   }
 }
 
@@ -156,6 +150,7 @@ $blue-light: $primary-blue-light;
 
 .daily-goal-form {
   gap: 10px;
+  margin-top: 24px;
 }
 
 .form-field {
@@ -170,16 +165,16 @@ $blue-light: $primary-blue-light;
   align-items: center;
   justify-content: center;
   gap: 16px;
-  background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 87, 34, 0.1));
+  background: $background-orange;
   border-radius: $card-radius;
   padding: 20px;
   margin-bottom: 24px;
-  border: 2px solid rgba(255, 152, 0, 0.2);
-  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
+  border: 2px solid $accent-orange;
+  box-shadow: $shadow-card;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(255, 152, 0, 0.25);
+    box-shadow: $shadow-card-hover;
   }
 }
 
@@ -203,10 +198,9 @@ $blue-light: $primary-blue-light;
 .streak-number {
   font-size: 36px;
   font-weight: 700;
-  color: $orange;
+  color: $accent-orange;
   line-height: 1;
   margin-bottom: 4px;
-  text-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
 }
 
 .streak-label {
@@ -220,8 +214,8 @@ $blue-light: $primary-blue-light;
 .calendar-section {
   margin-top: 24px;
   padding: 24px 20px 20px;
-  border-top: 2px solid rgba(0, 0, 0, 0.08);
-  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.02));
+  border-top: 2px solid $border-light;
+  background: transparent;
   border-radius: 0 0 $card-radius $card-radius;
   margin-left: -20px;
   margin-right: -20px;
@@ -245,23 +239,23 @@ $blue-light: $primary-blue-light;
 }
 
 .calendar-stats {
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.2));
+  background: $background-green;
   padding: 6px 12px;
   border-radius: 20px;
-  border: 1px solid rgba(76, 175, 80, 0.3);
+  border: 1px solid $border-green-light;
 }
 
 .stats-text {
   font-size: 12px;
   font-weight: 600;
-  color: $green;
+  color: $accent-green-strong;
 }
 
 .calendar-wrapper {
-  background: rgba(255, 255, 255, 0.5);
+  background: $background-hover;
   border-radius: 16px;
   padding: 16px;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 4px $overlay-border-subtle;
 }
 
 .calendar-weekdays, .calendar-grid {
@@ -300,8 +294,8 @@ $blue-light: $primary-blue-light;
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(245, 245, 245, 0.9));
-    border: 2px solid rgba(0, 0, 0, 0.06);
+    background: var(--calendar-day-bg);
+    border: 2px solid $overlay-border-subtle;
     border-radius: 10px;
     transition: all 0.3s ease;
     z-index: 1;
@@ -310,44 +304,43 @@ $blue-light: $primary-blue-light;
     transform: translateY(-2px) scale(1.05);
     z-index: 10;
     &::before {
-      border-color: rgba(0, 0, 0, 0.15);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-color: $overlay-border-strong;
+      box-shadow: $shadow-card-hover;
     }
   }
   &.completed {
     &::before {
-      background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.35));
-      border-color: rgba(76, 175, 80, 0.5);
-      box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.3), 0 2px 8px rgba(76, 175, 80, 0.2);
+      background: $background-green;
+      border-color: $border-green-light;
+      box-shadow: 0 0 0 1px $border-green-light, $shadow-card;
     }
     .day-number {
-      color: $green-dark;
+      color: $accent-green-darker;
       font-weight: 700;
-      text-shadow: 0 1px 2px rgba(76, 175, 80, 0.3);
     }
     &:hover::before {
-      box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.4), 0 6px 16px rgba(76, 175, 80, 0.3);
+      box-shadow: 0 0 0 1px $accent-green, $shadow-card-hover;
     }
   }
   &.today {
     &::before {
-      border-color: $blue;
+      border-color: $primary-blue;
       border-width: 2.5px;
-      box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2), 0 2px 8px rgba(33, 150, 243, 0.15);
+      box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2), $shadow-card;
     }
     .day-number {
-      color: $blue;
+      color: $primary-blue;
       font-weight: 800;
       font-size: 13px;
     }
     &:hover::before {
-      box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.3), 0 6px 16px rgba(33, 150, 243, 0.25);
+      box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.3), $shadow-card-hover;
     }
   }
   &.today.completed::before {
-    background: linear-gradient(135deg, rgba(33, 150, 243, 0.15), rgba(76, 175, 80, 0.3));
-    border-color: $blue;
-    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2), 0 0 0 3px rgba(76, 175, 80, 0.2), 0 2px 8px rgba(76, 175, 80, 0.2);
+    background: $background-green;
+    border-color: $primary-blue;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2), 0 0 0 3px $border-green-light, $shadow-card;
   }
 }
 
@@ -389,19 +382,19 @@ $blue-light: $primary-blue-light;
 
 .day-check {
   font-size: 11px;
-  color: $green-dark;
+  color: $accent-green-darker;
   font-weight: 900;
   line-height: 1;
   position: relative;
   z-index: 2;
   animation: checkPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  text-shadow: $calendar-day-check-shadow;
 }
 
 .check-ring {
   position: absolute;
   inset: -2px;
-  border: 2px solid $green;
+  border: 2px solid $accent-green-strong;
   border-radius: 50%;
   animation: ringPulse 2s ease-in-out infinite;
   opacity: 0.6;
@@ -439,7 +432,7 @@ $blue-light: $primary-blue-light;
   gap: 24px;
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid $border-light;
 }
 
 .legend-item {
@@ -455,19 +448,19 @@ $blue-light: $primary-blue-light;
   width: 18px;
   height: 18px;
   border-radius: 6px;
-  border: 2px solid rgba(0, 0, 0, 0.08);
+  border: 2px solid $overlay-border-medium;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
   &.completed {
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.35));
-    border-color: rgba(76, 175, 80, 0.5);
-    box-shadow: 0 0 0 1px rgba(76, 175, 80, 0.3);
+    background: $background-green;
+    border-color: $border-green-light;
+    box-shadow: 0 0 0 1px $border-green-light;
   }
   &.today {
-    border-color: $blue;
+    border-color: $primary-blue;
     border-width: 2.5px;
     box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
   }
@@ -475,7 +468,7 @@ $blue-light: $primary-blue-light;
 
 .legend-check {
   font-size: 10px;
-  color: $green-dark;
+  color: $accent-green-darker;
   font-weight: 900;
   line-height: 1;
 }

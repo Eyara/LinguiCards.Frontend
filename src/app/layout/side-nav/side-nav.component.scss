@@ -33,8 +33,17 @@ mat-sidenav {
       
       &:hover {
         background-color: $background-hover !important;
+        color: $text-main;
         box-shadow: $shadow-card;
         transform: translateY(-2px);
+
+        span {
+          color: $text-main;
+        }
+
+        mat-icon {
+          color: $text-main;
+        }
       }
       
       &.active {

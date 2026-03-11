@@ -1,21 +1,23 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, inject } from '@angular/core';
 import { combineLatest, map, Observable, shareReplay, Subscription, tap } from 'rxjs';
 import { SelectedLanguageService } from '../../components/language/selected-language.service';
 import { LanguageModel } from '../../models/language.model';
 import { LanguageService } from '../../components/language/language.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LoginService } from '../../components/login/login.service';
 import { SideNavService } from '../side-nav/side-nav.service';
 import { Router, RouterModule } from '@angular/router';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, MatToolbarModule, MatIconModule, MatFormFieldModule, MatSelectModule, RouterModule],
+  imports: [CommonModule, MatToolbarModule, MatIconModule, MatIconButton, MatFormFieldModule, MatSelectModule, RouterModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -33,6 +35,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   languages$: Observable<LanguageModel[]> | undefined;
   showLanguageSelector$: Observable<boolean> | undefined;
   private languageSubscription: Subscription = new Subscription();
+
+  readonly themeService = inject(ThemeService);
 
   constructor(
     private languageService: LanguageService,

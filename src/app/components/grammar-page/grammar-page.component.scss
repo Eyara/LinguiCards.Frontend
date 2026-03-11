@@ -1,3 +1,5 @@
+@import '../../../colors';
+
 .cribs-section {
   padding: 20px;
 }
@@ -9,9 +11,9 @@
 }
 
 .crib-card {
-  background-color: #f8f9fa;
+  background-color: $background-light;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+  box-shadow: $shadow-main;
   padding: 20px;
   transition: transform 0.2s ease-in-out;
 }
@@ -27,7 +29,7 @@
 .crib-header {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #333;
+  color: $text-main;
   margin-bottom: 8px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -36,14 +38,14 @@
 
 .crib-description {
   font-size: 1rem;
-  color: #555;
+  color: $text-medium;
   line-height: 1.5;
 }
 
 .no-cribs-message {
   text-align: center;
   font-size: 1.2rem;
-  color: #777;
+  color: $text-light;
   padding: 20px;
 }
 
@@ -55,7 +57,7 @@
 .section-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #333;
+  color: $text-main;
   margin-bottom: 20px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -69,20 +71,20 @@
 .irregular-verbs-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+  background-color: $background-card;
+  box-shadow: $shadow-main;
   border-radius: 8px;
   overflow: hidden;
 
   thead {
-    background-color: #f8f9fa;
+    background-color: $background-light;
     
     th {
       padding: 12px 16px;
       text-align: left;
       font-weight: 600;
-      color: #333;
-      border-bottom: 2px solid #dee2e6;
+      color: $text-main;
+      border-bottom: 2px solid $border-main;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       letter-spacing: -0.01em;
@@ -94,16 +96,16 @@
       transition: background-color 0.2s ease-in-out;
 
       &:hover {
-        background-color: #f8f9fa;
+        background-color: $background-light;
       }
 
       &:not(:last-child) {
-        border-bottom: 1px solid #dee2e6;
+        border-bottom: 1px solid $border-main;
       }
 
       td {
         padding: 12px 16px;
-        color: #555;
+        color: $text-medium;
       }
     }
   }
@@ -112,6 +114,6 @@
 .no-irregular-verbs-message {
   text-align: center;
   font-size: 1.1rem;
-  color: #777;
+  color: $text-light;
   padding: 20px;
 }

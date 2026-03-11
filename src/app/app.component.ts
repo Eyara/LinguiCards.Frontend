@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { SideNavComponent } from './layout/side-nav/side-nav.component';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -13,4 +14,5 @@ import { SideNavComponent } from './layout/side-nav/side-nav.component';
 })
 export class AppComponent {
   title = 'LinguiCards';
+  private themeService = inject(ThemeService);
 }

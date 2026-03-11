@@ -1,3 +1,5 @@
+@import '../../../../../colors';
+
 :host {
   display: block;
 }
@@ -23,7 +25,7 @@
   align-items: center;
   justify-content: center;
   transition: background 0.2s ease;
-  color: #9e9e9e;
+  color: $text-light;
 
   span {
     font-size: 22px;
@@ -31,8 +33,8 @@
   }
 
   &:hover {
-    background: rgba(0, 0, 0, 0.06);
-    color: #555;
+    background: $background-hover;
+    color: $text-medium;
   }
 }
 
@@ -47,17 +49,17 @@
   font-size: 40px;
   font-weight: 800;
   line-height: 1;
-  color: #333;
+  color: $text-main;
 }
 
 .completed .day-date-num {
-  color: #2E7D32;
+  color: $accent-green-darker;
 }
 
 .day-date-month {
   font-size: 13px;
   font-weight: 500;
-  color: #9e9e9e;
+  color: $text-light;
   margin-top: 2px;
   text-transform: lowercase;
 }
@@ -69,14 +71,14 @@
   padding: 4px 14px;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(0, 0, 0, 0.05);
-  color: #9e9e9e;
+  background: $background-light;
+  color: $text-light;
   letter-spacing: 0.3px;
 }
 
 .status-pill.achieved {
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(76, 175, 80, 0.25));
-  color: #2E7D32;
+  background: $background-green;
+  color: $accent-green-darker;
 }
 
 .xp-hero {
@@ -86,22 +88,22 @@
   gap: 6px;
   padding: 18px 0;
   margin: 0 -24px;
-  background: linear-gradient(135deg, rgba(74, 144, 226, 0.06) 0%, rgba(74, 144, 226, 0.14) 100%);
-  border-top: 1px solid rgba(74, 144, 226, 0.1);
-  border-bottom: 1px solid rgba(74, 144, 226, 0.1);
+  background: $primary-blue-light;
+  border-top: 1px solid $border-light;
+  border-bottom: 1px solid $border-light;
 }
 
 .xp-hero-value {
   font-size: 36px;
   font-weight: 800;
-  color: #4a90e2;
+  color: $primary-blue;
   line-height: 1;
 }
 
 .xp-hero-unit {
   font-size: 16px;
   font-weight: 600;
-  color: rgba(74, 144, 226, 0.6);
+  color: $primary-blue-soft;
   text-transform: uppercase;
 }
 
@@ -118,11 +120,11 @@
   gap: 12px;
   padding: 10px 12px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.02);
+  background: $background-light;
   transition: background 0.2s ease;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background: $background-hover;
   }
 }
 
@@ -138,13 +140,13 @@
   flex-shrink: 0;
 
   &.translate-icon {
-    background: linear-gradient(135deg, rgba(137, 207, 240, 0.3), rgba(137, 207, 240, 0.5));
-    color: #2980b9;
+    background: $primary-blue-light;
+    color: $primary-blue;
   }
 
   &.grammar-icon {
-    background: linear-gradient(135deg, rgba(197, 163, 255, 0.3), rgba(197, 163, 255, 0.5));
-    color: #7c4dff;
+    background: $background-light;
+    color: $accent-orange;
   }
 }
 
@@ -159,13 +161,13 @@
 .xp-detail-label {
   font-size: 13px;
   font-weight: 500;
-  color: #555;
+  color: $text-medium;
 }
 
 .xp-detail-value {
   font-size: 13px;
   font-weight: 700;
-  color: #333;
+  color: $text-main;
 }
 
 .no-data {
@@ -174,7 +176,7 @@
   align-items: center;
   gap: 8px;
   padding: 20px 0 8px;
-  color: #bdbdbd;
+  color: $text-placeholder;
 
   .no-data-icon {
     font-size: 28px;
