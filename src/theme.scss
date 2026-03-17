@@ -1,4 +1,7 @@
 @use '@angular/material' as mat;
+@use '@angular/cdk' as cdk;
+
+@include cdk.overlay();
 
 $light-theme: mat.define-theme((
   color: (theme-type: light, primary: mat.$azure-palette)
